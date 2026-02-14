@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact | PixelWave • Naveen</title>
+  <link rel="icon" type="image/png" href="assets/img/logo.png">
+  <meta name="description" content="Contact Naveen for a modern website. WhatsApp + contact form." />
+  <link rel="stylesheet" href="assets/css/style.css?v=7">
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/logo.png" alt="PixelWave logo"></span><span>PixelWave • Naveen</span></a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h1 style="margin:0 0 8px">Contact</h1>
+      <p class="lead" style="margin:0 0 18px">
+        Tell me about your business and what website you need. I reply fast.
+      </p>
+
+      <div class="split">
+        <div class="panel">
+          <h2 style="margin:0 0 12px">Send a message</h2>
+
+          <!-- Netlify Forms: Works after deploying on Netlify -->
+          <form name="contact" method="POST" data-netlify="true">
+            <input type="hidden" name="form-name" value="contact" />
+
+            <label class="label">Your Name</label>
+            <input class="input" name="name" required placeholder="Your name" />
+
+            <div style="height:12px"></div>
+
+            <label class="label">Phone / WhatsApp</label>
+            <input class="input" name="phone" placeholder="07X XXX XXXX" />
+
+            <div style="height:12px"></div>
+
+            <label class="label">Email</label>
+            <input class="input" type="email" name="email" required placeholder="you@email.com" />
+
+            <div style="height:12px"></div>
+
+            <label class="label">Message</label>
+            <textarea class="textarea" name="message" required placeholder="What website do you need? (pages, business type, etc.)"></textarea>
+
+            <div class="btnrow">
+              <button class="btn primary" type="submit">Send Message</button>
+              <a class="btn success" target="_blank" rel="noopener"
+                 href="https://wa.me/94750523127?text=Hi%20Naveen%2C%20I%20need%20a%20website.">WhatsApp Me</a>
+            </div>
+          </form>
+
+          <p class="card-text" style="margin-top:12px">
+            Tip: After you deploy on Netlify, go to <b>Forms</b> tab in Netlify dashboard to see messages.
+          </p>
+        </div>
+
+        <div class="panel">
+          <h2 style="margin:0 0 10px">Direct Contact</h2>
+          <p class="card-text" style="margin:0 0 12px">
+            WhatsApp: <b>+94 75 052 3127</b><br/>
+            Email: <b>sennnnaveen2@gmail.com</b>
+          </p>
+          <hr class="hr" />
+          <h3 style="margin:0 0 10px">What to send me</h3>
+          <ul class="list">
+            <li>Business name + location</li>
+            <li>What pages you want (Home, About, Services, Gallery, Contact)</li>
+            <li>Any example websites you like</li>
+            <li>Your logo + photos (if you have)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a class="whatsapp-fab" target="_blank" rel="noopener"
+     href="https://wa.me/94750523127?text=Hi%20Naveen%2C%20I%20want%20a%20website.">
+    <svg viewBox="0 0 32 32" aria-label="WhatsApp">
+      <path d="M19.11 17.43c-.27-.14-1.58-.78-1.82-.87-.24-.09-.42-.14-.6.14-.18.27-.69.87-.85 1.05-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.14-1.31-.79-.7-1.32-1.56-1.48-1.83-.16-.27-.02-.42.12-.56.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.14-.6-1.45-.82-1.98z"/>
+      <path d="M26.67 5.33A13.2 13.2 0 0 0 16.01 1.2C8.82 1.2 3 7.02 3 14.21c0 2.3.6 4.55 1.74 6.53L3 30.8l10.34-1.7a13 13 0 0 0 6.67 1.81h.01c7.19 0 13.01-5.82 13.01-13.01z"/>
+    </svg>
+  </a>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>© <span id="y"></span> PixelWave • Naveen</div>
+      <div><a href="projects.html">Projects</a> • <a href="services.html">Services</a></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+</body>
+</html>
