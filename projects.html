@@ -3,15 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Projects | PixelWave • Naveen</title>
-  <link rel="icon" type="image/png" href="assets/img/logo.png">
-  <meta name="description" content="Web design projects by Naveen (PixelWave) — modern, responsive websites." />
-  <link rel="stylesheet" href="assets/css/style.css?v=7">
+  <title>Projects | ZYVERION • Naveen</title>
+  <link rel="icon" type="image/png" href="assets/img/favicon.png?v=2">
+  <meta name="description" content="Web design projects by Naveen — modern, responsive websites." />
+  <link rel="stylesheet" href="assets/css/style.css?v=8">
 </head>
+
 <body>
+  <!-- FX (ONLY ONCE) -->
+  <div id="introFX" class="intro-fx" aria-hidden="true">
+    <div class="lightning l1"></div>
+    <div class="lightning l2"></div>
+    <div class="lightning l3"></div>
+    <div class="flash"></div>
+  </div>
+  <canvas id="energyCanvas" aria-hidden="true"></canvas>
+  <div id="cursorGlow" aria-hidden="true"></div>
+
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="index.html"><img class="brand-logo" src="assets/img/logo.png" alt="PixelWave logo"></span><span>PixelWave • Naveen</span></a>
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/img/logo.png" alt="ZYVERION logo">
+        <span>ZYVERION • Naveen</span>
+      </a>
       <nav class="menu">
         <a href="index.html">Home</a>
         <a href="projects.html">Projects</a>
@@ -23,25 +37,26 @@
 
   <main class="container">
     <section class="section">
-  <div class="panel">
-    <h2 style="margin:0 0 10px">MyGym Screenshots</h2>
-    <p class="card-text" style="margin:0 0 16px">
-      A quick look at the UI, pricing, schedule, and sections.
-    </p>
+      <div class="panel">
+        <h2 style="margin:0 0 10px">MyGym Screenshots</h2>
+        <p class="card-text" style="margin:0 0 16px">
+          A quick look at the UI, pricing, schedule, and sections.
+        </p>
 
-    <div class="grid grid-3">
-      <img class="card" src="assets/img/mygym1.png" alt="MyGym screenshot 1">
-      <img class="card" src="assets/img/mygym2.png" alt="MyGym screenshot 2">
-      <img class="card" src="assets/img/mygym3.png" alt="MyGym screenshot 3">
-      <img class="card" src="assets/img/mygym4.png" alt="MyGym screenshot 4">
-      <img class="card" src="assets/img/mygym5.png" alt="MyGym screenshot 5">
-      <img class="card" src="assets/img/mygym6.png" alt="MyGym screenshot 6">
-      <img class="card" src="assets/img/mygym7.png" alt="MyGym screenshot 7">
-    </div>
-  </div>
-</section>
+        <div class="grid grid-3">
+          <img class="card" src="assets/img/mygym1.png" alt="MyGym screenshot 1">
+          <img class="card" src="assets/img/mygym2.png" alt="MyGym screenshot 2">
+          <img class="card" src="assets/img/mygym3.png" alt="MyGym screenshot 3">
+          <img class="card" src="assets/img/mygym4.png" alt="MyGym screenshot 4">
+          <img class="card" src="assets/img/mygym5.png" alt="MyGym screenshot 5">
+          <img class="card" src="assets/img/mygym6.png" alt="MyGym screenshot 6">
+          <img class="card" src="assets/img/mygym7.png" alt="MyGym screenshot 7">
+        </div>
+      </div>
+    </section>
 
-
+    <section class="section">
+      <div class="grid grid-2">
         <article class="card">
           <img src="assets/img/project-2.jpg" alt="Business landing page screenshot" />
           <div class="card-body">
@@ -93,7 +108,7 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <div>© <span id="y"></span> PixelWave • Naveen</div>
+      <div>© <span id="y"></span> ZYVERION • Naveen</div>
       <div><a href="services.html">Services</a> • <a href="contact.html">Contact</a></div>
     </div>
   </footer>
