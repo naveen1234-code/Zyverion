@@ -50,49 +50,22 @@ if (form) {
         message: formData.get("message")?.trim() || ""
       };
 
-      const { data: insertedLead, error: leadError } = await supabase
-        .from("leads")
-        .insert([lead])
-        .select()
-        .single();
+      const response = await fetch(
+  "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(lead),
+  }
+);
 
-      if (leadError) {
-        throw new Error(`Lead insert failed: ${leadError.message}`);
-      }
+const result = await response.json();
 
-      const leadId = insertedLead.id;
-
-      for (const file of files) {
-        const safeName = file.name.replace(/\s+/g, "-");
-        const filePath = `${leadId}/${Date.now()}-${safeName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("lead-uploads")
-          .upload(filePath, file, {
-            cacheControl: "3600",
-            upsert: false
-          });
-
-        if (uploadError) {
-          throw new Error(`File upload failed: ${uploadError.message}`);
-        }
-
-        const { error: fileRecordError } = await supabase
-          .from("lead_files")
-          .insert([
-            {
-              lead_id: leadId,
-              file_name: file.name,
-              file_path: filePath,
-              file_type: file.type,
-              file_size: file.size
-            }
-          ]);
-
-        if (fileRecordError) {
-          throw new Error(`File record insert failed: ${fileRecordError.message}`);
-        }
-      }
+if (!response.ok) {
+  throw new Error(result.error || "Submission failed.");
+}
 
       formStatus.textContent =
         "Your inquiry has been sent successfully. ZYVERION will review it and get back to you.";
