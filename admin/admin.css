@@ -141,3 +141,13 @@ textarea {
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
+.toolbar-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.toolbar-actions input {
+  min-width: 260px;
+}

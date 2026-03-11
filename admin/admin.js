@@ -4,12 +4,26 @@ const SUPABASE_URL = "https://gydiqeomupsfiaayxpix.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5ZGlxZW9tdXBzZmlhYXl4cGl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTg2NDgsImV4cCI6MjA4ODc5NDY0OH0.K5GA_Ib4ouUhJ_-kBv7DlP1cZGRfpmU1DwXc8KBBXJo";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const searchInput = document.getElementById("searchInput");
 const statusFilter = document.getElementById("statusFilter");
 const loginForm = document.getElementById("loginForm");
 const loginStatus = document.getElementById("loginStatus");
 const logoutBtn = document.getElementById("logoutBtn");
 const leadCount = document.getElementById("leadCount");
 const leadTable = document.getElementById("leadTable");
+
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    loadLeads();
+  });
+}
+
+if (statusFilter) {
+  statusFilter.addEventListener("change", () => {
+    loadLeads();
+  });
+}
 
 async function requireAuth() {
   const { data, error } = await supabase.auth.getUser();
@@ -43,13 +57,31 @@ async function loadLeads() {
     return;
   }
 
+let filteredData = data || [];
+
+  if (searchInput && searchInput.value.trim() !== "") {
+    const term = searchInput.value.trim().toLowerCase();
+
+    filteredData = data.filter((lead) => {
+      const name = (lead.name || "").toLowerCase();
+      const email = (lead.email || "").toLowerCase();
+      const service = (lead.service_type || "").toLowerCase();
+
+      return (
+        name.includes(term) ||
+        email.includes(term) ||
+        service.includes(term)
+      );
+    });
+  }
+
   if (leadCount) {
-    leadCount.textContent = data.length;
+    leadCount.textContent = filteredData.length;
   }
 
   leadTable.innerHTML = "";
 
-  data.forEach((lead) => {
+  filteredData.forEach((lead) => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
@@ -57,7 +89,11 @@ async function loadLeads() {
       <td>${lead.email ?? ""}</td>
       <td>${lead.service_type ?? ""}</td>
       <td>${lead.budget_range ?? ""}</td>
-      <td><span class="status-badge status-${(lead.status ?? "new").replace(/\s+/g, "-")}">${lead.status ?? "new"}</span></td>
+      <td>
+        <span class="status-badge status-${(lead.status ?? "new").replace(/\s+/g, "-")}">
+          ${lead.status ?? "new"}
+        </span>
+      </td>
       <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
     `;
 
@@ -100,11 +136,7 @@ if (logoutBtn) {
     window.location.href = "/admin/login.html";
   });
 }
-if (statusFilter) {
-  statusFilter.addEventListener("change", () => {
-    loadLeads();
-  });
-}
+
 if (leadTable) {
   loadLeads();
 }
