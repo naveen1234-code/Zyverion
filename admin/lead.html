@@ -1,42 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Lead Details</title>
-
-<link rel="stylesheet" href="admin.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Details | ZYVERION</title>
+  <link rel="stylesheet" href="admin.css" />
 </head>
-
 <body>
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <h1>Lead Details</h1>
+      <a href="/admin/index.html" class="back-link">← Back to Dashboard</a>
+    </div>
 
-<div class="admin-wrap">
+    <div class="admin-card">
+      <p><strong>Name:</strong> <span id="leadName"></span></p>
+      <p><strong>Email:</strong> <span id="leadEmail"></span></p>
+      <p><strong>Phone:</strong> <span id="leadPhone"></span></p>
+      <p><strong>Service:</strong> <span id="leadService"></span></p>
+      <p><strong>Budget:</strong> <span id="leadBudget"></span></p>
+      <p><strong>Timeline:</strong> <span id="leadTimeline"></span></p>
+      <p><strong>Status:</strong> <span id="leadStatus"></span></p>
+      <p><strong>Created:</strong> <span id="leadCreated"></span></p>
 
-<h1>Lead Details</h1>
+      <hr style="border-color:#334155; margin:20px 0;" />
 
-<div class="admin-card">
+      <p><strong>Message:</strong></p>
+      <p id="leadMessage"></p>
+    </div>
 
-<p><strong>Name:</strong> <span id="leadName"></span></p>
+    <div class="admin-card">
+      <h2>Uploaded Files</h2>
+      <div id="leadFiles">No files loaded yet.</div>
+    </div>
+  </div>
 
-<p><strong>Email:</strong> <span id="leadEmail"></span></p>
-
-<p><strong>Phone:</strong> <span id="leadPhone"></span></p>
-
-<p><strong>Service:</strong> <span id="leadService"></span></p>
-
-<p><strong>Budget:</strong> <span id="leadBudget"></span></p>
-
-<p><strong>Timeline:</strong> <span id="leadTimeline"></span></p>
-
-<p><strong>Message:</strong></p>
-
-<p id="leadMessage"></p>
-
-</div>
-
-</div>
-
-<script type="module" src="lead.js"></script>
-
+  <script type="module" src="lead.js?v=1"></script>
 </body>
 </html>
