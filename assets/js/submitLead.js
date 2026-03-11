@@ -8,8 +8,7 @@ const FUNCTION_URL =
 
 /*
   IMPORTANT:
-  Replace the value below with your LEGACY anon key
-  from Supabase Settings → API Keys → Legacy anon, service_role API keys
+  Use your LEGACY anon key here, not sb_publishable_...
 */
 const SUPABASE_LEGACY_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5ZGlxZW9tdXBzZmlhYXl4cGl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTg2NDgsImV4cCI6MjA4ODc5NDY0OH0.K5GA_Ib4ouUhJ_-kBv7DlP1cZGRfpmU1DwXc8KBBXJo";
 
@@ -47,29 +46,17 @@ if (form) {
 
       const formData = new FormData(form);
 
-      const lead = {
-        name: (formData.get("name") || "").toString().trim(),
-        business_name: (formData.get("business") || "").toString().trim(),
-        email: (formData.get("email") || "").toString().trim(),
-        phone: (formData.get("phone") || "").toString().trim(),
-        service_type: (formData.get("service") || "").toString().trim(),
-        budget_range: (formData.get("budget_range") || "").toString(),
-        timeline: (formData.get("timeline") || "").toString(),
-        message: (formData.get("message") || "").toString().trim()
-      };
-
-      if (!lead.name || !lead.email || !lead.message) {
-        throw new Error("Please fill in all required fields.");
+      for (const file of files) {
+        formData.append("files", file);
       }
 
       const response = await fetch(FUNCTION_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           "apikey": SUPABASE_LEGACY_ANON_KEY,
           "Authorization": `Bearer ${SUPABASE_LEGACY_ANON_KEY}`
         },
-        body: JSON.stringify(lead)
+        body: formData
       });
 
       const result = await response.json();
