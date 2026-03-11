@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZYVERION Dashboard</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <h1>ZYVERION Dashboard</h1>
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="admin-card">
+      <h2>Total Leads</h2>
+      <p id="leadCount">0</p>
+    </div>
+
+    <div class="admin-card">
+      <h2>Leads</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Service</th>
+              <th>Budget</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="leadTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="admin.js?v=1"></script>
+</body>
+</html>
