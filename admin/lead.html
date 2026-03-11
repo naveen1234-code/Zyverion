@@ -20,7 +20,19 @@
       <p><strong>Service:</strong> <span id="leadService"></span></p>
       <p><strong>Budget:</strong> <span id="leadBudget"></span></p>
       <p><strong>Timeline:</strong> <span id="leadTimeline"></span></p>
-      <p><strong>Status:</strong> <span id="leadStatus"></span></p>
+      <p><strong>Status:</strong></p>
+<select id="statusSelect">
+  <option value="new">new</option>
+  <option value="contacted">contacted</option>
+  <option value="proposal sent">proposal sent</option>
+  <option value="won">won</option>
+  <option value="lost">lost</option>
+</select>
+
+<div style="height:12px;"></div>
+
+<button id="saveStatusBtn">Save Status</button>
+<p id="statusMessage" class="muted"></p>
       <p><strong>Created:</strong> <span id="leadCreated"></span></p>
 
       <hr style="border-color:#334155; margin:20px 0;" />

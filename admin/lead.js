@@ -8,6 +8,10 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const params = new URLSearchParams(window.location.search);
 const leadId = params.get("id");
 
+const statusSelect = document.getElementById("statusSelect");
+const saveStatusBtn = document.getElementById("saveStatusBtn");
+const statusMessage = document.getElementById("statusMessage");
+
 async function requireAuth() {
   const { data, error } = await supabase.auth.getUser();
 
@@ -40,11 +44,14 @@ async function loadLead() {
   document.getElementById("leadService").textContent = lead.service_type ?? "";
   document.getElementById("leadBudget").textContent = lead.budget_range ?? "";
   document.getElementById("leadTimeline").textContent = lead.timeline ?? "";
-  document.getElementById("leadStatus").textContent = lead.status ?? "new";
   document.getElementById("leadCreated").textContent = lead.created_at
     ? new Date(lead.created_at).toLocaleString()
     : "";
   document.getElementById("leadMessage").textContent = lead.message ?? "";
+
+  if (statusSelect) {
+    statusSelect.value = lead.status ?? "new";
+  }
 
   const { data: files, error: filesError } = await supabase
     .from("lead_files")
@@ -89,6 +96,25 @@ async function loadLead() {
     row.appendChild(link);
     row.appendChild(meta);
     leadFiles.appendChild(row);
+  });
+}
+
+if (saveStatusBtn) {
+  saveStatusBtn.addEventListener("click", async () => {
+    statusMessage.textContent = "Saving...";
+
+    const { error } = await supabase
+      .from("leads")
+      .update({ status: statusSelect.value })
+      .eq("id", leadId);
+
+    if (error) {
+      console.error(error);
+      statusMessage.textContent = "Failed to save status.";
+      return;
+    }
+
+    statusMessage.textContent = "Status updated successfully.";
   });
 }
 
