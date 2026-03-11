@@ -19,8 +19,20 @@
     </div>
 
     <div class="admin-card">
-      <h2>Leads</h2>
-      <div class="table-wrap">
+  <div class="admin-toolbar">
+    <h2>Leads</h2>
+
+    <select id="statusFilter">
+      <option value="all">All</option>
+      <option value="new">new</option>
+      <option value="contacted">contacted</option>
+      <option value="proposal sent">proposal sent</option>
+      <option value="won">won</option>
+      <option value="lost">lost</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
         <table>
           <thead>
             <tr>

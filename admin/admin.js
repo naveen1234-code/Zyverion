@@ -4,7 +4,7 @@ const SUPABASE_URL = "https://gydiqeomupsfiaayxpix.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5ZGlxZW9tdXBzZmlhYXl4cGl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTg2NDgsImV4cCI6MjA4ODc5NDY0OH0.K5GA_Ib4ouUhJ_-kBv7DlP1cZGRfpmU1DwXc8KBBXJo";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+const statusFilter = document.getElementById("statusFilter");
 const loginForm = document.getElementById("loginForm");
 const loginStatus = document.getElementById("loginStatus");
 const logoutBtn = document.getElementById("logoutBtn");
@@ -26,10 +26,16 @@ async function loadLeads() {
   const user = await requireAuth();
   if (!user || !leadTable) return;
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("leads")
     .select("*")
     .order("created_at", { ascending: false });
+
+  if (statusFilter && statusFilter.value !== "all") {
+    query = query.eq("status", statusFilter.value);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error(error);
@@ -44,27 +50,25 @@ async function loadLeads() {
   leadTable.innerHTML = "";
 
   data.forEach((lead) => {
+    const row = document.createElement("tr");
 
-  const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${lead.name ?? ""}</td>
+      <td>${lead.email ?? ""}</td>
+      <td>${lead.service_type ?? ""}</td>
+      <td>${lead.budget_range ?? ""}</td>
+      <td><span class="status-badge status-${(lead.status ?? "new").replace(/\s+/g, "-")}">${lead.status ?? "new"}</span></td>
+      <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
+    `;
 
-  row.innerHTML = `
-  <td>${lead.name ?? ""}</td>
-  <td>${lead.email ?? ""}</td>
-  <td>${lead.service_type ?? ""}</td>
-  <td>${lead.budget_range ?? ""}</td>
-  <td><span class="status-badge status-${(lead.status ?? "new").replace(/\s+/g, "-")}">${lead.status ?? "new"}</span></td>
-  <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
-`;
+    row.style.cursor = "pointer";
 
-  row.style.cursor = "pointer";
+    row.addEventListener("click", () => {
+      window.location.href = "/admin/lead.html?id=" + lead.id;
+    });
 
-  row.addEventListener("click", () => {
-    window.location.href = "/admin/lead.html?id=" + lead.id;
+    leadTable.appendChild(row);
   });
-
-  leadTable.appendChild(row);
-
-});
 }
 
 if (loginForm) {
@@ -96,7 +100,11 @@ if (logoutBtn) {
     window.location.href = "/admin/login.html";
   });
 }
-
+if (statusFilter) {
+  statusFilter.addEventListener("change", () => {
+    loadLeads();
+  });
+}
 if (leadTable) {
   loadLeads();
 }

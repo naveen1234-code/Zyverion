@@ -133,3 +133,11 @@ textarea {
   background: #dc2626;
   color: white;
 }
+.admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
