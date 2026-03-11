@@ -818,3 +818,180 @@ img{max-width:100%;display:block}
   -webkit-text-fill-color:transparent;
   background-clip:text;
 }
+/* =========================
+   MOBILE FIX PACK
+========================= */
+
+@media (max-width: 900px) {
+  .hero-grid,
+  .case-study,
+  .footer-grid,
+  .stats-grid,
+  .process-grid,
+  .split,
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero {
+    padding: 56px 0 24px;
+  }
+
+  .hero-card,
+  .panel,
+  .process-card,
+  .price-card,
+  .cta-panel,
+  .footer-card {
+    padding: 18px;
+  }
+
+  .section {
+    padding: 48px 0;
+  }
+
+  .stats-row {
+    gap: 10px;
+  }
+
+  .stat-box {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  .nav {
+    position: sticky;
+    top: 0;
+  }
+
+  .nav-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .menu {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .menu a {
+    width: 100%;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 13px;
+    border-radius: 14px;
+  }
+
+  .h1 {
+    font-size: 32px !important;
+    line-height: 1.08;
+  }
+
+  .section-head h2 {
+    font-size: 26px;
+    line-height: 1.15;
+  }
+
+  .lead,
+  .card-text,
+  .section-head p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .btnrow {
+    flex-direction: column;
+  }
+
+  .btnrow .btn,
+  .btnrow button.btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-points {
+    flex-direction: column;
+  }
+
+  .mini-point {
+    width: 100%;
+  }
+
+  .process-grid,
+  .stats-grid,
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .case-media img,
+  .grid img.card {
+    height: auto;
+    min-height: 0;
+  }
+
+  .metric-number {
+    font-size: 34px;
+  }
+
+  .footer-upgrade {
+    padding-bottom: 110px;
+  }
+}
+
+@media (max-width: 520px) {
+  .menu {
+    grid-template-columns: 1fr;
+  }
+
+  .brand span {
+    font-size: 15px;
+  }
+
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .h1 {
+    font-size: 28px !important;
+  }
+
+  .section-head h2 {
+    font-size: 23px;
+  }
+
+  .kicker,
+  .eyebrow,
+  .step-no,
+  .tag {
+    font-size: 12px;
+  }
+
+  .input,
+  .textarea,
+  select.input {
+    font-size: 16px;
+  }
+
+  .whatsapp-fab {
+    width: 52px;
+    height: 52px;
+    right: 12px;
+  }
+}
