@@ -7,7 +7,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const params = new URLSearchParams(window.location.search);
 const leadId = params.get("id");
-
+const leadNotes = document.getElementById("leadNotes");
+const saveNotesBtn = document.getElementById("saveNotesBtn");
+const notesMessage = document.getElementById("notesMessage");
 const statusSelect = document.getElementById("statusSelect");
 const saveStatusBtn = document.getElementById("saveStatusBtn");
 const statusMessage = document.getElementById("statusMessage");
@@ -48,6 +50,9 @@ async function loadLead() {
     ? new Date(lead.created_at).toLocaleString()
     : "";
   document.getElementById("leadMessage").textContent = lead.message ?? "";
+  if (leadNotes) {
+  leadNotes.value = lead.notes ?? "";
+}
 
   if (statusSelect) {
     statusSelect.value = lead.status ?? "new";
@@ -102,6 +107,25 @@ async function loadLead() {
 if (saveStatusBtn) {
   saveStatusBtn.addEventListener("click", async () => {
     statusMessage.textContent = "Saving...";
+
+    if (saveNotesBtn) {
+  saveNotesBtn.addEventListener("click", async () => {
+    notesMessage.textContent = "Saving...";
+
+    const { error } = await supabase
+      .from("leads")
+      .update({ notes: leadNotes.value })
+      .eq("id", leadId);
+
+    if (error) {
+      console.error(error);
+      notesMessage.textContent = "Failed to save notes.";
+      return;
+    }
+
+    notesMessage.textContent = "Notes updated successfully.";
+  });
+}
 
     const { error } = await supabase
       .from("leads")
