@@ -6,6 +6,8 @@ const projectFilesInput = document.getElementById("projectFiles");
 const FUNCTION_URL =
   "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead";
 
+const SUPABASE_KEY = "sb_publishable_GrvrURzXo72ECksExlKHpw_aVBmZnBD";
+
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -55,25 +57,20 @@ if (form) {
         throw new Error("Please fill in all required fields.");
       }
 
-      const SUPABASE_KEY = "sb_publishable_GrvrURzXo72ECksEx1KHpw_aVBmzNBD";
-
-const response = await fetch(
-  "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`
-    },
-    body: JSON.stringify(lead)
-  }
-);
+      const response = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify(lead)
+      });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Submission failed.");
+        throw new Error(result.error || JSON.stringify(result) || "Submission failed.");
       }
 
       formStatus.textContent =
