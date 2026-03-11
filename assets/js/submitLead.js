@@ -55,13 +55,18 @@ if (form) {
         throw new Error("Please fill in all required fields.");
       }
 
-      const response = await fetch(FUNCTION_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(lead)
-      });
+      const response = await fetch(
+  "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": "sb_publishable_GrvrURzXo72ECksExlKHpw_aVBmZnBD",
+      "Authorization": "Bearer sb_publishable_GrvrURzXo72ECksExlKHpw_aVBmZnBD"
+    },
+    body: JSON.stringify(lead),
+  }
+);
 
       const result = await response.json();
 
