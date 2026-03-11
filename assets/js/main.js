@@ -1,7 +1,3 @@
-// =========================
-// ZYVERION FX (2s intro)
-// =========================
-
 // Active nav
 (() => {
   const path = location.pathname.split("/").pop() || "index.html";
@@ -10,14 +6,14 @@
   });
 })();
 
-// Intro remove after 2 seconds (removes even if duplicated by mistake)
+// Intro remove faster
 window.addEventListener("load", () => {
   setTimeout(() => {
     document.querySelectorAll("#introFX").forEach(el => el.remove());
-  }, 2000);
+  }, 1400);
 });
 
-// Cursor glow follow (safe)
+// Cursor glow follow
 (() => {
   const glow = document.getElementById("cursorGlow");
   if (!glow) return;
@@ -31,7 +27,7 @@ window.addEventListener("load", () => {
   window.addEventListener("mousemove", (e) => move(e.clientX, e.clientY));
 })();
 
-// Parallax tilt on hero card (home only)
+// Hero tilt
 (() => {
   const hero = document.querySelector(".hero-card");
   if (!hero) return;
@@ -44,8 +40,8 @@ window.addEventListener("load", () => {
     const cx = rect.width / 2;
     const cy = rect.height / 2;
 
-    const rx = (y - cy) / 25;
-    const ry = (cx - x) / 25;
+    const rx = (y - cy) / 28;
+    const ry = (cx - x) / 28;
 
     hero.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
   });
@@ -64,7 +60,7 @@ window.addEventListener("load", () => {
     entries.forEach(ent => {
       if (ent.isIntersecting) ent.target.classList.add("visible");
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.12 });
 
   sections.forEach(s => obs.observe(s));
 })();
@@ -89,7 +85,63 @@ window.addEventListener("load", () => {
   });
 })();
 
-// Particle system (safe)
+// Animated counters
+(() => {
+  const counters = document.querySelectorAll("[data-counter]");
+  if (!counters.length) return;
+
+  const animateCounter = (el) => {
+    const target = Number(el.dataset.counter || 0);
+    const suffix = el.dataset.suffix || "";
+    const duration = 1400;
+    const start = performance.now();
+
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.floor(target * eased);
+
+      el.textContent = value + suffix;
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = target + suffix;
+      }
+    };
+
+    requestAnimationFrame(step);
+  };
+
+  const seen = new WeakSet();
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !seen.has(entry.target)) {
+        seen.add(entry.target);
+        animateCounter(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => obs.observe(counter));
+})();
+
+// Sticky mobile CTA visibility
+(() => {
+  const sticky = document.querySelector(".mobile-sticky-cta");
+  if (!sticky) return;
+
+  const toggleSticky = () => {
+    if (window.scrollY > 280) sticky.classList.add("show");
+    else sticky.classList.remove("show");
+  };
+
+  toggleSticky();
+  window.addEventListener("scroll", toggleSticky, { passive: true });
+})();
+
+// Particle system
 (() => {
   const canvas = document.getElementById("energyCanvas");
   if (!canvas) return;
@@ -104,19 +156,18 @@ window.addEventListener("load", () => {
   resize();
   window.addEventListener("resize", resize);
 
-  const count = Math.min(140, Math.floor((window.innerWidth * window.innerHeight) / 14000));
+  const count = Math.min(130, Math.floor((window.innerWidth * window.innerHeight) / 15000));
   const particles = Array.from({ length: count }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.35,
-    vy: (Math.random() - 0.5) * 0.35,
+    vx: (Math.random() - 0.5) * 0.32,
+    vy: (Math.random() - 0.5) * 0.32,
     r: Math.random() * 2 + 0.6,
   }));
 
   function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // particles
     for (const p of particles) {
       p.x += p.vx;
       p.y += p.vy;
@@ -128,11 +179,10 @@ window.addEventListener("load", () => {
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(0,247,255,.55)";
+      ctx.fillStyle = "rgba(0,247,255,.52)";
       ctx.fill();
     }
 
-    // lines
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const a = particles[i], b = particles[j];
@@ -142,7 +192,7 @@ window.addEventListener("load", () => {
 
         if (d2 < max) {
           const t = 1 - d2 / max;
-          ctx.globalAlpha = 0.12 * t;
+          ctx.globalAlpha = 0.11 * t;
           ctx.strokeStyle = "rgba(183,0,255,1)";
           ctx.lineWidth = 1;
           ctx.beginPath();
@@ -156,5 +206,6 @@ window.addEventListener("load", () => {
 
     requestAnimationFrame(loop);
   }
+
   loop();
 })();

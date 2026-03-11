@@ -3,22 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Contact | ZYVERION • Naveen</title>
+  <title>Start a Project | ZYVERION</title>
   <link rel="canonical" href="https://zyverion.com/contact.html">
   <link rel="icon" href="/favicon.png" sizes="48x48" type="image/png">
-<link rel="apple-touch-icon" href="/favicon.png">
-  <meta name="description" content="Contact Naveen for a modern website. WhatsApp + contact form." />
-  <link rel="stylesheet" href="assets/css/style.css?v=8">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <meta name="description" content="Start your project with ZYVERION. Tell us about your business, your goals, and the website or AI-ready system you want to build." />
+  <meta property="og:title" content="Start a Project | ZYVERION">
+  <meta property="og:description" content="Tell ZYVERION about your business and let’s build a premium modern website.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zyverion.com/contact.html">
+  <meta property="og:image" content="https://zyverion.com/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Start a Project | ZYVERION">
+  <meta name="twitter:description" content="Tell ZYVERION about your business and let’s build a premium modern website.">
+  <meta name="twitter:image" content="https://zyverion.com/assets/img/og-cover.jpg">
+  <link rel="stylesheet" href="assets/css/style.css?v=12">
+  <script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"ContactPage",
+  "name":"Start a Project | ZYVERION",
+  "url":"https://zyverion.com/contact.html",
+  "description":"Contact ZYVERION to start a project and build a premium modern website."
+}
+</script>
 </head>
 
 <body>
-  <!-- FX (ONLY ONCE) -->
   <div id="introFX" class="intro-fx" aria-hidden="true">
     <div class="lightning l1"></div>
     <div class="lightning l2"></div>
     <div class="lightning l3"></div>
     <div class="flash"></div>
   </div>
+
   <canvas id="energyCanvas" aria-hidden="true"></canvas>
   <div id="cursorGlow" aria-hidden="true"></div>
 
@@ -26,12 +44,13 @@
     <div class="container nav-inner">
       <a class="brand" href="index.html">
         <img class="brand-logo" src="assets/img/logo.png" alt="ZYVERION logo">
-        <span>ZYVERION • Naveen</span>
+        <span>ZYVERION</span>
       </a>
       <nav class="menu">
         <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="projects.html">Case Studies</a>
+        <a href="services.html">Solutions</a>
         <a href="contact.html">Contact</a>
       </nav>
     </div>
@@ -39,21 +58,29 @@
 
   <main class="container">
     <section class="section">
-      <h1 style="margin:0 0 8px">Contact</h1>
-      <p class="lead" style="margin:0 0 18px">
-        Tell me about your business and what website you need. I reply fast.
-      </p>
+      <div class="section-head">
+        <span class="eyebrow">Start a Project</span>
+        <h1 class="h1" style="font-size:44px">Let’s Build a Modern Website That Actually Feels Like a Real Brand</h1>
+        <p>
+          Tell ZYVERION about your business, your goals, and the kind of premium website
+          or AI-ready digital system you want to create.
+        </p>
+      </div>
+    </section>
 
+    <section class="section">
       <div class="split">
         <div class="panel">
-          <h2 style="margin:0 0 12px">Send a message</h2>
+          <h2 style="margin:0 0 14px">Project Inquiry Form</h2>
 
-          <!-- Netlify Forms: Works after deploying on Netlify -->
-          <form name="contact" method="POST" data-netlify="true">
-            <input type="hidden" name="form-name" value="contact" />
-
+          <form id="contactForm">
             <label class="label">Your Name</label>
             <input class="input" name="name" required placeholder="Your name" />
+
+            <div style="height:12px"></div>
+
+            <label class="label">Business Name</label>
+            <input class="input" name="business" placeholder="Your business or brand name" />
 
             <div style="height:12px"></div>
 
@@ -67,56 +94,189 @@
 
             <div style="height:12px"></div>
 
-            <label class="label">Message</label>
-            <textarea class="textarea" name="message" required placeholder="What website do you need? (pages, business type, etc.)"></textarea>
+            <label class="label">What do you need?</label>
+            <input class="input" name="service" placeholder="Website, redesign, AI-ready upgrade, automation idea..." />
+
+            <div style="height:12px"></div>
+
+            <label class="label">Budget Range</label>
+            <select class="input" name="budget_range">
+              <option value="">Select budget range</option>
+              <option value="Under LKR 25,000">Under LKR 25,000</option>
+              <option value="LKR 25,000 - 50,000">LKR 25,000 - 50,000</option>
+              <option value="LKR 50,000 - 100,000">LKR 50,000 - 100,000</option>
+              <option value="LKR 100,000+">LKR 100,000+</option>
+              <option value="Need consultation">Need consultation</option>
+            </select>
+
+            <div style="height:12px"></div>
+
+            <label class="label">Timeline</label>
+            <select class="input" name="timeline">
+              <option value="">Select timeline</option>
+              <option value="ASAP">ASAP</option>
+              <option value="2-4 weeks">2-4 weeks</option>
+              <option value="1-2 months">1-2 months</option>
+              <option value="Flexible">Flexible</option>
+            </select>
+
+            <div style="height:12px"></div>
+
+            <label class="label">Project Details</label>
+            <textarea class="textarea" name="message" required placeholder="Tell me about your business, what pages you need, and what kind of look or features you want."></textarea>
 
             <div class="btnrow">
-              <button class="btn primary" type="submit">Send Message</button>
+              <button class="btn primary" id="submitBtn" type="submit">Send Inquiry</button>
               <a class="btn success" target="_blank" rel="noopener"
-                 href="https://wa.me/94750523127?text=Hi%20Naveen%2C%20I%20need%20a%20website.">WhatsApp Me</a>
+                 href="https://wa.me/94775877952?text=Hi%20ZYVERION%2C%20I%20want%20to%20start%20a%20project.">
+                WhatsApp Me
+              </a>
             </div>
-          </form>
 
-          <p class="card-text" style="margin-top:12px">
-            Tip: After you deploy on Netlify, go to <b>Forms</b> tab in Netlify dashboard to see messages.
-          </p>
+            <p id="formStatus" class="card-text" style="margin-top:14px;"></p>
+          </form>
         </div>
 
         <div class="panel">
-          <h2 style="margin:0 0 10px">Direct Contact</h2>
-          <p class="card-text" style="margin:0 0 12px">
-            WhatsApp: <b>+94 75 052 3127</b><br/>
-            Email: <b>sennnnaveen2@gmail.com</b>
+          <h2 style="margin:0 0 12px">Direct Contact</h2>
+          <p class="card-text" style="margin:0 0 14px">
+            WhatsApp: <b>+94 77 587 7952</b><br>
+            Email: <b>sennnnaveen2@gmail.com</b><br>
+            Agency: <b>ZYVERION</b>
           </p>
-          <hr class="hr" />
-          <h3 style="margin:0 0 10px">What to send me</h3>
+
+          <hr class="hr">
+
+          <h3 style="margin:0 0 10px">Best things to send</h3>
           <ul class="list">
-            <li>Business name + location</li>
-            <li>What pages you want (Home, About, Services, Gallery, Contact)</li>
-            <li>Any example websites you like</li>
-            <li>Your logo + photos (if you have)</li>
+            <li>Business name and niche</li>
+            <li>The pages or sections you want</li>
+            <li>Example websites you like</li>
+            <li>Your logo, photos, or brand colors</li>
+            <li>Any AI or automation idea you want later</li>
           </ul>
+
+          <hr class="hr">
+
+          <h3 style="margin:0 0 10px">Good fit for ZYVERION</h3>
+          <div class="grid grid-1">
+            <div class="mini-point">⚡ Businesses needing a premium online presence</div>
+            <div class="mini-point">📱 Brands wanting a better mobile experience</div>
+            <div class="mini-point">🤖 Businesses planning future AI features</div>
+            <div class="mini-point">🎯 People who want more than a basic template site</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="panel">
+        <div class="section-head" style="margin-bottom:18px">
+          <span class="eyebrow">What Happens Next</span>
+          <h2>Simple project flow</h2>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <span class="step-no">01</span>
+            <h3>You send the details</h3>
+            <p>Tell ZYVERION about the business, pages, style, and features you want.</p>
+          </div>
+
+          <div class="process-card">
+            <span class="step-no">02</span>
+            <h3>We define the direction</h3>
+            <p>The structure, style, and best approach are decided around your real goal.</p>
+          </div>
+
+          <div class="process-card">
+            <span class="step-no">03</span>
+            <h3>The build begins</h3>
+            <p>Your site is designed and developed with a premium, future-ready feel.</p>
+          </div>
+
+          <div class="process-card">
+            <span class="step-no">04</span>
+            <h3>You launch stronger</h3>
+            <p>The finished site is ready to represent the business better and convert visitors more clearly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final-cta">
+      <div class="panel cta-panel">
+        <span class="eyebrow">Ready When You Are</span>
+        <h2>Let’s turn your idea into a serious digital presence.</h2>
+        <p class="card-text">
+          A strong website can change how people see your business in seconds.
+          ZYVERION is built to make that first impression hit harder.
+        </p>
+        <div class="btnrow center-btns">
+          <a class="btn primary" target="_blank" rel="noopener"
+             href="https://wa.me/94775877952?text=Hi%20ZYVERION%2C%20I%20want%20to%20start%20my%20project.">
+            Message on WhatsApp
+          </a>
+          <a class="btn" href="services.html">View Solutions</a>
         </div>
       </div>
     </section>
   </main>
 
   <a class="whatsapp-fab" target="_blank" rel="noopener"
-     href="https://wa.me/94750523127?text=Hi%20Naveen%2C%20I%20want%20a%20website.">
+     href="https://wa.me/94775877952?text=Hi%20ZYVERION%2C%20I%20want%20a%20website.">
     <svg viewBox="0 0 32 32" aria-label="WhatsApp">
-      <path d="M19.11 17.43c-.27-.14-1.58-.78-1.82-.87-.24-.09-.42-.14-.6.14-.18.27-.69.87-.85 1.05-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.14-1.31-.79-.7-1.32-1.56-1.48-1.83-.16-.27-.02-.42.12-.56.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.14-.6-1.45-.82-1.98z"/>
-      <path d="M26.67 5.33A13.2 13.2 0 0 0 16.01 1.2C8.82 1.2 3 7.02 3 14.21c0 2.3.6 4.55 1.74 6.53L3 30.8l10.34-1.7a13 13 0 0 0 6.67 1.81h.01c7.19 0 13.01-5.82 13.01-13.01z"/>
+      <path d="M19.11 17.43c-.27-.14-1.58-.78-1.82-.87-.24-.09-.42-.14-.6.14-.18.27-.69.87-.85 1.05-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.14-1.31-.79-.7-1.32-1.56-1.48-1.83-.16-.27-.02-.42.12-.56.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.14-.6-1.45-.82-1.98-.22-.53-.44-.46-.6-.47h-.51c-.18 0-.47.07-.71.34-.24.27-.94.92-.94 2.25 0 1.33.96 2.61 1.09 2.79.13.18 1.89 2.88 4.58 4.04.64.28 1.14.45 1.53.57.64.2 1.22.17 1.68.1.51-.08 1.58-.65 1.8-1.27.22-.62.22-1.15.16-1.27-.07-.12-.24-.2-.51-.34z"/>
+      <path d="M26.67 5.33A13.2 13.2 0 0 0 16.01 1.2C8.82 1.2 3 7.02 3 14.21c0 2.3.6 4.55 1.74 6.53L3 30.8l10.34-1.7a13 13 0 0 0 6.67 1.81h.01c7.19 0 13.01-5.82 13.01-13.01 0-3.47-1.35-6.73-3.36-9.57z"/>
     </svg>
   </a>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div>© <span id="y"></span> ZYVERION • Naveen</div>
-      <div><a href="projects.html">Projects</a> • <a href="services.html">Services</a></div>
+  <footer class="footer footer-upgrade">
+    <div class="container">
+      <div class="panel footer-card">
+        <div class="footer-grid">
+          <div>
+            <h2 class="footer-brand">ZYVERION</h2>
+            <p class="footer-copy">
+              Futuristic AI web agency building premium websites, stronger business presence,
+              and digital systems designed for long-term growth.
+            </p>
+            <p class="social-preview-note">
+              Built for brands that want more than a basic template website.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="footer-title">Navigation</h3>
+            <ul class="footer-list">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="projects.html">Case Studies</a></li>
+              <li><a href="services.html">Solutions</a></li>
+              <li><a href="contact.html">Start a Project</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="footer-title">Contact</h3>
+            <ul class="footer-list">
+              <li><a href="mailto:sennnnaveen2@gmail.com">sennnnaveen2@gmail.com</a></li>
+              <li><a href="https://wa.me/94750523127" target="_blank" rel="noopener">WhatsApp</a></li>
+              <li><a href="https://zyverion.com/" target="_blank" rel="noopener">zyverion.com</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© <span id="y"></span> ZYVERION. All rights reserved.</div>
+          <div>AI-Powered Web Agency</div>
+        </div>
+      </div>
     </div>
   </footer>
 
   <script src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/submitLead.js"></script>
   <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
 </body>
 </html>
