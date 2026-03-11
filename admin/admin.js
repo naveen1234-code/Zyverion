@@ -48,13 +48,13 @@ async function loadLeads() {
   const row = document.createElement("tr");
 
   row.innerHTML = `
-    <td>${lead.name ?? ""}</td>
-    <td>${lead.email ?? ""}</td>
-    <td>${lead.service_type ?? ""}</td>
-    <td>${lead.budget_range ?? ""}</td>
-    <td>${lead.status ?? "new"}</td>
-    <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
-  `;
+  <td>${lead.name ?? ""}</td>
+  <td>${lead.email ?? ""}</td>
+  <td>${lead.service_type ?? ""}</td>
+  <td>${lead.budget_range ?? ""}</td>
+  <td><span class="status-badge status-${(lead.status ?? "new").replace(/\s+/g, "-")}">${lead.status ?? "new"}</span></td>
+  <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
+`;
 
   row.style.cursor = "pointer";
 
