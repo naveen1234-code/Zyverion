@@ -15,6 +15,9 @@ const statusMessage = document.getElementById("statusMessage");
 const leadNotes = document.getElementById("leadNotes");
 const saveNotesBtn = document.getElementById("saveNotesBtn");
 const notesMessage = document.getElementById("notesMessage");
+const dealValueInput = document.getElementById("dealValueInput");
+const saveDealValueBtn = document.getElementById("saveDealValueBtn");
+const dealValueMessage = document.getElementById("dealValueMessage");
 
 async function requireAuth() {
   const { data, error } = await supabase.auth.getUser();
@@ -47,6 +50,9 @@ async function loadLead() {
   document.getElementById("leadPhone").textContent = lead.phone ?? "";
   document.getElementById("leadService").textContent = lead.service_type ?? "";
   document.getElementById("leadBudget").textContent = lead.budget_range ?? "";
+  if (dealValueInput) {
+  dealValueInput.value = lead.deal_value ?? "";
+}
   document.getElementById("leadTimeline").textContent = lead.timeline ?? "";
   document.getElementById("leadCreated").textContent = lead.created_at
     ? new Date(lead.created_at).toLocaleString()
@@ -123,6 +129,28 @@ if (saveStatusBtn) {
     }
 
     statusMessage.textContent = "Status updated successfully.";
+  });
+}
+
+if (saveDealValueBtn) {
+  saveDealValueBtn.addEventListener("click", async () => {
+
+    dealValueMessage.textContent = "Saving...";
+
+    const value = parseFloat(dealValueInput.value);
+
+    const { error } = await supabase
+      .from("leads")
+      .update({ deal_value: value })
+      .eq("id", leadId);
+
+    if (error) {
+      console.error(error);
+      dealValueMessage.textContent = "Failed to save deal value.";
+      return;
+    }
+
+    dealValueMessage.textContent = "Deal value saved.";
   });
 }
 

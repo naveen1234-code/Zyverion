@@ -5,25 +5,17 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const searchInput = document.getElementById("searchInput");
-const statusFilter = document.getElementById("statusFilter");
 const loginForm = document.getElementById("loginForm");
 const loginStatus = document.getElementById("loginStatus");
 const logoutBtn = document.getElementById("logoutBtn");
+
 const leadCount = document.getElementById("leadCount");
+const potentialRevenue = document.getElementById("potentialRevenue");
+const wonRevenue = document.getElementById("wonRevenue");
+
 const leadTable = document.getElementById("leadTable");
-
-if (searchInput) {
-  searchInput.addEventListener("input", () => {
-    loadLeads();
-  });
-}
-
-if (statusFilter) {
-  statusFilter.addEventListener("change", () => {
-    loadLeads();
-  });
-}
+const statusFilter = document.getElementById("statusFilter");
+const searchInput = document.getElementById("searchInput");
 
 async function requireAuth() {
   const { data, error } = await supabase.auth.getUser();
@@ -52,17 +44,20 @@ async function loadLeads() {
   const { data, error } = await query;
 
   if (error) {
-    console.error(error);
+    console.error("Load leads error:", error);
     leadTable.innerHTML = `<tr><td colspan="6">Failed to load leads.</td></tr>`;
+    if (leadCount) leadCount.textContent = "0";
+    if (potentialRevenue) potentialRevenue.textContent = "0";
+    if (wonRevenue) wonRevenue.textContent = "0";
     return;
   }
 
-let filteredData = data || [];
+  let filteredData = data || [];
 
   if (searchInput && searchInput.value.trim() !== "") {
     const term = searchInput.value.trim().toLowerCase();
 
-    filteredData = data.filter((lead) => {
+    filteredData = filteredData.filter((lead) => {
       const name = (lead.name || "").toLowerCase();
       const email = (lead.email || "").toLowerCase();
       const service = (lead.service_type || "").toLowerCase();
@@ -76,10 +71,34 @@ let filteredData = data || [];
   }
 
   if (leadCount) {
-    leadCount.textContent = filteredData.length;
+    leadCount.textContent = String(filteredData.length);
+  }
+
+  const potential = filteredData.reduce((sum, lead) => {
+    return sum + (Number(lead.deal_value) || 0);
+  }, 0);
+
+  const won = filteredData.reduce((sum, lead) => {
+    if ((lead.status || "").toLowerCase() === "won") {
+      return sum + (Number(lead.deal_value) || 0);
+    }
+    return sum;
+  }, 0);
+
+  if (potentialRevenue) {
+    potentialRevenue.textContent = potential.toLocaleString();
+  }
+
+  if (wonRevenue) {
+    wonRevenue.textContent = won.toLocaleString();
   }
 
   leadTable.innerHTML = "";
+
+  if (filteredData.length === 0) {
+    leadTable.innerHTML = `<tr><td colspan="6">No leads found.</td></tr>`;
+    return;
+  }
 
   filteredData.forEach((lead) => {
     const row = document.createElement("tr");
@@ -104,6 +123,18 @@ let filteredData = data || [];
     });
 
     leadTable.appendChild(row);
+  });
+}
+
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    loadLeads();
+  });
+}
+
+if (statusFilter) {
+  statusFilter.addEventListener("change", () => {
+    loadLeads();
   });
 }
 
