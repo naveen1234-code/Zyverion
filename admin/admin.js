@@ -44,17 +44,27 @@ async function loadLeads() {
   leadTable.innerHTML = "";
 
   data.forEach((lead) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${lead.name ?? ""}</td>
-      <td>${lead.email ?? ""}</td>
-      <td>${lead.service_type ?? ""}</td>
-      <td>${lead.budget_range ?? ""}</td>
-      <td>${lead.status ?? ""}</td>
-      <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
-    `;
-    leadTable.appendChild(row);
+
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td>${lead.name ?? ""}</td>
+    <td>${lead.email ?? ""}</td>
+    <td>${lead.service_type ?? ""}</td>
+    <td>${lead.budget_range ?? ""}</td>
+    <td>${lead.status ?? "new"}</td>
+    <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
+  `;
+
+  row.style.cursor = "pointer";
+
+  row.addEventListener("click", () => {
+    window.location.href = "/admin/lead.html?id=" + lead.id;
   });
+
+  leadTable.appendChild(row);
+
+});
 }
 
 if (loginForm) {
