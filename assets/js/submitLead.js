@@ -6,7 +6,12 @@ const projectFilesInput = document.getElementById("projectFiles");
 const FUNCTION_URL =
   "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead";
 
-const SUPABASE_KEY = "sb_publishable_GrvrURzXo72ECksExlKHpw_aVBmZnBD";
+/*
+  IMPORTANT:
+  Replace the value below with your LEGACY anon key
+  from Supabase Settings → API Keys → Legacy anon, service_role API keys
+*/
+const SUPABASE_LEGACY_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5ZGlxZW9tdXBzZmlhYXl4cGl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTg2NDgsImV4cCI6MjA4ODc5NDY0OH0.K5GA_Ib4ouUhJ_-kBv7DlP1cZGRfpmU1DwXc8KBBXJo";
 
 if (form) {
   form.addEventListener("submit", async (e) => {
@@ -61,8 +66,8 @@ if (form) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`
+          "apikey": SUPABASE_LEGACY_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_LEGACY_ANON_KEY}`
         },
         body: JSON.stringify(lead)
       });
