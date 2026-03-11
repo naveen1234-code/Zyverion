@@ -1,9 +1,10 @@
-import { supabase } from "./supabaseClient.js";
-
 const form = document.getElementById("contactForm");
 const submitBtn = document.getElementById("submitBtn");
 const formStatus = document.getElementById("formStatus");
 const projectFilesInput = document.getElementById("projectFiles");
+
+const FUNCTION_URL =
+  "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead";
 
 if (form) {
   form.addEventListener("submit", async (e) => {
@@ -40,32 +41,33 @@ if (form) {
       const formData = new FormData(form);
 
       const lead = {
-        name: formData.get("name")?.trim() || "",
-        business_name: formData.get("business")?.trim() || "",
-        email: formData.get("email")?.trim() || "",
-        phone: formData.get("phone")?.trim() || "",
-        service_type: formData.get("service")?.trim() || "",
-        budget_range: formData.get("budget_range") || "",
-        timeline: formData.get("timeline") || "",
-        message: formData.get("message")?.trim() || ""
+        name: (formData.get("name") || "").toString().trim(),
+        business_name: (formData.get("business") || "").toString().trim(),
+        email: (formData.get("email") || "").toString().trim(),
+        phone: (formData.get("phone") || "").toString().trim(),
+        service_type: (formData.get("service") || "").toString().trim(),
+        budget_range: (formData.get("budget_range") || "").toString(),
+        timeline: (formData.get("timeline") || "").toString(),
+        message: (formData.get("message") || "").toString().trim()
       };
 
-      const response = await fetch(
-  "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/submit-lead",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(lead),
-  }
-);
+      if (!lead.name || !lead.email || !lead.message) {
+        throw new Error("Please fill in all required fields.");
+      }
 
-const result = await response.json();
+      const response = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(lead)
+      });
 
-if (!response.ok) {
-  throw new Error(result.error || "Submission failed.");
-}
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Submission failed.");
+      }
 
       formStatus.textContent =
         "Your inquiry has been sent successfully. ZYVERION will review it and get back to you.";
