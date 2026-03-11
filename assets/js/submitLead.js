@@ -25,13 +25,18 @@ if (form) {
       message: formData.get("message")?.trim() || ""
     };
 
-    const { error } = await supabase
+    console.log("Submitting lead:", lead);
+
+    const { data, error } = await supabase
       .from("leads")
-      .insert([lead]);
+      .insert([lead])
+      .select();
+
+    console.log("Supabase data:", data);
+    console.log("Supabase error:", error);
 
     if (error) {
-      console.error("Supabase insert error:", error);
-      formStatus.textContent = "Something went wrong while sending your inquiry. Please try again.";
+      formStatus.textContent = `Error: ${error.message}`;
       submitBtn.disabled = false;
       submitBtn.textContent = "Send Inquiry";
       return;
