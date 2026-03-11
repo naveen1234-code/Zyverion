@@ -7,12 +7,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const params = new URLSearchParams(window.location.search);
 const leadId = params.get("id");
-const leadNotes = document.getElementById("leadNotes");
-const saveNotesBtn = document.getElementById("saveNotesBtn");
-const notesMessage = document.getElementById("notesMessage");
+
 const statusSelect = document.getElementById("statusSelect");
 const saveStatusBtn = document.getElementById("saveStatusBtn");
 const statusMessage = document.getElementById("statusMessage");
+
+const leadNotes = document.getElementById("leadNotes");
+const saveNotesBtn = document.getElementById("saveNotesBtn");
+const notesMessage = document.getElementById("notesMessage");
 
 async function requireAuth() {
   const { data, error } = await supabase.auth.getUser();
@@ -36,7 +38,7 @@ async function loadLead() {
     .single();
 
   if (leadError) {
-    console.error(leadError);
+    console.error("Lead load error:", leadError);
     return;
   }
 
@@ -50,12 +52,13 @@ async function loadLead() {
     ? new Date(lead.created_at).toLocaleString()
     : "";
   document.getElementById("leadMessage").textContent = lead.message ?? "";
-  if (leadNotes) {
-  leadNotes.value = lead.notes ?? "";
-}
 
   if (statusSelect) {
     statusSelect.value = lead.status ?? "new";
+  }
+
+  if (leadNotes) {
+    leadNotes.value = lead.notes ?? "";
   }
 
   const { data: files, error: filesError } = await supabase
@@ -67,7 +70,7 @@ async function loadLead() {
   const leadFiles = document.getElementById("leadFiles");
 
   if (filesError) {
-    console.error(filesError);
+    console.error("Files load error:", filesError);
     leadFiles.textContent = "Failed to load files.";
     return;
   }
@@ -108,7 +111,22 @@ if (saveStatusBtn) {
   saveStatusBtn.addEventListener("click", async () => {
     statusMessage.textContent = "Saving...";
 
-    if (saveNotesBtn) {
+    const { error } = await supabase
+      .from("leads")
+      .update({ status: statusSelect.value })
+      .eq("id", leadId);
+
+    if (error) {
+      console.error("Status save error:", error);
+      statusMessage.textContent = "Failed to save status.";
+      return;
+    }
+
+    statusMessage.textContent = "Status updated successfully.";
+  });
+}
+
+if (saveNotesBtn) {
   saveNotesBtn.addEventListener("click", async () => {
     notesMessage.textContent = "Saving...";
 
@@ -118,27 +136,12 @@ if (saveStatusBtn) {
       .eq("id", leadId);
 
     if (error) {
-      console.error(error);
+      console.error("Notes save error:", error);
       notesMessage.textContent = "Failed to save notes.";
       return;
     }
 
     notesMessage.textContent = "Notes updated successfully.";
-  });
-}
-
-    const { error } = await supabase
-      .from("leads")
-      .update({ status: statusSelect.value })
-      .eq("id", leadId);
-
-    if (error) {
-      console.error(error);
-      statusMessage.textContent = "Failed to save status.";
-      return;
-    }
-
-    statusMessage.textContent = "Status updated successfully.";
   });
 }
 
