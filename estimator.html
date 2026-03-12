@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Estimator | ZYVERION</title>
+  <link rel="stylesheet" href="style.css?v=20" />
+</head>
+<body>
+  <main class="container" style="padding:40px 16px;">
+    <div class="panel" style="max-width:800px; margin:0 auto;">
+      <h1>AI Project Estimator</h1>
+      <p class="card-text">Get a rough project estimate instantly.</p>
+
+      <form id="estimatorForm">
+        <label class="label">Business Type</label>
+        <input class="input" name="business_type" placeholder="Gym, restaurant, startup, personal brand" required />
+
+        <div style="height:12px;"></div>
+
+        <label class="label">Project Type</label>
+        <input class="input" name="project_type" placeholder="Business website, ecommerce, booking system" required />
+
+        <div style="height:12px;"></div>
+
+        <label class="label">Pages Needed</label>
+        <input class="input" name="pages_needed" placeholder="Home, About, Services, Contact..." required />
+
+        <div style="height:12px;"></div>
+
+        <label class="label">Features Needed</label>
+        <textarea class="textarea" name="features_needed" placeholder="Booking, payments, WhatsApp chat, admin dashboard"></textarea>
+
+        <div style="height:12px;"></div>
+
+        <label class="label">Preferred Timeline</label>
+        <input class="input" name="timeline" placeholder="ASAP, 2 weeks, 1 month" />
+
+        <div style="height:12px;"></div>
+
+        <label class="label">Budget Range</label>
+        <input class="input" name="budget" placeholder="LKR 50,000 - 100,000" />
+
+        <div style="height:12px;"></div>
+
+        <label class="label">Extra Notes</label>
+        <textarea class="textarea" name="notes" placeholder="Anything else about the project"></textarea>
+
+        <div class="btnrow">
+          <button class="btn primary" id="estimateBtn" type="submit">Estimate Project</button>
+        </div>
+
+        <p id="estimateStatus" class="card-text" style="margin-top:14px;"></p>
+      </form>
+
+      <div id="estimateResult" class="panel" style="margin-top:20px; display:none;">
+        <h2>Estimate Result</h2>
+        <p><strong>Summary:</strong> <span id="resultSummary"></span></p>
+        <p><strong>Estimated Price:</strong> <span id="resultPrice"></span></p>
+        <p><strong>Timeline:</strong> <span id="resultTimeline"></span></p>
+        <p><strong>Recommended Stack:</strong> <span id="resultStack"></span></p>
+        <p><strong>Confidence:</strong> <span id="resultConfidence"></span></p>
+        <p><strong>Notes:</strong> <span id="resultNotes"></span></p>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="assets/js/estimator.js?v=2"></script>
+</body>
+</html>
