@@ -15,6 +15,7 @@ if (form) {
     estimateStatus.textContent = "";
     estimateBtn.disabled = true;
     estimateBtn.textContent = "Estimating...";
+    document.body.classList.add("ai-estimating");
 
     try {
       const formData = new FormData(form);
@@ -54,13 +55,18 @@ if (form) {
       document.getElementById("resultNotes").textContent = result.notes || "";
 
       estimateResult.style.display = "block";
+      estimateResult.scrollIntoView({ behavior: "smooth", block: "start" });
       estimateStatus.textContent = "Estimate generated successfully.";
     } catch (error) {
       console.error(error);
       estimateStatus.textContent = error.message || "Something went wrong.";
     } finally {
+      document.body.classList.remove("ai-estimating");
+  estimateBtn.disabled = false;
+  estimateBtn.textContent = "Run AI Estimation";
       estimateBtn.disabled = false;
       estimateBtn.textContent = "Estimate Project";
+      document.body.classList.remove("ai-estimating");
     }
   });
 }

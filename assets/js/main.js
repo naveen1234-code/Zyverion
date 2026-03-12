@@ -1,24 +1,27 @@
 // =========================
-// ZYVERION FX - optimized
+// ZYVERION MAIN JS
+// Clean full version
 // =========================
 
 // Active nav
-(() => {
+(function () {
   const path = location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".menu a").forEach((a) => {
-    if (a.getAttribute("href") === path) a.classList.add("active");
+    if (a.getAttribute("href") === path) {
+      a.classList.add("active");
+    }
   });
 })();
 
-// Intro remove faster
+// Intro FX remove
 window.addEventListener("load", () => {
   setTimeout(() => {
     document.querySelectorAll("#introFX").forEach((el) => el.remove());
   }, 1200);
 });
 
-// Cursor glow only on desktop / fine pointer
-(() => {
+// Cursor glow - desktop only
+(function () {
   const glow = document.getElementById("cursorGlow");
   const canUseGlow =
     glow &&
@@ -32,18 +35,18 @@ window.addEventListener("load", () => {
   }
 
   let rafId = null;
-  let targetX = 0;
-  let targetY = 0;
+  let x = 0;
+  let y = 0;
 
-  const render = () => {
-    glow.style.left = `${targetX}px`;
-    glow.style.top = `${targetY}px`;
+  function render() {
+    glow.style.left = `${x}px`;
+    glow.style.top = `${y}px`;
     rafId = null;
-  };
+  }
 
   window.addEventListener("pointermove", (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
+    x = e.clientX;
+    y = e.clientY;
 
     if (!rafId) {
       rafId = requestAnimationFrame(render);
@@ -51,8 +54,8 @@ window.addEventListener("load", () => {
   });
 })();
 
-// Parallax tilt on hero card - desktop only
-(() => {
+// Hero tilt - desktop only
+(function () {
   const hero = document.querySelector(".hero-card");
   const canTilt =
     hero &&
@@ -65,7 +68,7 @@ window.addEventListener("load", () => {
   let rafId = null;
   let lastEvent = null;
 
-  const renderTilt = () => {
+  function render() {
     if (!lastEvent) {
       rafId = null;
       return;
@@ -74,7 +77,6 @@ window.addEventListener("load", () => {
     const rect = hero.getBoundingClientRect();
     const x = lastEvent.clientX - rect.left;
     const y = lastEvent.clientY - rect.top;
-
     const cx = rect.width / 2;
     const cy = rect.height / 2;
 
@@ -83,11 +85,11 @@ window.addEventListener("load", () => {
 
     hero.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
     rafId = null;
-  };
+  }
 
   hero.addEventListener("mousemove", (e) => {
     lastEvent = e;
-    if (!rafId) rafId = requestAnimationFrame(renderTilt);
+    if (!rafId) rafId = requestAnimationFrame(render);
   });
 
   hero.addEventListener("mouseleave", () => {
@@ -95,28 +97,30 @@ window.addEventListener("load", () => {
   });
 })();
 
-// Section reveal
-(() => {
+// Reveal sections on scroll
+(function () {
   const sections = document.querySelectorAll(".section");
   if (!sections.length) return;
 
-  const obs = new IntersectionObserver(
+  const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach((ent) => {
-        if (ent.isIntersecting) ent.target.classList.add("visible");
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
       });
     },
     {
       threshold: 0.12,
-      rootMargin: "0px 0px -40px 0px",
+      rootMargin: "0px 0px -40px 0px"
     }
   );
 
-  sections.forEach((s) => obs.observe(s));
+  sections.forEach((section) => observer.observe(section));
 })();
 
-// Button ripple effect
-(() => {
+// Button ripple
+(function () {
   document.querySelectorAll(".btn").forEach((btn) => {
     btn.addEventListener("pointerdown", function (e) {
       const circle = document.createElement("span");
@@ -129,112 +133,58 @@ window.addEventListener("load", () => {
       circle.style.top = `${e.clientY - rect.top - radius}px`;
       circle.classList.add("ripple");
 
-      const old = this.getElementsByClassName("ripple")[0];
-      if (old) old.remove();
+      const oldRipple = this.getElementsByClassName("ripple")[0];
+      if (oldRipple) oldRipple.remove();
 
       this.appendChild(circle);
     });
   });
 })();
 
-// Particle system - optimized
-(() => {
-  const canvas = document.getElementById("energyCanvas");
-  if (!canvas) return;
+// Metric counters
+(function () {
+  const counters = document.querySelectorAll(".metric-number");
+  if (!counters.length) return;
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isMobile = window.innerWidth <= 768;
+  function animateCounter(el) {
+    const target = Number(el.dataset.counter || 0);
+    const suffix = el.dataset.suffix || "";
+    const duration = 1200;
+    const startTime = performance.now();
 
-  if (reduceMotion) {
-    canvas.style.display = "none";
-    return;
-  }
+    function update(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(target * eased);
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+      el.textContent = `${value}${suffix}`;
 
-  let animationId = null;
-  let running = true;
-  let dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-
-  const resize = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-    canvas.width = Math.floor(window.innerWidth * dpr);
-    canvas.height = Math.floor(window.innerHeight * dpr);
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-
-  resize();
-  window.addEventListener("resize", resize);
-
-  const baseCount = isMobile ? 32 : 58;
-  const particles = Array.from({ length: baseCount }, () => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    vx: (Math.random() - 0.5) * (isMobile ? 0.18 : 0.24),
-    vy: (Math.random() - 0.5) * (isMobile ? 0.18 : 0.24),
-    r: Math.random() * 1.6 + 0.8,
-  }));
-
-  function loop() {
-    if (!running) return;
-
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0) p.x = window.innerWidth;
-      if (p.x > window.innerWidth) p.x = 0;
-      if (p.y < 0) p.y = window.innerHeight;
-      if (p.y > window.innerHeight) p.y = 0;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(0,247,255,0.50)";
-      ctx.fill();
-    }
-
-    const maxDist = isMobile ? 95 : 125;
-    const maxDistSq = maxDist * maxDist;
-
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i];
-        const b = particles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const d2 = dx * dx + dy * dy;
-
-        if (d2 < maxDistSq) {
-          const t = 1 - d2 / maxDistSq;
-          ctx.globalAlpha = 0.09 * t;
-          ctx.strokeStyle = "rgba(183,0,255,1)";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = `${target}${suffix}`;
       }
     }
 
-    animationId = requestAnimationFrame(loop);
+    requestAnimationFrame(update);
   }
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      running = false;
-      if (animationId) cancelAnimationFrame(animationId);
-    } else {
-      running = true;
-      loop();
-    }
-  });
+  const seen = new WeakSet();
 
-  loop();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        if (seen.has(entry.target)) return;
+
+        seen.add(entry.target);
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.35 }
+  );
+
+  counters.forEach((counter) => observer.observe(counter));
 })();
+

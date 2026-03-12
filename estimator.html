@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>AI Project Estimator | ZYVERION</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=31" />
+  <link rel="stylesheet" href="assets/css/style.css?v=37" />
 </head>
-<body>
+<body class="ai-estimator-page">
   <div id="introFX" class="intro-fx" aria-hidden="true">
     <div class="lightning l1"></div>
     <div class="lightning l2"></div>
@@ -14,7 +15,6 @@
     <div class="flash"></div>
   </div>
 
-  <canvas id="energyCanvas" aria-hidden="true"></canvas>
   <div id="cursorGlow" aria-hidden="true"></div>
 
   <header class="nav">
@@ -33,73 +33,272 @@
     </div>
   </header>
 
-  <main class="container" style="padding:40px 16px 90px;">
-    <section class="section visible">
-      <div class="section-head">
-        <span class="eyebrow">ZYVERION AI</span>
-        <h1 class="h1" style="font-size:44px">AI Project Estimator</h1>
-        <p>Get a rough project estimate instantly based on your business needs, features, timeline, and budget.</p>
+  <main class="container ai-console-main">
+    <section class="section visible ai-console-hero">
+      <div class="section-head ai-console-head">
+        <span class="eyebrow ai-system-badge">ZYVERION AI SYSTEM</span>
+        <div class="ai-reactor">
+    <div class="reactor-ring ring1"></div>
+    <div class="reactor-ring ring2"></div>
+    <div class="reactor-core"></div>
+</div>
+<div class="ai-neural-layer" aria-hidden="true">
+  <span class="ai-node n1"></span>
+  <span class="ai-node n2"></span>
+  <span class="ai-node n3"></span>
+  <span class="ai-node n4"></span>
+  <span class="ai-node n5"></span>
+
+  <span class="ai-link l1"></span>
+  <span class="ai-link l2"></span>
+  <span class="ai-link l3"></span>
+</div>
+
+<div class="ai-orbit" aria-hidden="true">
+  <span class="orbit-dot d1"></span>
+  <span class="orbit-dot d2"></span>
+  <span class="orbit-dot d3"></span>
+  <span class="orbit-dot d4"></span>
+</div>
+        <h1 class="h1 ai-console-title">AI Project Estimator</h1>
+        <p class="ai-console-subtitle">
+          Enter your project details and let ZYVERION AI analyze scope, complexity,
+          pricing range, timeline, and the best stack direction for your build.
+        </p>
+
+        <div class="ai-status-row">
+          <span class="ai-status-pill">Live estimation engine</span>
+          <span class="ai-status-pill">Business-grade analysis</span>
+          <span class="ai-status-pill">Premium web intelligence</span>
+        </div>
       </div>
     </section>
 
     <section class="section visible">
-      <div class="panel" style="max-width:860px; margin:0 auto; padding:24px;">
-        <form id="estimatorForm">
-          <label class="label">Business Type</label>
-          <input class="input" name="business_type" placeholder="Gym, restaurant, startup, personal brand" required />
+      <div class="ai-console-grid">
+        <aside class="panel ai-intelligence-panel">
+          <div class="ai-panel-glow"></div>
 
-          <div style="height:12px;"></div>
-
-          <label class="label">Project Type</label>
-          <input class="input" name="project_type" placeholder="Business website, ecommerce, booking system" required />
-
-          <div style="height:12px;"></div>
-
-          <label class="label">Pages Needed</label>
-          <input class="input" name="pages_needed" placeholder="Home, About, Services, Contact..." required />
-
-          <div style="height:12px;"></div>
-
-          <label class="label">Features Needed</label>
-          <textarea class="textarea" name="features_needed" placeholder="Booking, payments, WhatsApp chat, admin dashboard"></textarea>
-
-          <div style="height:12px;"></div>
-
-          <label class="label">Preferred Timeline</label>
-          <input class="input" name="timeline" placeholder="ASAP, 2 weeks, 1 month" />
-
-          <div style="height:12px;"></div>
-
-          <label class="label">Budget Range</label>
-          <input class="input" name="budget" placeholder="LKR 50,000 - 100,000" />
-
-          <div style="height:12px;"></div>
-
-          <label class="label">Extra Notes</label>
-          <textarea class="textarea" name="notes" placeholder="Anything else about the project"></textarea>
-
-          <div class="btnrow" style="margin-top:16px;">
-            <button class="btn primary" id="estimateBtn" type="submit">Estimate Project</button>
-            <a class="btn" href="contact.html">Start a Project</a>
+          <div class="ai-panel-top">
+            <span class="eyebrow">AI Intelligence Core</span>
+            <h2>Strategic project estimation for premium digital builds</h2>
+            <p class="card-text">
+              ZYVERION AI evaluates your business type, requested features, timeline,
+              and overall complexity to generate a cleaner project estimate with
+              smarter delivery direction.
+            </p>
           </div>
 
-          <p id="estimateStatus" class="card-text" style="margin-top:14px;"></p>
-        </form>
+          <div class="ai-scan-card">
+            <div class="ai-scan-line"></div>
+            <div class="ai-scan-grid">
+              <div class="ai-scan-item">
+                <span>Scope analysis</span>
+                <strong>ACTIVE</strong>
+              </div>
+              <div class="ai-scan-item">
+                <span>Timeline model</span>
+                <strong>READY</strong>
+              </div>
+              <div class="ai-scan-item">
+                <span>Cost engine</span>
+                <strong>LIVE</strong>
+              </div>
+              <div class="ai-scan-item">
+                <span>Stack logic</span>
+                <strong>ENABLED</strong>
+              </div>
+            </div>
+          </div>
 
-        <div id="estimateResult" class="panel" style="margin-top:20px; display:none; padding:20px;">
-          <h2 style="margin-top:0;">Estimate Result</h2>
-          <p><strong>Summary:</strong> <span id="resultSummary"></span></p>
-          <p><strong>Estimated Price:</strong> <span id="resultPrice"></span></p>
-          <p><strong>Timeline:</strong> <span id="resultTimeline"></span></p>
-          <p><strong>Recommended Stack:</strong> <span id="resultStack"></span></p>
-          <p><strong>Confidence:</strong> <span id="resultConfidence"></span></p>
-          <p><strong>Notes:</strong> <span id="resultNotes"></span></p>
+          <div class="ai-capability-block">
+            <h3>System capabilities</h3>
+            <div class="ai-chip-row">
+              <span class="ai-chip">Website Architecture</span>
+              <span class="ai-chip">Automation Systems</span>
+              <span class="ai-chip">AI Integrations</span>
+              <span class="ai-chip">Conversion UX</span>
+              <span class="ai-chip">Business Tools</span>
+              <span class="ai-chip">Growth Planning</span>
+            </div>
+          </div>
+
+          <div class="ai-note-box">
+            <span class="ai-note-label">Estimator Logic</span>
+            <p>
+              Best for business websites, premium landing pages, booking systems,
+              ecommerce builds, internal dashboards, and AI-ready service platforms.
+            </p>
+          </div>
+        </aside>
+
+        <div class="panel ai-form-panel">
+          <div class="ai-form-head">
+            <span class="eyebrow">Project Input Interface</span>
+            <h2>Run AI estimation</h2>
+            <p class="card-text">
+              Fill in the project requirements below. The more specific the details,
+              the better the estimate.
+            </p>
+          </div>
+
+          <form id="estimatorForm" class="ai-estimator-form">
+            <div class="ai-field-group">
+              <label class="label">Business Type</label>
+              <input class="input" name="business_type" placeholder="Gym, restaurant, startup, personal brand" required />
+            </div>
+
+            <div class="ai-field-group">
+              <label class="label">Project Type</label>
+              <input class="input" name="project_type" placeholder="Business website, ecommerce, booking system" required />
+            </div>
+
+            <div class="ai-field-group">
+              <label class="label">Pages Needed</label>
+              <input class="input" name="pages_needed" placeholder="Home, About, Services, Contact..." required />
+            </div>
+
+            <div class="ai-field-group">
+              <label class="label">Features Needed</label>
+              <textarea class="textarea" name="features_needed" placeholder="Booking, payments, WhatsApp chat, admin dashboard"></textarea>
+            </div>
+
+            <div class="ai-form-split">
+              <div class="ai-field-group">
+                <label class="label">Preferred Timeline</label>
+                <input class="input" name="timeline" placeholder="ASAP, 2 weeks, 1 month" />
+              </div>
+
+              <div class="ai-field-group">
+                <label class="label">Budget Range</label>
+                <input class="input" name="budget" placeholder="LKR 50,000 - 100,000" />
+              </div>
+            </div>
+
+            <div class="ai-field-group">
+              <label class="label">Extra Notes</label>
+              <textarea class="textarea" name="notes" placeholder="Any other business goals, systems, or special requests"></textarea>
+            </div>
+
+            <div class="btnrow ai-console-btnrow">
+              <button class="btn primary ai-run-btn" id="estimateBtn" type="submit">Run AI Estimation</button>
+              <a class="btn" href="contact.html">Start a Project</a>
+            </div>
+
+            <p id="estimateStatus" class="card-text ai-estimate-status"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section visible">
+      <div id="estimateResult" class="panel ai-result-panel" style="display:none;">
+        <div class="ai-result-head">
+          <span class="eyebrow">AI Estimation Result</span>
+          <h2>System Output</h2>
+          <p class="card-text">
+            This estimate is generated from your project inputs and intended as a strategic starting point.
+          </p>
+        </div>
+
+        <div class="ai-result-grid">
+          <div class="ai-result-main">
+            <div class="ai-result-block">
+              <span class="ai-result-label">Project Summary</span>
+              <p id="resultSummary" class="ai-result-summary"></p>
+            </div>
+
+            <div class="ai-highlight-grid">
+              <div class="ai-highlight-card">
+                <span class="ai-result-label">Estimated Price</span>
+                <strong id="resultPrice" class="ai-highlight-value"></strong>
+              </div>
+
+              <div class="ai-highlight-card">
+                <span class="ai-result-label">Timeline</span>
+                <strong id="resultTimeline" class="ai-highlight-value"></strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-result-side">
+            <div class="ai-side-card">
+              <span class="ai-result-label">Recommended Stack</span>
+              <p id="resultStack"></p>
+            </div>
+
+            <div class="ai-side-card">
+              <span class="ai-result-label">Confidence</span>
+              <p id="resultConfidence"></p>
+            </div>
+
+            <div class="ai-side-card">
+              <span class="ai-result-label">AI Analysis Notes</span>
+              <p id="resultNotes"></p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="assets/js/main.js?v=3"></script>
-  <script type="module" src="assets/js/estimator.js?v=2"></script>
+  <footer class="footer footer-upgrade">
+    <div class="container">
+      <div class="panel footer-card footer-pro">
+        <div class="footer-topline"></div>
+
+        <div class="footer-main">
+          <div class="footer-col footer-brand-col">
+            <div class="brand footer-brand">
+              <img class="brand-logo" src="assets/img/logo.png" alt="ZYVERION logo">
+              <span>ZYVERION</span>
+            </div>
+
+            <p class="footer-text">
+              Premium websites, smarter business systems, and AI-ready digital experiences for modern brands.
+            </p>
+
+            <div class="footer-badge-row">
+              <span class="footer-badge">AI-ready</span>
+              <span class="footer-badge">Modern UI</span>
+              <span class="footer-badge">Growth focused</span>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-title">Navigation</h4>
+            <div class="footer-links footer-links-stack">
+              <a href="index.html">Home</a>
+              <a href="about.html">About</a>
+              <a href="projects.html">Case Studies</a>
+              <a href="services.html">Solutions</a>
+              <a href="contact.html">Start a Project</a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4 class="footer-title">Contact</h4>
+            <div class="footer-links footer-links-stack">
+              <a href="https://wa.me/94775877952?text=Hi%20ZYVERION%2C%20I%20want%20to%20start%20a%20project." target="_blank" rel="noopener">WhatsApp Us</a>
+              <a href="mailto:sennnnaveen2@gmail.com">sennnnaveen2@gmail.com</a>
+              <a href="contact.html">Start a Project</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom footer-bottom-pro">
+          <span>© <span id="y"></span> ZYVERION. All rights reserved.</span>
+          <span class="footer-bottom-note">Built for modern brands</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const y = document.getElementById("y");
+    if (y) y.textContent = new Date().getFullYear();
+  </script>
+  <script src="assets/js/main.js?v=8"></script>
+  <script type="module" src="assets/js/estimator.js?v=3"></script>
 </body>
 </html>
