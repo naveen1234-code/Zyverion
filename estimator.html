@@ -4,67 +4,102 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Project Estimator | ZYVERION</title>
-  <link rel="stylesheet" href="assets/css/style.css?v=30" />
+  <link rel="stylesheet" href="assets/css/style.css?v=31" />
 </head>
 <body>
-  <main class="container" style="padding:40px 16px;">
-    <div class="panel" style="max-width:800px; margin:0 auto;">
-      <h1>AI Project Estimator</h1>
-      <p class="card-text">Get a rough project estimate instantly.</p>
+  <div id="introFX" class="intro-fx" aria-hidden="true">
+    <div class="lightning l1"></div>
+    <div class="lightning l2"></div>
+    <div class="lightning l3"></div>
+    <div class="flash"></div>
+  </div>
 
-      <form id="estimatorForm">
-        <label class="label">Business Type</label>
-        <input class="input" name="business_type" placeholder="Gym, restaurant, startup, personal brand" required />
+  <canvas id="energyCanvas" aria-hidden="true"></canvas>
+  <div id="cursorGlow" aria-hidden="true"></div>
 
-        <div style="height:12px;"></div>
-
-        <label class="label">Project Type</label>
-        <input class="input" name="project_type" placeholder="Business website, ecommerce, booking system" required />
-
-        <div style="height:12px;"></div>
-
-        <label class="label">Pages Needed</label>
-        <input class="input" name="pages_needed" placeholder="Home, About, Services, Contact..." required />
-
-        <div style="height:12px;"></div>
-
-        <label class="label">Features Needed</label>
-        <textarea class="textarea" name="features_needed" placeholder="Booking, payments, WhatsApp chat, admin dashboard"></textarea>
-
-        <div style="height:12px;"></div>
-
-        <label class="label">Preferred Timeline</label>
-        <input class="input" name="timeline" placeholder="ASAP, 2 weeks, 1 month" />
-
-        <div style="height:12px;"></div>
-
-        <label class="label">Budget Range</label>
-        <input class="input" name="budget" placeholder="LKR 50,000 - 100,000" />
-
-        <div style="height:12px;"></div>
-
-        <label class="label">Extra Notes</label>
-        <textarea class="textarea" name="notes" placeholder="Anything else about the project"></textarea>
-
-        <div class="btnrow" style="margin-top:16px;">
-          <button class="btn primary" id="estimateBtn" type="submit">Estimate Project</button>
-        </div>
-
-        <p id="estimateStatus" class="card-text" style="margin-top:14px;"></p>
-      </form>
-
-      <div id="estimateResult" class="panel" style="margin-top:20px; display:none;">
-        <h2>Estimate Result</h2>
-        <p><strong>Summary:</strong> <span id="resultSummary"></span></p>
-        <p><strong>Estimated Price:</strong> <span id="resultPrice"></span></p>
-        <p><strong>Timeline:</strong> <span id="resultTimeline"></span></p>
-        <p><strong>Recommended Stack:</strong> <span id="resultStack"></span></p>
-        <p><strong>Confidence:</strong> <span id="resultConfidence"></span></p>
-        <p><strong>Notes:</strong> <span id="resultNotes"></span></p>
-      </div>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="assets/img/logo.png" alt="ZYVERION logo">
+        <span>ZYVERION</span>
+      </a>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="projects.html">Case Studies</a>
+        <a href="services.html">Solutions</a>
+        <a href="contact.html">Contact</a>
+      </nav>
     </div>
+  </header>
+
+  <main class="container" style="padding:40px 16px 90px;">
+    <section class="section visible">
+      <div class="section-head">
+        <span class="eyebrow">ZYVERION AI</span>
+        <h1 class="h1" style="font-size:44px">AI Project Estimator</h1>
+        <p>Get a rough project estimate instantly based on your business needs, features, timeline, and budget.</p>
+      </div>
+    </section>
+
+    <section class="section visible">
+      <div class="panel" style="max-width:860px; margin:0 auto; padding:24px;">
+        <form id="estimatorForm">
+          <label class="label">Business Type</label>
+          <input class="input" name="business_type" placeholder="Gym, restaurant, startup, personal brand" required />
+
+          <div style="height:12px;"></div>
+
+          <label class="label">Project Type</label>
+          <input class="input" name="project_type" placeholder="Business website, ecommerce, booking system" required />
+
+          <div style="height:12px;"></div>
+
+          <label class="label">Pages Needed</label>
+          <input class="input" name="pages_needed" placeholder="Home, About, Services, Contact..." required />
+
+          <div style="height:12px;"></div>
+
+          <label class="label">Features Needed</label>
+          <textarea class="textarea" name="features_needed" placeholder="Booking, payments, WhatsApp chat, admin dashboard"></textarea>
+
+          <div style="height:12px;"></div>
+
+          <label class="label">Preferred Timeline</label>
+          <input class="input" name="timeline" placeholder="ASAP, 2 weeks, 1 month" />
+
+          <div style="height:12px;"></div>
+
+          <label class="label">Budget Range</label>
+          <input class="input" name="budget" placeholder="LKR 50,000 - 100,000" />
+
+          <div style="height:12px;"></div>
+
+          <label class="label">Extra Notes</label>
+          <textarea class="textarea" name="notes" placeholder="Anything else about the project"></textarea>
+
+          <div class="btnrow" style="margin-top:16px;">
+            <button class="btn primary" id="estimateBtn" type="submit">Estimate Project</button>
+            <a class="btn" href="contact.html">Start a Project</a>
+          </div>
+
+          <p id="estimateStatus" class="card-text" style="margin-top:14px;"></p>
+        </form>
+
+        <div id="estimateResult" class="panel" style="margin-top:20px; display:none; padding:20px;">
+          <h2 style="margin-top:0;">Estimate Result</h2>
+          <p><strong>Summary:</strong> <span id="resultSummary"></span></p>
+          <p><strong>Estimated Price:</strong> <span id="resultPrice"></span></p>
+          <p><strong>Timeline:</strong> <span id="resultTimeline"></span></p>
+          <p><strong>Recommended Stack:</strong> <span id="resultStack"></span></p>
+          <p><strong>Confidence:</strong> <span id="resultConfidence"></span></p>
+          <p><strong>Notes:</strong> <span id="resultNotes"></span></p>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="assets/js/estimator.js?v=1"></script>
+  <script src="assets/js/main.js?v=3"></script>
+  <script type="module" src="assets/js/estimator.js?v=2"></script>
 </body>
 </html>

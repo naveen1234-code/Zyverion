@@ -1,108 +1,129 @@
 const launcher = document.getElementById("aiLauncher");
 const overlay = document.getElementById("aiWelcomeOverlay");
 
-if (!launcher) return;
+if (launcher) {
+  let isDragging = false;
+  let moved = false;
+  let pointerStartX = 0;
+  let pointerStartY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+  let currentLeft = 0;
+  let currentTop = 0;
+  let rafId = null;
 
-let isDragging = false;
-let moved = false;
+  const isMobile = () => window.innerWidth <= 768;
+  const getMargin = () => (isMobile() ? 14 : 22);
 
-let startX = 0;
-let startY = 0;
-
-let currentX = 0;
-let currentY = 0;
-
-const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-
-function setPosition(x, y) {
-  const maxX = window.innerWidth - launcher.offsetWidth;
-  const maxY = window.innerHeight - launcher.offsetHeight;
-
-  currentX = clamp(x, 0, maxX);
-  currentY = clamp(y, 0, maxY);
-
-  launcher.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-}
-
-function startDrag(x, y) {
-  isDragging = true;
-  moved = false;
-
-  startX = x - currentX;
-  startY = y - currentY;
-
-  launcher.classList.add("dragging");
-}
-
-function drag(x, y) {
-  if (!isDragging) return;
-
-  const newX = x - startX;
-  const newY = y - startY;
-
-  if (Math.abs(newX - currentX) > 3 || Math.abs(newY - currentY) > 3) {
-    moved = true;
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
   }
 
-  requestAnimationFrame(() => {
-    setPosition(newX, newY);
+  function renderPosition() {
+    const margin = getMargin();
+    const maxLeft = Math.max(margin, window.innerWidth - launcher.offsetWidth - margin);
+    const maxTop = Math.max(margin, window.innerHeight - launcher.offsetHeight - margin);
+
+    currentLeft = clamp(currentLeft, margin, maxLeft);
+    currentTop = clamp(currentTop, margin, maxTop);
+
+    launcher.style.transform = `translate3d(${currentLeft}px, ${currentTop}px, 0)`;
+    rafId = null;
+  }
+
+  function queueRender() {
+    if (!rafId) rafId = requestAnimationFrame(renderPosition);
+  }
+
+  function setDefaultPosition() {
+    const margin = getMargin();
+    currentLeft = window.innerWidth - launcher.offsetWidth - margin;
+    currentTop = window.innerHeight - launcher.offsetHeight - margin;
+    queueRender();
+  }
+
+  function startDrag(clientX, clientY) {
+    isDragging = true;
+    moved = false;
+    pointerStartX = clientX;
+    pointerStartY = clientY;
+    startLeft = currentLeft;
+    startTop = currentTop;
+    launcher.classList.add("dragging");
+  }
+
+  function moveDrag(clientX, clientY) {
+    if (!isDragging) return;
+
+    const dx = clientX - pointerStartX;
+    const dy = clientY - pointerStartY;
+
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      moved = true;
+    }
+
+    currentLeft = startLeft + dx;
+    currentTop = startTop + dy;
+    queueRender();
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    launcher.classList.remove("dragging");
+  }
+
+  function openEstimator() {
+    if (overlay) {
+      overlay.classList.add("active");
+      setTimeout(() => {
+        window.location.href = "estimator.html";
+      }, 850);
+    } else {
+      window.location.href = "estimator.html";
+    }
+  }
+
+  window.addEventListener("load", setDefaultPosition);
+  window.addEventListener("resize", setDefaultPosition);
+
+  launcher.addEventListener("mousedown", (e) => {
+    startDrag(e.clientX, e.clientY);
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    moveDrag(e.clientX, e.clientY);
+  });
+
+  window.addEventListener("mouseup", endDrag);
+
+  launcher.addEventListener(
+    "touchstart",
+    (e) => {
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!isDragging) return;
+      const t = e.touches[0];
+      moveDrag(t.clientX, t.clientY);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("touchend", endDrag);
+
+  launcher.addEventListener("click", (e) => {
+    if (moved) {
+      e.preventDefault();
+      moved = false;
+      return;
+    }
+    openEstimator();
   });
 }
-
-function endDrag() {
-  isDragging = false;
-  launcher.classList.remove("dragging");
-}
-
-function openEstimator() {
-  if (!overlay) {
-    window.location.href = "estimator.html";
-    return;
-  }
-
-  overlay.classList.add("active");
-
-  setTimeout(() => {
-    window.location.href = "estimator.html";
-  }, 1200);
-}
-
-/* Mouse */
-launcher.addEventListener("mousedown", e => {
-  startDrag(e.clientX, e.clientY);
-});
-
-window.addEventListener("mousemove", e => {
-  drag(e.clientX, e.clientY);
-});
-
-window.addEventListener("mouseup", endDrag);
-
-/* Touch */
-launcher.addEventListener("touchstart", e => {
-  const t = e.touches[0];
-  startDrag(t.clientX, t.clientY);
-}, { passive: true });
-
-window.addEventListener("touchmove", e => {
-  const t = e.touches[0];
-  drag(t.clientX, t.clientY);
-}, { passive: true });
-
-window.addEventListener("touchend", endDrag);
-
-/* Click */
-launcher.addEventListener("click", e => {
-  if (moved) {
-    moved = false;
-    e.preventDefault();
-    return;
-  }
-
-  openEstimator();
-});
-
-/* Resize fix */
-window.addEventListener("resize", () => {
-  setPosition(currentX, currentY);
-});
