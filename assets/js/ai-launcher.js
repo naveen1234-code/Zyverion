@@ -1,107 +1,108 @@
 const launcher = document.getElementById("aiLauncher");
 const overlay = document.getElementById("aiWelcomeOverlay");
 
-if (launcher) {
-  let isDragging = false;
-  let moved = false;
-  let startX = 0;
-  let startY = 0;
-  let originLeft = 0;
-  let originTop = 0;
+if (!launcher) return;
 
-  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+let isDragging = false;
+let moved = false;
 
-  const setLauncherPosition = (left, top) => {
-    const maxLeft = window.innerWidth - launcher.offsetWidth;
-    const maxTop = window.innerHeight - launcher.offsetHeight;
+let startX = 0;
+let startY = 0;
 
-    launcher.style.left = `${clamp(left, 0, maxLeft)}px`;
-    launcher.style.top = `${clamp(top, 0, maxTop)}px`;
-    launcher.style.right = "auto";
-    launcher.style.bottom = "auto";
-  };
+let currentX = 0;
+let currentY = 0;
 
-  const startDrag = (clientX, clientY) => {
-    const rect = launcher.getBoundingClientRect();
-    isDragging = true;
-    moved = false;
-    startX = clientX;
-    startY = clientY;
-    originLeft = rect.left;
-    originTop = rect.top;
-    launcher.classList.add("dragging");
-  };
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
-  const moveDrag = (clientX, clientY) => {
-    if (!isDragging) return;
+function setPosition(x, y) {
+  const maxX = window.innerWidth - launcher.offsetWidth;
+  const maxY = window.innerHeight - launcher.offsetHeight;
 
-    const dx = clientX - startX;
-    const dy = clientY - startY;
+  currentX = clamp(x, 0, maxX);
+  currentY = clamp(y, 0, maxY);
 
-    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
-      moved = true;
-    }
+  launcher.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+}
 
-    setLauncherPosition(originLeft + dx, originTop + dy);
-  };
+function startDrag(x, y) {
+  isDragging = true;
+  moved = false;
 
-  const endDrag = () => {
-    isDragging = false;
-    launcher.classList.remove("dragging");
-  };
+  startX = x - currentX;
+  startY = y - currentY;
 
-  const openEstimator = () => {
-    if (!overlay) {
-      window.location.href = "estimator.html";
-      return;
-    }
+  launcher.classList.add("dragging");
+}
 
-    overlay.classList.add("active");
+function drag(x, y) {
+  if (!isDragging) return;
 
-    setTimeout(() => {
-      window.location.href = "estimator.html";
-    }, 1200);
-  };
+  const newX = x - startX;
+  const newY = y - startY;
 
-  launcher.addEventListener("mousedown", (e) => {
-    startDrag(e.clientX, e.clientY);
-  });
+  if (Math.abs(newX - currentX) > 3 || Math.abs(newY - currentY) > 3) {
+    moved = true;
+  }
 
-  window.addEventListener("mousemove", (e) => {
-    moveDrag(e.clientX, e.clientY);
-  });
-
-  window.addEventListener("mouseup", () => {
-    endDrag();
-  });
-
-  launcher.addEventListener("touchstart", (e) => {
-    const touch = e.touches[0];
-    startDrag(touch.clientX, touch.clientY);
-  }, { passive: true });
-
-  window.addEventListener("touchmove", (e) => {
-    if (!isDragging) return;
-    const touch = e.touches[0];
-    moveDrag(touch.clientX, touch.clientY);
-  }, { passive: true });
-
-  window.addEventListener("touchend", () => {
-    endDrag();
-  });
-
-  launcher.addEventListener("click", (e) => {
-    if (moved) {
-      e.preventDefault();
-      moved = false;
-      return;
-    }
-
-    openEstimator();
-  });
-
-  window.addEventListener("resize", () => {
-    const rect = launcher.getBoundingClientRect();
-    setLauncherPosition(rect.left, rect.top);
+  requestAnimationFrame(() => {
+    setPosition(newX, newY);
   });
 }
+
+function endDrag() {
+  isDragging = false;
+  launcher.classList.remove("dragging");
+}
+
+function openEstimator() {
+  if (!overlay) {
+    window.location.href = "estimator.html";
+    return;
+  }
+
+  overlay.classList.add("active");
+
+  setTimeout(() => {
+    window.location.href = "estimator.html";
+  }, 1200);
+}
+
+/* Mouse */
+launcher.addEventListener("mousedown", e => {
+  startDrag(e.clientX, e.clientY);
+});
+
+window.addEventListener("mousemove", e => {
+  drag(e.clientX, e.clientY);
+});
+
+window.addEventListener("mouseup", endDrag);
+
+/* Touch */
+launcher.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  startDrag(t.clientX, t.clientY);
+}, { passive: true });
+
+window.addEventListener("touchmove", e => {
+  const t = e.touches[0];
+  drag(t.clientX, t.clientY);
+}, { passive: true });
+
+window.addEventListener("touchend", endDrag);
+
+/* Click */
+launcher.addEventListener("click", e => {
+  if (moved) {
+    moved = false;
+    e.preventDefault();
+    return;
+  }
+
+  openEstimator();
+});
+
+/* Resize fix */
+window.addEventListener("resize", () => {
+  setPosition(currentX, currentY);
+});
