@@ -6,9 +6,6 @@ const estimateResult = document.getElementById("estimateResult");
 const FUNCTION_URL =
   "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/ai-estimator";
 
-/*
-  Use your LEGACY anon key here for Edge Function auth.
-*/
 const SUPABASE_LEGACY_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5ZGlxZW9tdXBzZmlhYXl4cGl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTg2NDgsImV4cCI6MjA4ODc5NDY0OH0.K5GA_Ib4ouUhJ_-kBv7DlP1cZGRfpmU1DwXc8KBBXJo";
 
 if (form) {
@@ -49,7 +46,8 @@ if (form) {
       }
 
       document.getElementById("resultSummary").textContent = result.summary || "";
-      document.getElementById("resultPrice").textContent = `LKR ${Number(result.price_min || 0).toLocaleString()} - LKR ${Number(result.price_max || 0).toLocaleString()}`;
+      document.getElementById("resultPrice").textContent =
+        `LKR ${Number(result.price_min || 0).toLocaleString()} - LKR ${Number(result.price_max || 0).toLocaleString()}`;
       document.getElementById("resultTimeline").textContent = result.timeline || "";
       document.getElementById("resultStack").textContent = result.recommended_stack || "";
       document.getElementById("resultConfidence").textContent = result.confidence || "";
