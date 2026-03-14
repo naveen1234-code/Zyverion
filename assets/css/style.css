@@ -2359,3 +2359,11 @@ body.ai-estimating .ai-link{
     animation:none !important;
   }
 }
+.hp-field{
+  position:absolute !important;
+  left:-9999px !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  height:0 !important;
+  overflow:hidden !important;
+}
