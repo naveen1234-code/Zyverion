@@ -2761,3 +2761,39 @@ body.ai-estimating .ai-link{
 .popup-whatsapp-btn:hover{
   transform:translateY(-2px);
 }
+.ai-feature-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.ai-check-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  color:#e6eef9;
+  cursor:pointer;
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.ai-check-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(124,58,237,.35);
+  background:rgba(255,255,255,.05);
+}
+
+.ai-check-card input{
+  accent-color:#7c3aed;
+  width:16px;
+  height:16px;
+}
+
+@media (max-width: 640px){
+  .ai-feature-grid{
+    grid-template-columns:1fr;
+  }
+}

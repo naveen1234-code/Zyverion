@@ -143,50 +143,116 @@
           </div>
 
           <form id="estimatorForm" class="ai-estimator-form">
-            <div class="ai-field-group">
-              <label class="label">Business Type</label>
-              <input class="input" name="business_type" placeholder="Gym, restaurant, startup, personal brand" required />
-            </div>
+  <div class="ai-form-split">
+    <div class="ai-field-group">
+      <label class="label">Business Location</label>
+      <select class="input" name="location" required>
+        <option value="">Select location</option>
+        <option value="sri_lanka">Sri Lanka</option>
+        <option value="international">International</option>
+      </select>
+    </div>
 
-            <div class="ai-field-group">
-              <label class="label">Project Type</label>
-              <input class="input" name="project_type" placeholder="Business website, ecommerce, booking system" required />
-            </div>
+    <div class="ai-field-group">
+      <label class="label">Project Type</label>
+      <select class="input" name="websiteType" required>
+        <option value="">Select project type</option>
+        <option value="landing">Landing Page</option>
+        <option value="business">Business Website</option>
+        <option value="ecommerce">E-commerce Website</option>
+        <option value="booking">Booking Website / System</option>
+        <option value="custom_system">Custom Web System</option>
+      </select>
+    </div>
+  </div>
 
-            <div class="ai-field-group">
-              <label class="label">Pages Needed</label>
-              <input class="input" name="pages_needed" placeholder="Home, About, Services, Contact..." required />
-            </div>
+  <div class="ai-form-split">
+    <div class="ai-field-group">
+      <label class="label">Number of Pages</label>
+      <select class="input" name="pages" required>
+        <option value="">Select page range</option>
+        <option value="1-3">1 - 3 pages</option>
+        <option value="4-6">4 - 6 pages</option>
+        <option value="7-10">7 - 10 pages</option>
+        <option value="10+">10+ pages</option>
+      </select>
+    </div>
 
-            <div class="ai-field-group">
-              <label class="label">Features Needed</label>
-              <textarea class="textarea" name="features_needed" placeholder="Booking, payments, WhatsApp chat, admin dashboard"></textarea>
-            </div>
+    <div class="ai-field-group">
+      <label class="label">AI Level</label>
+      <select class="input" name="aiLevel">
+        <option value="">No AI feature</option>
+        <option value="chatbot">Smart Chatbot</option>
+        <option value="assistant">Business AI Assistant</option>
+        <option value="custom_ai">Custom AI System</option>
+      </select>
+    </div>
+  </div>
 
-            <div class="ai-form-split">
-              <div class="ai-field-group">
-                <label class="label">Preferred Timeline</label>
-                <input class="input" name="timeline" placeholder="ASAP, 2 weeks, 1 month" />
-              </div>
+  <div class="ai-field-group">
+    <label class="label">Features Needed</label>
+    <div class="ai-feature-grid">
+      <label class="ai-check-card">
+        <input type="checkbox" name="features" value="contact" />
+        <span>Contact System</span>
+      </label>
 
-              <div class="ai-field-group">
-                <label class="label">Budget Range</label>
-                <input class="input" name="budget" placeholder="LKR 50,000 - 100,000" />
-              </div>
-            </div>
+      <label class="ai-check-card">
+        <input type="checkbox" name="features" value="booking_system" />
+        <span>Booking System</span>
+      </label>
 
-            <div class="ai-field-group">
-              <label class="label">Extra Notes</label>
-              <textarea class="textarea" name="notes" placeholder="Any other business goals, systems, or special requests"></textarea>
-            </div>
+      <label class="ai-check-card">
+        <input type="checkbox" name="features" value="payment_gateway" />
+        <span>Payment Gateway</span>
+      </label>
 
-            <div class="btnrow ai-console-btnrow">
-              <button class="btn primary ai-run-btn" id="estimateBtn" type="submit">Run AI Estimation</button>
-              <a class="btn" href="contact.html">Start a Project</a>
-            </div>
+      <label class="ai-check-card">
+        <input type="checkbox" name="features" value="admin_dashboard" />
+        <span>Admin Dashboard</span>
+      </label>
 
-            <p id="estimateStatus" class="card-text ai-estimate-status"></p>
-          </form>
+      <label class="ai-check-card">
+        <input type="checkbox" name="features" value="seo_setup" />
+        <span>SEO Setup</span>
+      </label>
+
+      <label class="ai-check-card">
+        <input type="checkbox" name="features" value="analytics" />
+        <span>Analytics</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="ai-form-split">
+    <div class="ai-field-group">
+      <label class="label">Timeline</label>
+      <select class="input" name="timeline" required>
+        <option value="">Select timeline</option>
+        <option value="normal">Normal</option>
+        <option value="fast">Fast</option>
+        <option value="urgent">Urgent</option>
+      </select>
+    </div>
+
+    <div class="ai-field-group">
+      <label class="label">Expected Budget (Optional)</label>
+      <input class="input" name="budgetHint" placeholder="Optional only" />
+    </div>
+  </div>
+
+  <div class="ai-field-group">
+    <label class="label">Extra Notes</label>
+    <textarea class="textarea" name="notes" placeholder="Any special requirements, style ideas, or extra business needs"></textarea>
+  </div>
+
+  <div class="btnrow ai-console-btnrow">
+    <button class="btn primary ai-run-btn" id="estimateBtn" type="submit">Run AI Estimation</button>
+    <a class="btn" href="contact.html">Start a Project</a>
+  </div>
+
+  <p id="estimateStatus" class="card-text ai-estimate-status"></p>
+</form>
         </div>
       </div>
     </section>
