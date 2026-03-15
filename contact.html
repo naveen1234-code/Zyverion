@@ -300,11 +300,12 @@
     </div>
   </div>
 
-  <!-- SUCCESS POPUP -->
+  <!-- ZYVERION SUCCESS POPUP -->
 <div id="successPopup" class="popup-overlay">
+
   <div class="popup-box premium-popup">
-    <div class="popup-glow popup-glow-1"></div>
-    <div class="popup-glow popup-glow-2"></div>
+
+    <canvas id="popupConfettiCanvas" class="popup-confetti-canvas"></canvas>
 
     <div class="popup-icon-wrap">
       <div class="popup-icon">✓</div>
@@ -315,24 +316,85 @@
     <h2>Inquiry Sent Successfully</h2>
 
     <p class="popup-text">
-      Your project request has been received successfully.
+      Your project request has been received.
     </p>
 
+    <!-- PROJECT CODE -->
     <div class="popup-code-card">
-      <span class="popup-code-label">Reference Code</span>
+
+      <span class="popup-code-label">Project Reference Code</span>
+
       <div class="popup-code-row">
+
         <span id="popupProjectCode" class="popup-code-value"></span>
-        <button type="button" id="copyProjectCodeBtn" class="copy-code-btn">
+
+        <button id="copyProjectCodeBtn" class="copy-code-btn">
           Copy
         </button>
+
       </div>
+
+    </div>
+
+    <!-- MINI RECEIPT PREVIEW -->
+    <div class="popup-mini-receipt">
+
+      <div class="receipt-row">
+        <span>Client</span>
+        <span id="receiptClientName"></span>
+      </div>
+
+      <div class="receipt-row">
+        <span>Email</span>
+        <span id="receiptClientEmail"></span>
+      </div>
+
+      <div class="receipt-row">
+        <span>Service</span>
+        <span id="receiptService"></span>
+      </div>
+
+      <div class="receipt-row">
+        <span>Status</span>
+        <span class="receipt-status">Inquiry Received</span>
+      </div>
+
     </div>
 
     <p class="popup-note">
-      Save this code and use it on your physical agreement, quotation, and future project documents.
+      Save your reference code for your agreement and future communication.
+    </p>
+
+    <!-- ACTION BUTTONS -->
+    <div class="popup-actions">
+
+      <button id="downloadReceiptBtn" class="popup-receipt-btn">
+        Download PDF Receipt
+      </button>
+
+      <button id="whatsappProjectBtn" class="popup-whatsapp-btn">
+        WhatsApp Project
+      </button>
+
+      <button id="closePopupBtn" class="popup-close-btn">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+    <p class="popup-note">
+      Save this code and use it on your physical agreement, quotation, invoice, and future project documents.
     </p>
 
     <div class="popup-actions">
+      <button type="button" id="downloadReceiptBtn" class="popup-receipt-btn">
+        Download Project Receipt
+      </button>
+
       <button type="button" id="closePopupBtn" class="popup-close-btn">
         Close
       </button>
