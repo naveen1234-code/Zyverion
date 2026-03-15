@@ -91,9 +91,9 @@ if (form) {
       }
 
       if (formStatus) {
-        formStatus.textContent =
-          "Your inquiry has been sent successfully. ZYVERION will review it and get back to you.";
-      }
+  formStatus.textContent =
+    `Your inquiry has been sent successfully. Reference Code: ${result.project_code}`;
+}
 
       form.reset();
       setFormLoadedTime();
