@@ -91,8 +91,19 @@ if (form) {
       }
 
       if (formStatus) {
-  formStatus.textContent =
-    `Your inquiry has been sent successfully. Reference Code: ${result.project_code}`;
+  const popup = document.getElementById("successPopup");
+const popupCode = document.getElementById("popupProjectCode");
+const copyProjectCodeBtn = document.getElementById("copyProjectCodeBtn");
+
+if (popup && popupCode) {
+  popupCode.textContent = result.project_code;
+  popup.style.display = "flex";
+
+  if (copyProjectCodeBtn) {
+    copyProjectCodeBtn.textContent = "Copy";
+    copyProjectCodeBtn.classList.remove("copied");
+  }
+}
 }
 
       form.reset();
@@ -112,5 +123,54 @@ if (form) {
         submitBtn.textContent = "Send Inquiry";
       }
     }
+    const closePopupBtn = document.getElementById("closePopupBtn");
+const successPopup = document.getElementById("successPopup");
+const copyProjectCodeBtn = document.getElementById("copyProjectCodeBtn");
+const popupProjectCode = document.getElementById("popupProjectCode");
+
+/* CLOSE BUTTON */
+if (closePopupBtn && successPopup) {
+  closePopupBtn.addEventListener("click", () => {
+    successPopup.style.display = "none";
+  });
+}
+
+/* CLICK OUTSIDE TO CLOSE */
+if (successPopup) {
+  successPopup.addEventListener("click", (e) => {
+    if (e.target === successPopup) {
+      successPopup.style.display = "none";
+    }
+  });
+}
+
+/* COPY CODE BUTTON */
+if (copyProjectCodeBtn && popupProjectCode) {
+  copyProjectCodeBtn.addEventListener("click", async () => {
+
+    try {
+
+      await navigator.clipboard.writeText(popupProjectCode.textContent || "");
+
+      copyProjectCodeBtn.textContent = "Copied!";
+      copyProjectCodeBtn.classList.add("copied");
+
+      setTimeout(() => {
+        copyProjectCodeBtn.textContent = "Copy";
+        copyProjectCodeBtn.classList.remove("copied");
+      }, 2000);
+
+    } catch (err) {
+
+      copyProjectCodeBtn.textContent = "Failed";
+
+      setTimeout(() => {
+        copyProjectCodeBtn.textContent = "Copy";
+      }, 2000);
+
+    }
+
+  });
+}
   });
 }

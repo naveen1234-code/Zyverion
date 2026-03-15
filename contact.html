@@ -300,6 +300,46 @@
     </div>
   </div>
 
+  <!-- SUCCESS POPUP -->
+<div id="successPopup" class="popup-overlay">
+  <div class="popup-box premium-popup">
+    <div class="popup-glow popup-glow-1"></div>
+    <div class="popup-glow popup-glow-2"></div>
+
+    <div class="popup-icon-wrap">
+      <div class="popup-icon">✓</div>
+    </div>
+
+    <span class="popup-badge">ZYVERION SYSTEM</span>
+
+    <h2>Inquiry Sent Successfully</h2>
+
+    <p class="popup-text">
+      Your project request has been received successfully.
+    </p>
+
+    <div class="popup-code-card">
+      <span class="popup-code-label">Reference Code</span>
+      <div class="popup-code-row">
+        <span id="popupProjectCode" class="popup-code-value"></span>
+        <button type="button" id="copyProjectCodeBtn" class="copy-code-btn">
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <p class="popup-note">
+      Save this code and use it on your physical agreement, quotation, and future project documents.
+    </p>
+
+    <div class="popup-actions">
+      <button type="button" id="closePopupBtn" class="popup-close-btn">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
   <script>
     const y = document.getElementById("y");
     if (y) y.textContent = new Date().getFullYear();
@@ -307,5 +347,8 @@
   <script src="assets/js/main.js?v=8"></script>
   <script type="module" src="assets/js/submitLead.js?v=12"></script>
   <script src="assets/js/ai-launcher.js?v=4"></script>
+
+
+  
 </body>
 </html>
