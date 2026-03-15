@@ -146,5 +146,20 @@ if (form) {
       estimateBtn.disabled = false;
       estimateBtn.textContent = "Run AI Estimation";
     }
+    const startProjectBtn = document.getElementById("startProjectBtn");
+const leadPopup = document.getElementById("leadMagnetPopup");
+const closeLeadPopup = document.getElementById("closeLeadPopup");
+
+if(startProjectBtn){
+  startProjectBtn.addEventListener("click",()=>{
+    leadPopup.style.display="flex";
+  });
+}
+
+if(closeLeadPopup){
+  closeLeadPopup.addEventListener("click",()=>{
+    leadPopup.style.display="none";
+  });
+}
   });
 }

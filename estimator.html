@@ -248,7 +248,7 @@
 
   <div class="btnrow ai-console-btnrow">
     <button class="btn primary ai-run-btn" id="estimateBtn" type="submit">Run AI Estimation</button>
-    <a class="btn" href="contact.html">Start a Project</a>
+    <button id="startProjectBtn" type="button">Start a Project</button>
   </div>
 
   <p id="estimateStatus" class="card-text ai-estimate-status"></p>
@@ -307,6 +307,43 @@
       </div>
     </section>
   </main>
+
+  <div id="leadMagnetPopup" class="lead-popup">
+  <div class="lead-popup-card">
+
+    <h2>Unlock Your Full Project Report</h2>
+
+    <p>
+      Get your detailed project proposal including pricing breakdown,
+      development roadmap, and recommended architecture.
+    </p>
+
+    <form id="leadMagnetForm">
+
+      <input
+        type="text"
+        id="leadName"
+        placeholder="Your name"
+        required
+      />
+
+      <input
+        type="email"
+        id="leadEmail"
+        placeholder="Your email"
+        required
+      />
+
+      <button type="submit" id="downloadReportBtn">
+        Download Full Report
+      </button>
+
+    </form>
+
+    <button id="closeLeadPopup" class="popup-close">Close</button>
+
+  </div>
+</div>
 
   <footer class="footer footer-upgrade">
     <div class="container">

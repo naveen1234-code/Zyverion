@@ -2797,3 +2797,63 @@ body.ai-estimating .ai-link{
     grid-template-columns:1fr;
   }
 }
+/* LEAD MAGNET POPUP */
+
+.lead-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.65);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.lead-popup-card{
+  background:#0e1424;
+  border:1px solid rgba(255,255,255,0.08);
+  padding:40px;
+  border-radius:16px;
+  width:420px;
+  text-align:center;
+  backdrop-filter:blur(14px);
+}
+
+.lead-popup-card h2{
+  margin-bottom:10px;
+}
+
+.lead-popup-card p{
+  color:#9aa4b5;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.lead-popup input{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.15);
+  background:#0c1120;
+  color:white;
+}
+
+.lead-popup button{
+  width:100%;
+  margin-top:16px;
+  padding:12px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#5b8cff,#7f53ff);
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+.popup-close{
+  margin-top:10px;
+  background:none;
+  border:none;
+  color:#aaa;
+  cursor:pointer;
+}
