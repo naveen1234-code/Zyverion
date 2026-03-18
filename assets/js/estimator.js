@@ -4,7 +4,7 @@ const form = document.getElementById("estimatorForm");
 const estimateBtn = document.getElementById("estimateBtn");
 const estimateStatus = document.getElementById("estimateStatus");
 const estimateResult = document.getElementById("estimateResult");
-
+const leadPopupMessage = document.getElementById("leadPopupMessage");
 const startProjectBtn = document.getElementById("startProjectBtn");
 const leadPopup = document.getElementById("leadMagnetPopup");
 const closeLeadPopup = document.getElementById("closeLeadPopup");
@@ -100,11 +100,23 @@ function prettifyFeature(value) {
 
 function openLeadPopup() {
   if (!leadPopup) return;
+
+  if (leadPopupMessage) {
+    leadPopupMessage.textContent = "";
+    leadPopupMessage.classList.remove("is-error", "is-success");
+  }
+
   leadPopup.style.display = "flex";
 }
 
 function closeLeadPopupUI() {
   if (!leadPopup) return;
+
+  if (leadPopupMessage) {
+    leadPopupMessage.textContent = "";
+    leadPopupMessage.classList.remove("is-error", "is-success");
+  }
+
   leadPopup.style.display = "none";
 }
 
@@ -380,31 +392,44 @@ if (leadMagnetForm) {
       }
 
       const response = await fetch(
-        "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/save-estimator-lead",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name: clientName,
-            email: clientEmail
-          })
-        }
-      );
+  "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/save-estimator-lead",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_LEGACY_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_LEGACY_ANON_KEY}`
+    },
+    body: JSON.stringify({
+      name: clientName,
+      email: clientEmail
+    })
+  }
+);
 
-      const result = await response.json();
+const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to save lead.");
-      }
+console.log("SAVE ESTIMATOR LEAD RESPONSE:", result);
+
+if (!response.ok || !result.success) {
+  throw new Error(result.error || "Failed to save lead.");
+}
+if (leadPopupMessage) {
+  leadPopupMessage.textContent = "Your report is ready. Download starting...";
+  leadPopupMessage.classList.remove("is-error");
+  leadPopupMessage.classList.add("is-success");
+}
 
       buildProjectReportPDF(clientName, clientEmail);
       closeLeadPopupUI();
       leadMagnetForm.reset();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while saving your details.");
+      if (leadPopupMessage) {
+  leadPopupMessage.textContent = "Something went wrong while preparing your report. Please try again.";
+  leadPopupMessage.classList.remove("is-success");
+  leadPopupMessage.classList.add("is-error");
+}
     } finally {
       if (downloadReportBtn) {
         downloadReportBtn.textContent = "Download Full Report";

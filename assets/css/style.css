@@ -3271,3 +3271,33 @@ body.ai-estimating .ai-link{
   color:#fff;
   text-decoration:underline;
 }
+.lead-popup-trust{
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.72);
+  text-align: center;
+}
+.lead-popup-urgency{
+  margin-top: 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #a78bfa;
+  text-align: center;
+}
+.lead-popup-message{
+  min-height: 20px;
+  margin-top: 10px;
+  font-size: 13px;
+  text-align: center;
+  color: rgba(255,255,255,0.75);
+}
+
+.lead-popup-message.is-error{
+  color: #fda4af;
+}
+
+.lead-popup-message.is-success{
+  color: #86efac;
+}
