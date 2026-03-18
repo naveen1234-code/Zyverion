@@ -362,18 +362,55 @@ if (leadPopup) {
 }
 
 if (leadMagnetForm) {
-  leadMagnetForm.addEventListener("submit", (e) => {
+  leadMagnetForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const clientName = (leadNameInput?.value || "").trim();
     const clientEmail = (leadEmailInput?.value || "").trim();
+    const downloadReportBtn = document.getElementById("downloadReportBtn");
 
     if (!clientName || !clientEmail) {
       return;
     }
 
-    buildProjectReportPDF(clientName, clientEmail);
-    closeLeadPopupUI();
+    try {
+      if (downloadReportBtn) {
+        downloadReportBtn.textContent = "Preparing...";
+        downloadReportBtn.disabled = true;
+      }
+
+      const response = await fetch(
+        "https://gydiqeomupsfiaayxpix.supabase.co/functions/v1/save-estimator-lead",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: clientName,
+            email: clientEmail
+          })
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to save lead.");
+      }
+
+      buildProjectReportPDF(clientName, clientEmail);
+      closeLeadPopupUI();
+      leadMagnetForm.reset();
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while saving your details.");
+    } finally {
+      if (downloadReportBtn) {
+        downloadReportBtn.textContent = "Download Full Report";
+        downloadReportBtn.disabled = false;
+      }
+    }
   });
 }
 
