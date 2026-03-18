@@ -6,63 +6,225 @@
   <title>Lead Details | ZYVERION</title>
   <link rel="stylesheet" href="admin.css" />
 </head>
-<body>
-  <div class="admin-wrap">
-    <div class="admin-header">
-      <h1>Lead Details</h1>
-      <a href="/admin/index.html" class="back-link">← Back to Dashboard</a>
+<body class="admin-body">
+  <div class="admin-bg">
+    <div class="admin-bg-orb orb-1"></div>
+    <div class="admin-bg-orb orb-2"></div>
+    <div class="admin-bg-orb orb-3"></div>
+    <div class="admin-grid-overlay"></div>
+  </div>
+
+  <div class="admin-shell admin-detail-shell">
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <div class="admin-brand-icon">Z</div>
+        <div class="admin-brand-copy">
+          <span class="admin-brand-label">ZYVERION</span>
+          <strong>Lead Control</strong>
+        </div>
+      </div>
+
+      <div class="admin-side-block">
+        <span class="admin-side-title">NAVIGATION</span>
+        <a href="/admin/index.html" class="admin-side-link">← Back to Dashboard</a>
+      </div>
+
+      <div class="admin-side-block">
+        <span class="admin-side-title">RECORD TYPE</span>
+        <div class="admin-side-chip" id="leadTypeChip">Client Lead Record</div>
+        <div class="admin-side-chip">Status Tracking</div>
+        <div class="admin-side-chip">Revenue Potential</div>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-head-copy">
+          <span class="admin-eyebrow">Lead Intelligence</span>
+          <h1>Lead Details</h1>
+          <p>Review lead information, update status, assign deal value, and manage internal notes from one clean workspace.</p>
+        </div>
+
+        <div class="admin-head-actions">
+          <a href="/admin/index.html" class="admin-ghost-btn">Back to Dashboard</a>
+        </div>
+      </header>
+
+      <section class="admin-detail-grid">
+        <div class="admin-panel">
+          <div class="admin-panel-head">
+            <div>
+              <span class="admin-eyebrow">Lead Overview</span>
+              <h2>Client Information</h2>
+            </div>
+          </div>
+
+          <div class="admin-info-grid">
+            <div class="admin-info-card">
+              <span class="admin-info-label">Name</span>
+              <p id="leadName" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card">
+              <span class="admin-info-label">Email</span>
+              <p id="leadEmail" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card" id="phoneCard">
+              <span class="admin-info-label">Phone</span>
+              <p id="leadPhone" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card" id="serviceCard">
+              <span class="admin-info-label">Service</span>
+              <p id="leadService" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card" id="budgetCard">
+              <span class="admin-info-label">Budget</span>
+              <p id="leadBudget" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card" id="timelineCard">
+              <span class="admin-info-label">Timeline</span>
+              <p id="leadTimeline" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card">
+              <span class="admin-info-label">Source</span>
+              <p id="leadSource" class="admin-info-value"></p>
+            </div>
+
+            <div class="admin-info-card full">
+              <span class="admin-info-label">Created</span>
+              <p id="leadCreated" class="admin-info-value"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel" id="pipelinePanel">
+          <div class="admin-panel-head">
+            <div>
+              <span class="admin-eyebrow">Actions</span>
+              <h2>Pipeline Controls</h2>
+            </div>
+          </div>
+
+          <div class="admin-action-stack">
+            <div class="admin-action-card">
+              <label for="dealValueInput" class="admin-field-label">Deal Value</label>
+              <input type="number" id="dealValueInput" placeholder="Enter deal value" />
+              <button id="saveDealValueBtn" class="admin-action-btn">Save Deal Value</button>
+              <p id="dealValueMessage" class="muted admin-inline-message"></p>
+            </div>
+
+            <div class="admin-action-card">
+              <label for="statusSelect" class="admin-field-label">Lead Status</label>
+              <select id="statusSelect">
+                <option value="new">new</option>
+                <option value="contacted">contacted</option>
+                <option value="proposal sent">proposal sent</option>
+                <option value="won">won</option>
+                <option value="lost">lost</option>
+              </select>
+              <button id="saveStatusBtn" class="admin-action-btn">Save Status</button>
+              <p id="statusMessage" class="muted admin-inline-message"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-panel" id="estimatorPanel" style="display:none;">
+  <div class="admin-panel-head">
+    <div>
+      <span class="admin-eyebrow">Estimator Record</span>
+      <h2>Estimator Details</h2>
+    </div>
+  </div>
+
+  <div class="admin-info-grid">
+    <div class="admin-info-card">
+      <span class="admin-info-label">Project Type</span>
+      <p id="estimatorProjectType" class="admin-info-value"></p>
     </div>
 
-    <div class="admin-card">
-      <p><strong>Name:</strong> <span id="leadName"></span></p>
-      <p><strong>Email:</strong> <span id="leadEmail"></span></p>
-      <p><strong>Phone:</strong> <span id="leadPhone"></span></p>
-      <p><strong>Service:</strong> <span id="leadService"></span></p>
-      <p><strong>Budget:</strong> <span id="leadBudget"></span></p>
-      <p><strong>Deal Value:</strong></p>
-
-<input type="number" id="dealValueInput" placeholder="Enter deal value" />
-
-<div style="height:12px;"></div>
-
-<button id="saveDealValueBtn">Save Deal Value</button>
-
-<p id="dealValueMessage" class="muted"></p>
-      <p><strong>Timeline:</strong> <span id="leadTimeline"></span></p>
-      <p><strong>Status:</strong></p>
-<select id="statusSelect">
-  <option value="new">new</option>
-  <option value="contacted">contacted</option>
-  <option value="proposal sent">proposal sent</option>
-  <option value="won">won</option>
-  <option value="lost">lost</option>
-</select>
-
-<div style="height:12px;"></div>
-
-<button id="saveStatusBtn">Save Status</button>
-<p id="statusMessage" class="muted"></p>
-      <p><strong>Created:</strong> <span id="leadCreated"></span></p>
-
-      <hr style="border-color:#334155; margin:20px 0;" />
-
-      <p><strong>Message:</strong></p>
-      <p id="leadMessage"></p>
-      <hr style="border-color:#334155; margin:20px 0;" />
-
-<p><strong>Internal Notes:</strong></p>
-<textarea id="leadNotes" rows="6" style="width:100%;"></textarea>
-
-<div style="height:12px;"></div>
-
-<button id="saveNotesBtn">Save Notes</button>
-<p id="notesMessage" class="muted"></p>
+    <div class="admin-info-card">
+      <span class="admin-info-label">Pages</span>
+      <p id="estimatorPages" class="admin-info-value"></p>
     </div>
 
-    <div class="admin-card">
-      <h2>Uploaded Files</h2>
-      <div id="leadFiles">No files loaded yet.</div>
+    <div class="admin-info-card">
+      <span class="admin-info-label">AI Level</span>
+      <p id="estimatorAiLevel" class="admin-info-value"></p>
     </div>
+
+    <div class="admin-info-card">
+      <span class="admin-info-label">Timeline</span>
+      <p id="estimatorTimeline" class="admin-info-value"></p>
+    </div>
+
+    <div class="admin-info-card full">
+      <span class="admin-info-label">Selected Features</span>
+      <p id="estimatorFeatures" class="admin-info-value"></p>
+    </div>
+
+    <div class="admin-info-card">
+      <span class="admin-info-label">Price Min</span>
+      <p id="estimatorPriceMin" class="admin-info-value"></p>
+    </div>
+
+    <div class="admin-info-card">
+      <span class="admin-info-label">Price Max</span>
+      <p id="estimatorPriceMax" class="admin-info-value"></p>
+    </div>
+
+    <div class="admin-info-card full">
+      <span class="admin-info-label">Estimator Notes</span>
+      <p id="estimatorNotes" class="admin-info-value"></p>
+    </div>
+  </div>
+</section>
+
+      <section class="admin-panel" id="messagePanel">
+        <div class="admin-panel-head">
+          <div>
+            <span class="admin-eyebrow">Message Record</span>
+            <h2>Lead Message</h2>
+          </div>
+        </div>
+
+        <div class="admin-message-box">
+          <p id="leadMessage"></p>
+        </div>
+      </section>
+
+      <section class="admin-panel" id="notesPanel">
+        <div class="admin-panel-head">
+          <div>
+            <span class="admin-eyebrow">Internal Workspace</span>
+            <h2>Internal Notes</h2>
+          </div>
+        </div>
+
+        <textarea id="leadNotes" rows="8" class="admin-notes-box"></textarea>
+
+        <div class="admin-notes-actions">
+          <button id="saveNotesBtn" class="admin-action-btn">Save Notes</button>
+          <p id="notesMessage" class="muted admin-inline-message"></p>
+        </div>
+      </section>
+
+      <section class="admin-panel" id="filesPanel">
+        <div class="admin-panel-head">
+          <div>
+            <span class="admin-eyebrow">Attachments</span>
+            <h2>Uploaded Files</h2>
+          </div>
+        </div>
+
+        <div id="leadFiles" class="admin-files-box">No files loaded yet.</div>
+      </section>
+    </main>
   </div>
 
   <script type="module" src="lead.js?v=2"></script>

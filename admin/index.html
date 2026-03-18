@@ -3,67 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZYVERION Dashboard</title>
+  <title>ZYVERION Control Dashboard</title>
   <link rel="stylesheet" href="admin.css" />
 </head>
-<body>
-  <div class="admin-wrap">
-    <div class="admin-header">
-      <h1>ZYVERION Dashboard</h1>
-      <button id="logoutBtn">Logout</button>
-    </div>
-
-    <div class="stats-grid">
-  <div class="admin-card">
-    <h2>Total Leads</h2>
-    <p id="leadCount">0</p>
+<body class="admin-body">
+  <div class="admin-bg">
+    <div class="admin-bg-orb orb-1"></div>
+    <div class="admin-bg-orb orb-2"></div>
+    <div class="admin-bg-orb orb-3"></div>
+    <div class="admin-grid-overlay"></div>
   </div>
 
-  <div class="admin-card">
-    <h2>Potential Revenue</h2>
-    <p id="potentialRevenue">0</p>
-  </div>
-
-  <div class="admin-card">
-    <h2>Won Revenue</h2>
-    <p id="wonRevenue">0</p>
-  </div>
-</div>
-
-    <div class="admin-card">
-  <div class="admin-toolbar">
-  <h2>Leads</h2>
-
-  <div class="toolbar-actions">
-    <input type="text" id="searchInput" placeholder="Search by name, email, or service" />
-    
-    <select id="statusFilter">
-      <option value="all">All</option>
-      <option value="new">new</option>
-      <option value="contacted">contacted</option>
-      <option value="proposal sent">proposal sent</option>
-      <option value="won">won</option>
-      <option value="lost">lost</option>
-    </select>
-  </div>
-</div>
-
-  <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Service</th>
-              <th>Budget</th>
-              <th>Status</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody id="leadTable"></tbody>
-        </table>
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <div class="admin-brand-icon">Z</div>
+        <div class="admin-brand-copy">
+          <span class="admin-brand-label">ZYVERION</span>
+          <strong>Control Panel</strong>
+        </div>
       </div>
-    </div>
+
+      <div class="admin-side-block">
+        <span class="admin-side-title">SYSTEM</span>
+        <div class="admin-side-chip">Lead Intelligence</div>
+        <div class="admin-side-chip">Revenue Tracking</div>
+        <div class="admin-side-chip">Client Pipeline</div>
+      </div>
+
+      <div class="admin-side-block">
+        <span class="admin-side-title">STATUS</span>
+        <div class="admin-status-line">
+          <span class="status-dot live"></span>
+          <span>Dashboard Online</span>
+        </div>
+        <div class="admin-status-line">
+          <span class="status-dot sync"></span>
+          <span>Lead Sync Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-head-copy">
+          <span class="admin-eyebrow">Agency Command Center</span>
+          <h1>ZYVERION Dashboard</h1>
+          <p>Track leads, monitor revenue potential, and manage your business pipeline from one place.</p>
+        </div>
+
+        <div class="admin-head-actions">
+          <button id="logoutBtn" class="admin-logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <section class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <span class="admin-stat-label">Total Leads</span>
+          <p id="leadCount" class="admin-stat-value">0</p>
+          <span class="admin-stat-foot">All captured leads</span>
+        </div>
+
+        <div class="admin-stat-card">
+          <span class="admin-stat-label">Potential Revenue</span>
+          <p id="potentialRevenue" class="admin-stat-value">0</p>
+          <span class="admin-stat-foot">Possible total pipeline value</span>
+        </div>
+
+        <div class="admin-stat-card">
+          <span class="admin-stat-label">Won Revenue</span>
+          <p id="wonRevenue" class="admin-stat-value">0</p>
+          <span class="admin-stat-foot">Confirmed project income</span>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <div class="admin-panel-head">
+          <div>
+            <span class="admin-eyebrow">Lead Records</span>
+            <h2>Leads Overview</h2>
+          </div>
+
+          <div class="admin-toolbar">
+            <div class="admin-input-wrap">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by name, email, or service"
+              />
+            </div>
+
+            <div class="admin-select-wrap">
+              <select id="statusFilter">
+                <option value="all">All Statuses</option>
+                <option value="new">new</option>
+                <option value="contacted">contacted</option>
+                <option value="proposal sent">proposal sent</option>
+                <option value="won">won</option>
+                <option value="lost">lost</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-table-shell">
+          <div class="table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>source</th>
+                  <th>Service</th>
+                  <th>Budget</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="leadTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script type="module" src="admin.js?v=1"></script>

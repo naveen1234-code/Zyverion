@@ -401,9 +401,20 @@ if (leadMagnetForm) {
       Authorization: `Bearer ${SUPABASE_LEGACY_ANON_KEY}`
     },
     body: JSON.stringify({
-      name: clientName,
-      email: clientEmail
-    })
+  name: clientName,
+  email: clientEmail,
+  project_type: latestEstimateData.websiteType || "",
+  pages: latestEstimateData.pages || "",
+  ai_level: latestEstimateData.aiLevel || "",
+  timeline: latestEstimateData.timeline || "",
+  features: Array.isArray(latestEstimateData.features)
+    ? latestEstimateData.features.join(", ")
+    : "",
+  notes: latestEstimateData.notes || "",
+  price_min: latestEstimateData.min || 0,
+  price_max: latestEstimateData.max || 0,
+  currency: latestEstimateData.currency || "LKR"
+})
   }
 );
 

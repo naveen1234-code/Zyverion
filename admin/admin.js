@@ -17,6 +17,19 @@ const leadTable = document.getElementById("leadTable");
 const statusFilter = document.getElementById("statusFilter");
 const searchInput = document.getElementById("searchInput");
 
+function formatCurrency(value) {
+  const number = Number(value) || 0;
+  return number.toLocaleString();
+}
+
+function safeText(value) {
+  return value ?? "";
+}
+
+function getStatusClass(status) {
+  return `status-${String(status || "new").toLowerCase().replace(/\s+/g, "-")}`;
+}
+
 async function requireAuth() {
   const { data, error } = await supabase.auth.getUser();
 
@@ -32,94 +45,134 @@ async function loadLeads() {
   const user = await requireAuth();
   if (!user || !leadTable) return;
 
-  let query = supabase
+  let leadsQuery = supabase
     .from("leads")
     .select("*")
     .order("created_at", { ascending: false });
 
   if (statusFilter && statusFilter.value !== "all") {
-    query = query.eq("status", statusFilter.value);
+    leadsQuery = leadsQuery.eq("status", statusFilter.value);
   }
 
-  const { data, error } = await query;
+  const { data: leadsData, error: leadsError } = await leadsQuery;
 
-  if (error) {
-    console.error("Load leads error:", error);
-    leadTable.innerHTML = `<tr><td colspan="6">Failed to load leads.</td></tr>`;
+  const { data: estimatorData, error: estimatorError } = await supabase
+    .from("estimator_leads")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (leadsError || estimatorError) {
+    console.error("Load leads error:", leadsError || estimatorError);
+    leadTable.innerHTML = `<tr><td colspan="7">Failed to load leads.</td></tr>`;
+
     if (leadCount) leadCount.textContent = "0";
     if (potentialRevenue) potentialRevenue.textContent = "0";
     if (wonRevenue) wonRevenue.textContent = "0";
     return;
   }
 
-  let filteredData = data || [];
+  const normalLeads = (leadsData || []).map((lead) => ({
+    id: lead.id,
+    name: lead.name,
+    email: lead.email,
+    source: "contact",
+    service_type: lead.service_type,
+    budget_range: lead.budget_range,
+    status: lead.status || "new",
+    created_at: lead.created_at,
+    deal_value: lead.deal_value || 0,
+    detail_url: `/admin/lead.html?id=${lead.id}&type=contact`
+  }));
+
+  const estimatorLeads = (estimatorData || []).map((lead) => ({
+  id: lead.id,
+  name: lead.name,
+  email: lead.email,
+  source: "estimator",
+  service_type: "AI Estimate Request",
+  budget_range: "-",
+  status: lead.status || "new",
+  created_at: lead.created_at,
+  deal_value: 0,
+  detail_url: `/admin/lead.html?id=${lead.id}&type=estimator`
+}));
+
+  let mergedData = [...normalLeads, ...estimatorLeads].sort((a, b) => {
+    const aDate = new Date(a.created_at || 0).getTime();
+    const bDate = new Date(b.created_at || 0).getTime();
+    return bDate - aDate;
+  });
 
   if (searchInput && searchInput.value.trim() !== "") {
     const term = searchInput.value.trim().toLowerCase();
 
-    filteredData = filteredData.filter((lead) => {
-      const name = (lead.name || "").toLowerCase();
-      const email = (lead.email || "").toLowerCase();
-      const service = (lead.service_type || "").toLowerCase();
+    mergedData = mergedData.filter((lead) => {
+      const name = String(lead.name || "").toLowerCase();
+      const email = String(lead.email || "").toLowerCase();
+      const service = String(lead.service_type || "").toLowerCase();
+      const source = String(lead.source || "").toLowerCase();
 
       return (
         name.includes(term) ||
         email.includes(term) ||
-        service.includes(term)
+        service.includes(term) ||
+        source.includes(term)
       );
     });
   }
 
   if (leadCount) {
-    leadCount.textContent = String(filteredData.length);
+    leadCount.textContent = String(mergedData.length);
   }
 
-  const potential = filteredData.reduce((sum, lead) => {
+  const potential = normalLeads.reduce((sum, lead) => {
     return sum + (Number(lead.deal_value) || 0);
   }, 0);
 
-  const won = filteredData.reduce((sum, lead) => {
-    if ((lead.status || "").toLowerCase() === "won") {
+  const won = normalLeads.reduce((sum, lead) => {
+    if (String(lead.status || "").toLowerCase() === "won") {
       return sum + (Number(lead.deal_value) || 0);
     }
     return sum;
   }, 0);
 
   if (potentialRevenue) {
-    potentialRevenue.textContent = potential.toLocaleString();
+    potentialRevenue.textContent = formatCurrency(potential);
   }
 
   if (wonRevenue) {
-    wonRevenue.textContent = won.toLocaleString();
+    wonRevenue.textContent = formatCurrency(won);
   }
 
   leadTable.innerHTML = "";
 
-  if (filteredData.length === 0) {
-    leadTable.innerHTML = `<tr><td colspan="6">No leads found.</td></tr>`;
+  if (mergedData.length === 0) {
+    leadTable.innerHTML = `<tr><td colspan="7">No leads found.</td></tr>`;
     return;
   }
 
-  filteredData.forEach((lead) => {
+  mergedData.forEach((lead) => {
     const row = document.createElement("tr");
+    const status = lead.status || "new";
 
     row.innerHTML = `
-      <td>${lead.name ?? ""}</td>
-      <td>${lead.email ?? ""}</td>
-      <td>${lead.service_type ?? ""}</td>
-      <td>${lead.budget_range ?? ""}</td>
+      <td>${safeText(lead.name)}</td>
+      <td>${safeText(lead.email)}</td>
+      <td>${safeText(lead.source)}</td>
+      <td>${safeText(lead.service_type)}</td>
+      <td>${safeText(lead.budget_range)}</td>
       <td>
-        <span class="status-badge status-${(lead.status ?? "new").replace(/\s+/g, "-")}">
-          ${lead.status ?? "new"}
+        <span class="status-badge ${getStatusClass(status)}">
+          ${safeText(status)}
         </span>
       </td>
-      <td>${lead.created_at ? new Date(lead.created_at).toLocaleString() : ""}</td>
+      <td>${lead.created_at ? new Date(lead.created_at).toLocaleString("en-LK", { timeZone: "Asia/Colombo" }) : ""}</td>
     `;
 
     row.style.cursor = "pointer";
 
     row.addEventListener("click", () => {
-      window.location.href = "/admin/lead.html?id=" + lead.id;
+      window.location.href = lead.detail_url;
     });
 
     leadTable.appendChild(row);
@@ -142,10 +195,12 @@ if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    loginStatus.textContent = "Signing in...";
+    if (loginStatus) {
+      loginStatus.textContent = "Signing in...";
+    }
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email")?.value.trim();
+    const password = document.getElementById("password")?.value;
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -153,7 +208,9 @@ if (loginForm) {
     });
 
     if (error) {
-      loginStatus.textContent = error.message;
+      if (loginStatus) {
+        loginStatus.textContent = error.message;
+      }
       return;
     }
 
