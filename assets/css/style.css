@@ -5219,3 +5219,45 @@ body.nav-scrolled .nav-inner{
     min-height:200px;
   }
 }
+.verify-contact-action{
+  margin-top:18px;
+}
+.topbar-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.back-contact-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px 14px;
+  border-radius:14px;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.05);
+  transition:.2s ease;
+}
+
+.back-contact-btn:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.08);
+  box-shadow:0 14px 30px rgba(0,0,0,.22);
+}
+
+@media (max-width:640px){
+  .topbar{
+    align-items:flex-start;
+  }
+
+  .topbar-actions{
+    width:100%;
+    justify-content:space-between;
+  }
+}
