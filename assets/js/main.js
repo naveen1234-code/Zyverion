@@ -1,190 +1,237 @@
 // =========================
 // ZYVERION MAIN JS
-// Clean full version
+// Lightweight + Hamburger Version
 // =========================
 
-// Active nav
-(function () {
-  const path = location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll(".menu a").forEach((a) => {
-    if (a.getAttribute("href") === path) {
-      a.classList.add("active");
-    }
-  });
-})();
+document.addEventListener("DOMContentLoaded", () => {
+  // =========================
+  // Active nav
+  // =========================
+  (function () {
+    const path = location.pathname.split("/").pop() || "index.html";
+    document.querySelectorAll(".menu a").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (href === path) {
+        a.classList.add("active");
+      } else {
+        a.classList.remove("active");
+      }
+    });
+  })();
 
-// Intro FX remove
+// Intro FX remove - safer version
 window.addEventListener("load", () => {
+  const intro = document.getElementById("introFX");
+  if (!intro) return;
+
   setTimeout(() => {
-    document.querySelectorAll("#introFX").forEach((el) => el.remove());
+    intro.style.pointerEvents = "none";
   }, 1200);
+
+  setTimeout(() => {
+    intro.remove();
+  }, 1500);
 });
 
-// Cursor glow - desktop only
-(function () {
-  const glow = document.getElementById("cursorGlow");
-  const canUseGlow =
-    glow &&
-    window.matchMedia("(pointer: fine)").matches &&
-    window.innerWidth > 900 &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (!canUseGlow) {
-    if (glow) glow.style.display = "none";
-    return;
-  }
-
-  let rafId = null;
-  let x = 0;
-  let y = 0;
-
-  function render() {
-    glow.style.left = `${x}px`;
-    glow.style.top = `${y}px`;
-    rafId = null;
-  }
-
-  window.addEventListener("pointermove", (e) => {
-    x = e.clientX;
-    y = e.clientY;
-
-    if (!rafId) {
-      rafId = requestAnimationFrame(render);
+  // =========================
+  // Disable cursor glow completely on lighter version
+  // =========================
+  (function () {
+    const glow = document.getElementById("cursorGlow");
+    if (glow) {
+      glow.remove();
     }
-  });
-})();
+  })();
 
-// Hero tilt - desktop only
-(function () {
-  const hero = document.querySelector(".hero-card");
-  const canTilt =
-    hero &&
-    window.matchMedia("(pointer: fine)").matches &&
-    window.innerWidth > 960 &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // =========================
+  // Remove hero tilt for smoother phones
+  // =========================
+  (function () {
+    const hero = document.querySelector(".hero-card");
+    if (hero) {
+      hero.style.transform = "none";
+    }
+  })();
 
-  if (!canTilt) return;
+  // =========================
+  // Lightweight reveal sections on scroll
+  // =========================
+  (function () {
+    const sections = document.querySelectorAll(".section");
+    if (!sections.length) return;
 
-  let rafId = null;
-  let lastEvent = null;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function render() {
-    if (!lastEvent) {
-      rafId = null;
+    if (reduceMotion) {
+      sections.forEach((section) => section.classList.add("visible"));
       return;
     }
 
-    const rect = hero.getBoundingClientRect();
-    const x = lastEvent.clientX - rect.left;
-    const y = lastEvent.clientY - rect.top;
-    const cx = rect.width / 2;
-    const cy = rect.height / 2;
-
-    const rx = (y - cy) / 30;
-    const ry = (cx - x) / 30;
-
-    hero.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-    rafId = null;
-  }
-
-  hero.addEventListener("mousemove", (e) => {
-    lastEvent = e;
-    if (!rafId) rafId = requestAnimationFrame(render);
-  });
-
-  hero.addEventListener("mouseleave", () => {
-    hero.style.transform = "rotateX(0deg) rotateY(0deg)";
-  });
-})();
-
-// Reveal sections on scroll
-(function () {
-  const sections = document.querySelectorAll(".section");
-  if (!sections.length) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
           entry.target.classList.add("visible");
-        }
+          obs.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: "0px 0px -30px 0px"
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+  })();
+
+  // =========================
+  // Button ripple - desktop / touch-safe lighter version
+  // =========================
+  (function () {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    document.querySelectorAll(".btn").forEach((btn) => {
+      btn.addEventListener("pointerdown", function (e) {
+        if (e.pointerType === "touch" && window.innerWidth < 768) return;
+
+        const circle = document.createElement("span");
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+        const rect = this.getBoundingClientRect();
+
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - rect.left - radius}px`;
+        circle.style.top = `${e.clientY - rect.top - radius}px`;
+        circle.classList.add("ripple");
+
+        const oldRipple = this.getElementsByClassName("ripple")[0];
+        if (oldRipple) oldRipple.remove();
+
+        this.appendChild(circle);
+
+        setTimeout(() => {
+          circle.remove();
+        }, 500);
       });
-    },
-    {
-      threshold: 0.12,
-      rootMargin: "0px 0px -40px 0px"
-    }
-  );
-
-  sections.forEach((section) => observer.observe(section));
-})();
-
-// Button ripple
-(function () {
-  document.querySelectorAll(".btn").forEach((btn) => {
-    btn.addEventListener("pointerdown", function (e) {
-      const circle = document.createElement("span");
-      const diameter = Math.max(this.clientWidth, this.clientHeight);
-      const radius = diameter / 2;
-      const rect = this.getBoundingClientRect();
-
-      circle.style.width = circle.style.height = `${diameter}px`;
-      circle.style.left = `${e.clientX - rect.left - radius}px`;
-      circle.style.top = `${e.clientY - rect.top - radius}px`;
-      circle.classList.add("ripple");
-
-      const oldRipple = this.getElementsByClassName("ripple")[0];
-      if (oldRipple) oldRipple.remove();
-
-      this.appendChild(circle);
     });
-  });
-})();
+  })();
 
-// Metric counters
-(function () {
-  const counters = document.querySelectorAll(".metric-number");
-  if (!counters.length) return;
+  // =========================
+  // Metric counters
+  // =========================
+  (function () {
+    const counters = document.querySelectorAll(".metric-number");
+    if (!counters.length) return;
 
-  function animateCounter(el) {
-    const target = Number(el.dataset.counter || 0);
-    const suffix = el.dataset.suffix || "";
-    const duration = 1200;
-    const startTime = performance.now();
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    function update(now) {
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const value = Math.round(target * eased);
+    function animateCounter(el) {
+      const target = Number(el.dataset.counter || 0);
+      const suffix = el.dataset.suffix || "";
 
-      el.textContent = `${value}${suffix}`;
-
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
+      if (reduceMotion) {
         el.textContent = `${target}${suffix}`;
+        return;
+      }
+
+      const duration = 900;
+      const startTime = performance.now();
+
+      function update(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * eased);
+
+        el.textContent = `${value}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          el.textContent = `${target}${suffix}`;
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    const seen = new WeakSet();
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          if (seen.has(entry.target)) return;
+
+          seen.add(entry.target);
+          animateCounter(entry.target);
+          obs.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    counters.forEach((counter) => observer.observe(counter));
+  })();
+
+  // =========================
+  // Hamburger menu
+  // =========================
+  (function () {
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    if (!hamburgerBtn || !mobileMenu) return;
+
+    function openMenu() {
+      hamburgerBtn.classList.add("is-open");
+      mobileMenu.classList.add("is-open");
+      hamburgerBtn.setAttribute("aria-expanded", "true");
+      document.body.classList.add("menu-open");
+    }
+
+    function closeMenu() {
+      hamburgerBtn.classList.remove("is-open");
+      mobileMenu.classList.remove("is-open");
+      hamburgerBtn.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("menu-open");
+    }
+
+    function toggleMenu() {
+      if (mobileMenu.classList.contains("is-open")) {
+        closeMenu();
+      } else {
+        openMenu();
       }
     }
 
-    requestAnimationFrame(update);
-  }
+    hamburgerBtn.addEventListener("click", toggleMenu);
 
-  const seen = new WeakSet();
+    document.addEventListener("click", (e) => {
+      const clickedButton = hamburgerBtn.contains(e.target);
+      const clickedMenu = mobileMenu.contains(e.target);
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        if (seen.has(entry.target)) return;
+      if (!clickedButton && !clickedMenu) {
+        closeMenu();
+      }
+    });
 
-        seen.add(entry.target);
-        animateCounter(entry.target);
-        observer.unobserve(entry.target);
+    mobileMenu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        closeMenu();
       });
-    },
-    { threshold: 0.35 }
-  );
+    });
 
-  counters.forEach((counter) => observer.observe(counter));
-})();
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 992) {
+        closeMenu();
+      }
+    });
 
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeMenu();
+      }
+    });
+  })();
+});
