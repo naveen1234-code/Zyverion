@@ -6543,3 +6543,12 @@ body:has(.team-card) .grid.grid-3 .team-card {
     font-size: 15px;
   }
 }
+.work-index-link{
+  display:block;
+  color:inherit;
+  text-decoration:none;
+}
+
+.work-index-link:hover{
+  color:inherit;
+}
