@@ -1,67 +1,68 @@
 (function () {
   const launcher = document.getElementById("aiLauncher");
-  const welcomeOverlay = document.getElementById("aiWelcomeOverlay");
   const voiceOverlay = document.getElementById("aiVoiceOverlay");
 
   if (!launcher) return;
 
   const STORAGE_KEYS = {
     language: "zyverion-ai-language",
-    preferredVoice: "zyverion-ai-voice",
-    hintShown: "zyverion-ai-hint-shown-v2",
-    workPopupShown: "zyverion-work-popup-shown-v2",
-    sessionState: "zyverion-ai-session-state-v1",
+    preferredVoice: "zyverion-ai-voice-v2",
+    hintShown: "zyverion-ai-hint-shown-v3",
+    workPopupShown: "zyverion-work-popup-shown-v3",
+    sessionState: "zyverion-ai-session-state-v2",
   };
 
   const SELECTORS = {
     panel: "#zyverionAiPanel",
     panelShell: "#zyverionAiPanel .zyverion-ai-panel-shell",
-    panelClose: "#zyverionAiPanelClose",
-    panelBackdrop: "#zyverionAiPanelBackdrop",
+    backdrop: "#zyverionAiPanelBackdrop",
     hint: "#zyverionAiHint",
 
     languageSelect: "#zyverionAiLanguageSelect",
     languagePicker: "#zyverionAiLanguagePicker",
     languageOption: "[data-ai-language]",
 
-    headerIntro: "#zyverionAiHeaderIntro",
     status: "#zyverionAiStatus",
     transcript: "#zyverionAiTranscript",
+    headerIntro: "#zyverionAiHeaderIntro",
+    contextSummary: "#zyverionAiContextSummary",
+
     messages: "#zyverionAiMessages",
+    answerCard: ".zyverion-ai-answer-card",
+    answerText: ".zyverion-ai-answer-text",
 
     orbZone: "#zyverionAiOrbZone",
     orbButton: "#zyverionAiOrbButton",
     orbStateText: "#zyverionAiOrbStateText",
     orbHintText: "#zyverionAiOrbHintText",
 
-    contextSummary: "#zyverionAiContextSummary",
     recommendationRail: "#zyverionAiRecommendationRail",
     followUpRail: "#zyverionAiFollowUpRail",
-
-    utilityDock: "#zyverionAiUtilityDock",
-    muteBtn: "#zyverionAiMuteBtn",
-    replayBtn: "#zyverionAiReplayBtn",
 
     actionDock: "#zyverionAiActionDock",
     estimatorLink: "#zyverionAiEstimatorLink",
     contactLink: "#zyverionAiContactLink",
     workLink: "#zyverionAiWorkLink",
 
+    utilityDock: "#zyverionAiUtilityDock",
+    muteBtn: "#zyverionAiMuteBtn",
+    replayBtn: "#zyverionAiReplayBtn",
+
+    legacyControls: ".zyverion-ai-controls",
     legacyStartBtn: "#zyverionAiStartBtn",
     legacyStopBtn: "#zyverionAiStopBtn",
-    legacyControls: ".zyverion-ai-controls",
   };
 
   const STATUS_TEXT = {
     idle: {
-      en: "Tell me about your business, goal, or project idea.",
-      si: "ඔයාගේ business එක, goal එක, හෝ project idea එක ගැන කියන්න.",
-      ta: "உங்கள் business, goal, அல்லது project idea பற்றி சொல்லுங்கள்.",
+      en: "Tell me about your business.",
+      si: "ඔයාගේ business එක ගැන කියන්න.",
+      ta: "உங்கள் business பற்றி சொல்லுங்கள்.",
     },
     chooseLanguage: {
-      en: "Choose a language to begin.",
-      si: "ආරම්භ කරන්න භාෂාවක් තෝරන්න.",
-      ta: "தொடங்க ஒரு மொழியைத் தேர்ந்தெடுக்கவும்.",
+      en: "Choose your language.",
+      si: "ඔයාගේ භාෂාව තෝරන්න.",
+      ta: "உங்கள் மொழியை தேர்வு செய்யுங்கள்.",
     },
     listening: {
       en: "Listening...",
@@ -69,9 +70,9 @@
       ta: "கேட்டு கொண்டிருக்கிறது...",
     },
     thinking: {
-      en: "Thinking through your situation...",
-      si: "ඔයාගේ situation එක analyse කරමින් සිටියි...",
-      ta: "உங்கள் situation ஐ analyse செய்கிறது...",
+      en: "Thinking...",
+      si: "සිතමින් සිටියි...",
+      ta: "யோசிக்கிறது...",
     },
     speaking: {
       en: "Speaking...",
@@ -84,19 +85,19 @@
       ta: "குரல் mute செய்யப்பட்டுள்ளது.",
     },
     notHeard: {
-      en: "I couldn't hear that clearly. Try again.",
-      si: "පැහැදිලිව අහන්න ලැබුණේ නැහැ. ආයෙත් උත්සාහ කරන්න.",
-      ta: "தெளிவாக கேட்கவில்லை. மீண்டும் முயற்சிக்கவும்.",
+      en: "I couldn't hear that clearly.",
+      si: "පැහැදිලිව අහන්න ලැබුණේ නැහැ.",
+      ta: "தெளிவாக கேட்கவில்லை.",
     },
     micBlocked: {
-      en: "Microphone access is blocked on this browser.",
-      si: "මේ browser එකේ microphone access block කරලා තියෙන්නේ.",
-      ta: "இந்த browser இல் microphone access block செய்யப்பட்டுள்ளது.",
+      en: "Microphone access is blocked.",
+      si: "Microphone access block කරලා තියෙන්නේ.",
+      ta: "Microphone access block செய்யப்பட்டுள்ளது.",
     },
     unsupported: {
-      en: "Voice recognition is not supported on this browser.",
-      si: "මේ browser එකේ voice recognition support නැහැ.",
-      ta: "இந்த browser இல் voice recognition support இல்லை.",
+      en: "Voice recognition is not supported here.",
+      si: "මෙතැන voice recognition support නැහැ.",
+      ta: "இங்கு voice recognition support இல்லை.",
     },
     backendVoice: {
       en: "Preparing voice...",
@@ -104,9 +105,9 @@
       ta: "குரல் தயாராகிறது...",
     },
     ttsFallback: {
-      en: "Using fallback voice playback.",
-      si: "Fallback voice playback භාවිතා කරයි.",
-      ta: "Fallback voice playback பயன்படுத்துகிறது.",
+      en: "Using fallback voice.",
+      si: "Fallback voice භාවිතා කරයි.",
+      ta: "Fallback voice பயன்படுத்துகிறது.",
     },
   };
 
@@ -115,13 +116,11 @@
       recognition: "en-GB",
       speech: "en-GB",
       welcome:
-        "Hello. I'm Zyverion AI. Tell me about your business or project, and I’ll help you figure out the right website or system direction.",
-      languageSelected:
-        "English selected. We can continue in English now.",
-      languageSwitched:
-        "Language switched to English. We can continue in English now.",
-      orbHintIdle: "Tap the AI core",
-      orbHintListening: "Tap again to stop",
+        "Hello. I'm Zyverion AI. Tell me what kind of business you have, and I’ll guide you toward the right website or system direction.",
+      switchMessage:
+        "Language switched to English.",
+      orbHintIdle: "Tap to speak",
+      orbHintListening: "Tap to stop",
       orbHintSpeaking: "Tap to stop voice",
       overlaySpeaking: "Speaking...",
       preferredVoice: "marin",
@@ -130,12 +129,10 @@
       recognition: "si-LK",
       speech: "si-LK",
       welcome:
-        "ආයුබෝවන්. මම Zyverion AI. ඔයාගේ business එක හෝ project idea එක ගැන කියන්න. ඒකට fit වෙන website හෝ system direction එක මම help කරන්නම්.",
-      languageSelected:
-        "සිංහල තෝරාගෙන තියෙනවා. දැන් අපි සිංහලෙන් ඉදිරියට යමු.",
-      languageSwitched:
-        "සිංහල භාෂාවට මාරු වුණා. දැන් අපි සිංහලෙන් ඉදිරියට යමු.",
-      orbHintIdle: "AI core එක තට්ටු කරන්න",
+        "ආයුබෝවන්. මම Zyverion AI. ඔයාගේ business එක මොන type එකක්ද කියන්න, ඒකට fit වෙන website හෝ system direction එක මම guide කරන්නම්.",
+      switchMessage:
+        "සිංහල භාෂාවට මාරු වුණා.",
+      orbHintIdle: "කතා කරන්න තට්ටු කරන්න",
       orbHintListening: "නවත්වන්න ආයෙත් තට්ටු කරන්න",
       orbHintSpeaking: "හඬ නවත්වන්න තට්ටු කරන්න",
       overlaySpeaking: "කතා කරමින් සිටියි...",
@@ -145,18 +142,18 @@
       recognition: "ta-IN",
       speech: "ta-IN",
       welcome:
-        "வணக்கம். நான் Zyverion AI. உங்கள் business அல்லது project idea பற்றி சொல்லுங்கள். அதற்கு பொருத்தமான website அல்லது system direction ஐ நான் help செய்கிறேன்.",
-      languageSelected:
-        "தமிழ் தேர்வு செய்யப்பட்டுள்ளது. இப்போது தமிழில் தொடரலாம்.",
-      languageSwitched:
-        "தமிழ் மொழிக்கு மாற்றப்பட்டது. இப்போது தமிழில் தொடரலாம்.",
-      orbHintIdle: "AI core ஐ தட்டவும்",
+        "வணக்கம். நான் Zyverion AI. உங்கள் business type என்ன என்று சொல்லுங்கள், அதற்கு பொருத்தமான website அல்லது system direction ஐ நான் guide செய்கிறேன்.",
+      switchMessage:
+        "தமிழ் மொழிக்கு மாற்றப்பட்டது.",
+      orbHintIdle: "பேச தட்டவும்",
       orbHintListening: "நிறுத்த மீண்டும் தட்டவும்",
       orbHintSpeaking: "குரலை நிறுத்த தட்டவும்",
       overlaySpeaking: "பேசுகிறது...",
       preferredVoice: "marin",
     },
   };
+
+  const DEFAULT_LANGUAGE = "en";
 
   const SpeechRecognitionCtor =
     window.SpeechRecognition || window.webkitSpeechRecognition || null;
@@ -166,16 +163,6 @@
   let activeAudio = null;
   let activeAudioUrl = "";
   let activeTtsController = null;
-
-  let isDragging = false;
-  let moved = false;
-  let pointerStartX = 0;
-  let pointerStartY = 0;
-  let startLeft = 0;
-  let startTop = 0;
-  let currentLeft = 0;
-  let currentTop = 0;
-  let rafId = null;
 
   let isPanelOpen = false;
   let isMuted = false;
@@ -191,18 +178,6 @@
 
   let sessionState = loadSessionState();
 
-  function loadSessionState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEYS.sessionState);
-      if (!raw) return createEmptySessionState();
-
-      const parsed = JSON.parse(raw);
-      return normalizeSessionState(parsed);
-    } catch (error) {
-      return createEmptySessionState();
-    }
-  }
-
   function createEmptySessionState() {
     return {
       businessSummary: "",
@@ -213,8 +188,14 @@
       lastSituationSummary: "",
       lastRecommendedSolutions: [],
       lastFollowUpQuestions: [],
+      lastSuggestedAction: {
+        type: "none",
+        label: "",
+        href: "",
+      },
       answerMode: "",
-      history: [],
+      latestUserText: "",
+      latestAssistantText: "",
     };
   }
 
@@ -248,20 +229,39 @@
       lastFollowUpQuestions: Array.isArray(value.lastFollowUpQuestions)
         ? value.lastFollowUpQuestions.slice(0, 3)
         : [],
+      lastSuggestedAction:
+        value.lastSuggestedAction && typeof value.lastSuggestedAction === "object"
+          ? {
+              type: typeof value.lastSuggestedAction.type === "string"
+                ? value.lastSuggestedAction.type.trim()
+                : "none",
+              label: typeof value.lastSuggestedAction.label === "string"
+                ? value.lastSuggestedAction.label.trim()
+                : "",
+              href: typeof value.lastSuggestedAction.href === "string"
+                ? value.lastSuggestedAction.href.trim()
+                : "",
+            }
+          : base.lastSuggestedAction,
       answerMode:
         typeof value.answerMode === "string" ? value.answerMode.trim() : "",
-      history: Array.isArray(value.history)
-        ? value.history
-            .filter(
-              (item) =>
-                item &&
-                typeof item === "object" &&
-                typeof item.role === "string" &&
-                typeof item.text === "string"
-            )
-            .slice(-10)
-        : [],
+      latestUserText:
+        typeof value.latestUserText === "string" ? value.latestUserText.trim() : "",
+      latestAssistantText:
+        typeof value.latestAssistantText === "string"
+          ? value.latestAssistantText.trim()
+          : "",
     };
+  }
+
+  function loadSessionState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.sessionState);
+      if (!raw) return createEmptySessionState();
+      return normalizeSessionState(JSON.parse(raw));
+    } catch (error) {
+      return createEmptySessionState();
+    }
   }
 
   function persistSessionState() {
@@ -278,19 +278,16 @@
     persistSessionState();
   }
 
-  const isMobile = () => window.innerWidth <= 768;
-  const getMargin = () => (isMobile() ? 14 : 22);
-
-  function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
   function qs(selector) {
     return document.querySelector(selector);
   }
 
   function qsa(selector) {
     return Array.from(document.querySelectorAll(selector));
+  }
+
+  function safeText(value) {
+    return typeof value === "string" ? value.trim() : "";
   }
 
   function normalizeText(value) {
@@ -301,10 +298,6 @@
     return Array.from(new Set((values || []).filter(Boolean)));
   }
 
-  function safeText(value) {
-    return typeof value === "string" ? value.trim() : "";
-  }
-
   function getPanel() {
     return qs(SELECTORS.panel);
   }
@@ -313,12 +306,8 @@
     return qs(SELECTORS.panelShell);
   }
 
-  function getPanelClose() {
-    return qs(SELECTORS.panelClose);
-  }
-
-  function getPanelBackdrop() {
-    return qs(SELECTORS.panelBackdrop);
+  function getBackdrop() {
+    return qs(SELECTORS.backdrop);
   }
 
   function getHint() {
@@ -333,10 +322,6 @@
     return qs(SELECTORS.languagePicker);
   }
 
-  function getHeaderIntro() {
-    return qs(SELECTORS.headerIntro);
-  }
-
   function getStatus() {
     return qs(SELECTORS.status);
   }
@@ -345,8 +330,24 @@
     return qs(SELECTORS.transcript);
   }
 
+  function getHeaderIntro() {
+    return qs(SELECTORS.headerIntro);
+  }
+
+  function getContextSummary() {
+    return qs(SELECTORS.contextSummary);
+  }
+
   function getMessages() {
     return qs(SELECTORS.messages);
+  }
+
+  function getAnswerCard() {
+    return qs(SELECTORS.answerCard);
+  }
+
+  function getAnswerText() {
+    return qs(SELECTORS.answerText);
   }
 
   function getOrbZone() {
@@ -365,28 +366,12 @@
     return qs(SELECTORS.orbHintText);
   }
 
-  function getContextSummary() {
-    return qs(SELECTORS.contextSummary);
-  }
-
   function getRecommendationRail() {
     return qs(SELECTORS.recommendationRail);
   }
 
   function getFollowUpRail() {
     return qs(SELECTORS.followUpRail);
-  }
-
-  function getUtilityDock() {
-    return qs(SELECTORS.utilityDock);
-  }
-
-  function getMuteBtn() {
-    return qs(SELECTORS.muteBtn);
-  }
-
-  function getReplayBtn() {
-    return qs(SELECTORS.replayBtn);
   }
 
   function getActionDock() {
@@ -405,6 +390,18 @@
     return qs(SELECTORS.workLink);
   }
 
+  function getUtilityDock() {
+    return qs(SELECTORS.utilityDock);
+  }
+
+  function getMuteBtn() {
+    return qs(SELECTORS.muteBtn);
+  }
+
+  function getReplayBtn() {
+    return qs(SELECTORS.replayBtn);
+  }
+
   function getVoiceOverlayTitle() {
     return voiceOverlay ? voiceOverlay.querySelector("strong") : null;
   }
@@ -413,9 +410,11 @@
     return voiceOverlay ? voiceOverlay.querySelector("span") : null;
   }
 
-  function getSavedLanguage() {
+function getSavedLanguage() {
     const value = localStorage.getItem(STORAGE_KEYS.language);
-    return value === "si" || value === "en" || value === "ta" ? value : "";
+    return value === "si" || value === "en" || value === "ta"
+      ? value
+      : DEFAULT_LANGUAGE;
   }
 
   function getLanguagePack(language) {
@@ -425,6 +424,7 @@
   function getStatusText(key, language) {
     const lang = language || getSavedLanguage() || "en";
     const table = STATUS_TEXT[key];
+
     if (table && table[lang]) return table[lang];
     if (table && table.en) return table.en;
     return key;
@@ -434,12 +434,6 @@
     const status = getStatus();
     if (!status) return;
     status.textContent = getStatusText(textOrKey, language);
-  }
-
-  function setHeaderIntro(text) {
-    const intro = getHeaderIntro();
-    if (!intro) return;
-    intro.textContent = text;
   }
 
   function setTranscript(text) {
@@ -456,34 +450,43 @@
     transcript.textContent = text;
   }
 
-  function appendMessage(role, text, replaceAll) {
-    const messages = getMessages();
-    if (!messages || !text) return;
+  function setHeaderIntro(text) {
+    const el = getHeaderIntro();
+    if (!el) return;
 
-    if (replaceAll) {
-      messages.innerHTML = "";
+    if (!text) {
+      el.hidden = true;
+      el.textContent = "";
+      return;
     }
 
-    const row = document.createElement("div");
-    row.className = "zyverion-ai-message " + role;
-
-    const bubble = document.createElement("div");
-    bubble.className = "zyverion-ai-message-bubble";
-    bubble.textContent = text;
-
-    row.appendChild(bubble);
-    messages.appendChild(row);
-    messages.scrollTop = messages.scrollHeight;
+    el.hidden = false;
+    el.textContent = text;
   }
 
-  function pushHistory(role, text) {
-    if (!text) return;
-    sessionState.history.push({
-      role: role,
-      text: text,
-      ts: Date.now(),
-    });
-    sessionState.history = sessionState.history.slice(-10);
+  function setContextSummary(text) {
+    const el = getContextSummary();
+    if (!el) return;
+
+    if (!text) {
+      el.hidden = true;
+      el.textContent = "";
+      return;
+    }
+
+    el.hidden = false;
+    el.textContent = text;
+  }
+
+  function setCurrentAnswer(text) {
+    const answerText = getAnswerText();
+    const messages = getMessages();
+    if (!answerText || !messages) return;
+
+    const finalText = safeText(text) || "Welcome to Zyverion AI. Tell me what kind of business you have.";
+    answerText.textContent = finalText;
+
+    sessionState.latestAssistantText = finalText;
     persistSessionState();
   }
   function syncLanguageSelect(language) {
@@ -510,19 +513,23 @@
     picker.style.display = show ? "" : "none";
   }
 
-  function setVoiceOverlayCopy(language) {
-    const title = getVoiceOverlayTitle();
-    const subtitle = getVoiceOverlaySubtitle();
-    const pack = getLanguagePack(language);
-
-    if (title) {
-      title.textContent = "ZYVERION AI";
-    }
-
-    if (subtitle) {
-      subtitle.textContent = pack.overlaySpeaking;
-    }
+  function getSavedPreferredVoice() {
+    return localStorage.getItem(STORAGE_KEYS.preferredVoice) || "";
   }
+
+  function getPreferredVoice(language) {
+    const saved = getSavedPreferredVoice();
+    if (saved) return saved;
+    return getLanguagePack(language).preferredVoice || "marin";
+  }
+
+function setVoiceOverlayCopy(language) {
+  const title = getVoiceOverlayTitle();
+  const subtitle = getVoiceOverlaySubtitle();
+
+  if (title) title.textContent = "ZYVERION AI";
+  if (subtitle) subtitle.textContent = "";
+}
 
   function showVoiceOverlay() {
     if (!voiceOverlay) return;
@@ -536,30 +543,20 @@
     voiceOverlay.setAttribute("aria-hidden", "true");
   }
 
-  function getSavedPreferredVoice() {
-    return localStorage.getItem(STORAGE_KEYS.preferredVoice) || "";
-  }
-
-  function getPreferredVoice(language) {
-    const saved = getSavedPreferredVoice();
-    if (saved) return saved;
-    return getLanguagePack(language).preferredVoice || "marin";
-  }
-
   function updateMuteButton() {
-    const muteBtn = getMuteBtn();
-    if (!muteBtn) return;
-    muteBtn.textContent = isMuted ? "Unmute" : "Mute";
-    muteBtn.classList.toggle("is-active", isMuted);
-    muteBtn.setAttribute("aria-pressed", isMuted ? "true" : "false");
+    const btn = getMuteBtn();
+    if (!btn) return;
+    btn.textContent = isMuted ? "Unmute" : "Mute";
+    btn.classList.toggle("is-active", isMuted);
+    btn.setAttribute("aria-pressed", isMuted ? "true" : "false");
   }
 
   function updateReplayButton() {
-    const replayBtn = getReplayBtn();
-    if (!replayBtn) return;
+    const btn = getReplayBtn();
+    if (!btn) return;
     const enabled = !!(lastSpokenText && lastSpokenLanguage);
-    replayBtn.disabled = !enabled;
-    replayBtn.classList.toggle("is-disabled", !enabled);
+    btn.disabled = !enabled;
+    btn.classList.toggle("is-disabled", !enabled);
   }
 
   function setOrbTexts(stateKey, language) {
@@ -576,13 +573,9 @@
     }
 
     if (hintText) {
-      if (stateKey === "listening") {
-        hintText.textContent = pack.orbHintListening;
-      } else if (stateKey === "speaking") {
-        hintText.textContent = pack.orbHintSpeaking;
-      } else {
-        hintText.textContent = pack.orbHintIdle;
-      }
+      if (stateKey === "listening") hintText.textContent = pack.orbHintListening;
+      else if (stateKey === "speaking") hintText.textContent = pack.orbHintSpeaking;
+      else hintText.textContent = pack.orbHintIdle;
     }
   }
 
@@ -621,20 +614,6 @@
     setOrbTexts(stateKey, language || getSavedLanguage() || "en");
   }
 
-  function setContextSummary(text) {
-    const summary = getContextSummary();
-    if (!summary) return;
-
-    if (!text) {
-      summary.hidden = true;
-      summary.textContent = "";
-      return;
-    }
-
-    summary.hidden = false;
-    summary.textContent = text;
-  }
-
   function createSolutionCard(solution) {
     const card = document.createElement("button");
     card.type = "button";
@@ -658,17 +637,13 @@
     card.appendChild(purpose);
 
     card.addEventListener("click", function () {
-      const messages = getMessages();
-      if (!messages) return;
-
-      const text =
+      const message =
         solution.name && solution.purpose
           ? solution.name + " — " + solution.purpose
           : solution.name || "";
-      if (!text) return;
 
-      appendMessage("assistant", text, false);
-      messages.scrollTop = messages.scrollHeight;
+      if (!message) return;
+      setCurrentAnswer(message);
     });
 
     return card;
@@ -727,12 +702,12 @@
 
     const label = document.createElement("div");
     label.className = "zyverion-ai-section-label";
-    label.textContent = "Helpful Follow-ups";
+    label.textContent = "Next Questions";
 
     const list = document.createElement("div");
     list.className = "zyverion-ai-followup-list";
 
-    questions.slice(0, 2).forEach(function (question) {
+    questions.slice(0, 3).forEach(function (question) {
       list.appendChild(createFollowUpChip(question));
     });
 
@@ -748,33 +723,18 @@
     });
   }
 
-  function updateSuggestedAction(source) {
+  function updateSuggestedAction(type) {
     clearSuggestedActionState();
-
-    if (!source || source === "none") return;
 
     let target = null;
 
-    if (source === "estimator" || source === "pricing") {
-      target = getEstimatorLink();
-    } else if (source === "contact" || source === "start" || source === "consultation") {
-      target = getContactLink();
-    } else if (source === "work") {
-      target = getWorkLink();
-    }
+    if (type === "estimator") target = getEstimatorLink();
+    else if (type === "contact") target = getContactLink();
+    else if (type === "work") target = getWorkLink();
 
     if (target) {
       target.classList.add("is-suggested");
     }
-  }
-
-  function applySuggestedAction(action) {
-    if (!action || typeof action !== "object") {
-      clearSuggestedActionState();
-      return;
-    }
-
-    updateSuggestedAction(action.type);
   }
 
   function normalizeSuggestedAction(action) {
@@ -786,30 +746,29 @@
       };
     }
 
-    const type =
-      typeof action.type === "string" ? action.type.trim() : "none";
+    const type = safeText(action.type);
 
     if (type === "estimator") {
       return {
         type: "estimator",
-        label: action.label || "Open Estimator",
-        href: action.href || "estimator.html",
+        label: safeText(action.label) || "Estimator",
+        href: safeText(action.href) || "estimator.html",
       };
     }
 
     if (type === "contact") {
       return {
         type: "contact",
-        label: action.label || "Contact Zyverion",
-        href: action.href || "contact.html",
+        label: safeText(action.label) || "Contact",
+        href: safeText(action.href) || "contact.html",
       };
     }
 
     if (type === "work") {
       return {
         type: "work",
-        label: action.label || "View Our Work",
-        href: action.href || "projects.html",
+        label: safeText(action.label) || "Work",
+        href: safeText(action.href) || "projects.html",
       };
     }
 
@@ -817,6 +776,23 @@
       type: "none",
       label: "",
       href: "",
+    };
+  }
+
+  function applySuggestedAction(action) {
+    const normalized = normalizeSuggestedAction(action);
+    updateSuggestedAction(normalized.type);
+    sessionState.lastSuggestedAction = normalized;
+    persistSessionState();
+  }
+
+  function buildSessionContextPayload() {
+    return {
+      businessSummary: sessionState.businessSummary,
+      userGoal: sessionState.userGoal,
+      knownBusinessTypeId: sessionState.knownBusinessTypeId,
+      knownStage: sessionState.knownStage,
+      notes: sessionState.notes,
     };
   }
 
@@ -847,11 +823,9 @@
       if (safeText(result.situation.businessTypeId)) {
         sessionState.knownBusinessTypeId = safeText(result.situation.businessTypeId);
       }
-
       if (safeText(result.situation.stage)) {
         sessionState.knownStage = safeText(result.situation.stage);
       }
-
       if (Array.isArray(result.situation.goals) && result.situation.goals.length) {
         sessionState.userGoal = result.situation.goals.join(", ");
       }
@@ -860,19 +834,11 @@
     persistSessionState();
   }
 
-  function buildSessionContextPayload() {
-    return {
-      businessSummary: sessionState.businessSummary,
-      userGoal: sessionState.userGoal,
-      knownBusinessTypeId: sessionState.knownBusinessTypeId,
-      knownStage: sessionState.knownStage,
-      notes: sessionState.notes,
-    };
-  }
-
   function learnFromUserMessage(text) {
     const value = normalizeText(text);
     if (!value) return;
+
+    sessionState.latestUserText = safeText(text);
 
     if (!sessionState.businessSummary && value.length < 180) {
       if (
@@ -887,7 +853,7 @@
         value.includes("brand") ||
         value.includes("institute")
       ) {
-        sessionState.businessSummary = text.trim();
+        sessionState.businessSummary = safeText(text);
       }
     }
 
@@ -902,14 +868,15 @@
         value.includes("system") ||
         value.includes("guidance")
       ) {
-        sessionState.userGoal = text.trim();
+        sessionState.userGoal = safeText(text);
       }
     }
 
     if (value.length < 240) {
       sessionState.notes = uniqueArray(
-        [sessionState.notes, text.trim()].filter(Boolean)
+        [sessionState.notes, safeText(text)].filter(Boolean)
       ).join(" | ");
+
       if (sessionState.notes.length > 420) {
         sessionState.notes = sessionState.notes.slice(-420);
       }
@@ -922,12 +889,18 @@
     setContextSummary(sessionState.lastSituationSummary || "");
     renderRecommendationRail(sessionState.lastRecommendedSolutions || []);
     renderFollowUpRail(sessionState.lastFollowUpQuestions || []);
+    applySuggestedAction(sessionState.lastSuggestedAction || { type: "none" });
     updateReplayButton();
     updateMuteButton();
     updateOrbState(getSavedLanguage() || "en");
+
+    if (sessionState.latestAssistantText) {
+      setCurrentAnswer(sessionState.latestAssistantText);
+    }
   }
 
   function clearSmartUi() {
+    setHeaderIntro("");
     setContextSummary("");
     renderRecommendationRail([]);
     renderFollowUpRail([]);
@@ -949,88 +922,6 @@
       event.altKey ||
       event.button === 1
     );
-  }
-
-  function isProjectsPage() {
-    const path = (window.location.pathname || "").toLowerCase();
-    return path.endsWith("/projects.html") || path.endsWith("projects.html");
-  }
-
-  function getWorkPopup() {
-    return document.getElementById("zyverionWorkPopup");
-  }
-
-  function hideWorkPopup() {
-    const popup = getWorkPopup();
-    if (!popup) return;
-    popup.classList.remove("show");
-    popup.setAttribute("aria-hidden", "true");
-  }
-
-  function ensureWorkPopupExists() {
-    if (!isProjectsPage()) return null;
-
-    let popup = getWorkPopup();
-    if (popup) return popup;
-
-    popup = document.createElement("div");
-    popup.id = "zyverionWorkPopup";
-    popup.className = "zyverion-work-popup";
-    popup.setAttribute("aria-hidden", "true");
-
-    popup.innerHTML = `
-      <button
-        type="button"
-        class="zyverion-work-popup-close"
-        aria-label="Close estimator popup"
-      >
-        <span></span>
-        <span></span>
-      </button>
-      <div class="zyverion-work-popup-copy">
-        <strong>Like what you see?</strong>
-        <p>Visit the Estimator to get a price direction for your project.</p>
-      </div>
-      <a class="zyverion-work-popup-btn" href="estimator.html">Open Estimator</a>
-    `;
-
-    document.body.appendChild(popup);
-
-    const closeBtn = popup.querySelector(".zyverion-work-popup-close");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", hideWorkPopup);
-    }
-
-    return popup;
-  }
-
-  function showWorkPopupIfNeeded() {
-    if (!isProjectsPage()) return;
-    if (sessionStorage.getItem(STORAGE_KEYS.workPopupShown) === "true") return;
-
-    const popup = ensureWorkPopupExists();
-    if (!popup) return;
-
-    setTimeout(function () {
-      popup.classList.add("show");
-      popup.setAttribute("aria-hidden", "false");
-      sessionStorage.setItem(STORAGE_KEYS.workPopupShown, "true");
-
-      setTimeout(function () {
-        hideWorkPopup();
-      }, 6000);
-    }, 1800);
-  }
-
-  function setSavedLanguage(language) {
-    if (!language) return;
-
-    localStorage.setItem(STORAGE_KEYS.language, language);
-    syncLanguageUi(language);
-    showLanguagePicker(false);
-    setHeaderIntro(getStatusText("idle", language));
-    setStatus("idle", language);
-    updateOrbState(language);
   }
   function revokeActiveAudioUrl() {
     if (activeAudioUrl) {
@@ -1075,10 +966,7 @@
 
     for (let i = 0; i < targets.length; i += 1) {
       const found = voices.find(function (voice) {
-        return (
-          voice.lang &&
-          voice.lang.toLowerCase().indexOf(targets[i]) === 0
-        );
+        return voice.lang && voice.lang.toLowerCase().indexOf(targets[i]) === 0;
       });
       if (found) return found;
     }
@@ -1164,7 +1052,6 @@
           audio.onplay = null;
           audio.onended = null;
           audio.onerror = null;
-          audio.onpause = null;
 
           if (!success) {
             cleanupActiveAudio();
@@ -1199,10 +1086,6 @@
           if (!isListening) setStatus("ttsFallback", language);
           updateOrbState(language);
           finalize(false);
-        };
-
-        audio.onpause = function () {
-          if (audio.ended) return;
         };
 
         audio.play().catch(function () {
@@ -1308,146 +1191,6 @@
     updateOrbState(getSavedLanguage() || "en");
   }
 
-  function hideLegacyControls() {
-    const legacyControls = qs(SELECTORS.legacyControls);
-    const startBtn = qs(SELECTORS.legacyStartBtn);
-    const stopBtn = qs(SELECTORS.legacyStopBtn);
-
-    if (legacyControls) legacyControls.style.display = "none";
-    if (startBtn) startBtn.style.display = "none";
-    if (stopBtn) stopBtn.style.display = "none";
-  }
-
-  function getLanguageSwitchMessage(language) {
-    return getLanguagePack(language).languageSwitched;
-  }
-
-  async function handleGreeting(language, replaceConversation) {
-    const pack = getLanguagePack(language);
-
-    if (hasWelcomedThisOpen) {
-      const switchMessage = getLanguageSwitchMessage(language);
-      appendMessage("assistant", switchMessage, false);
-      pushHistory("assistant", switchMessage);
-      await speakText(switchMessage, language);
-      return;
-    }
-
-    appendMessage("assistant", pack.welcome, replaceConversation);
-    pushHistory("assistant", pack.welcome);
-    await speakText(pack.welcome, language);
-    hasWelcomedThisOpen = true;
-  }
-
-  function showHintOncePerSession() {
-    const hint = getHint();
-    if (!hint) return;
-
-    if (sessionStorage.getItem(STORAGE_KEYS.hintShown) === "true") {
-      hint.classList.remove("show");
-      return;
-    }
-
-    setTimeout(function () {
-      hint.classList.add("show");
-      sessionStorage.setItem(STORAGE_KEYS.hintShown, "true");
-
-      setTimeout(function () {
-        hint.classList.remove("show");
-      }, 5000);
-    }, 2000);
-  }
-
-  function openFallbackWelcome() {
-    if (!welcomeOverlay) return;
-
-    welcomeOverlay.style.display = "flex";
-    welcomeOverlay.classList.remove("is-closing");
-
-    requestAnimationFrame(function () {
-      welcomeOverlay.classList.add("show");
-      welcomeOverlay.setAttribute("aria-hidden", "false");
-    });
-  }
-
-  async function openAssistantPanel() {
-    const panel = getPanel();
-    const backdrop = getPanelBackdrop();
-
-    if (!panel) {
-      openFallbackWelcome();
-      return;
-    }
-
-    panel.classList.add("is-open");
-    if (backdrop) backdrop.classList.add("is-open");
-    panel.setAttribute("aria-hidden", "false");
-    document.body.classList.add("zyverion-ai-open");
-    launcher.classList.add("is-active");
-    hideWorkPopup();
-
-    isPanelOpen = true;
-    hasWelcomedThisOpen = false;
-    isProcessing = false;
-    clearPendingNavigationTimer();
-    resetListeningUi();
-    setTranscript("");
-    clearSuggestedActionState();
-    hideLegacyControls();
-
-    const savedLanguage = getSavedLanguage();
-    syncLanguageUi(savedLanguage);
-    showLanguagePicker(!savedLanguage);
-    refreshSmartUiFromSession();
-
-    if (savedLanguage) {
-      setHeaderIntro(getStatusText("idle", savedLanguage));
-      setStatus("idle", savedLanguage);
-      updateOrbState(savedLanguage);
-
-      setTimeout(function () {
-        handleGreeting(savedLanguage, true);
-      }, 180);
-    } else {
-      setStatus("chooseLanguage");
-      updateOrbState("en");
-    }
-  }
-
-  function closeAssistantPanel() {
-    const panel = getPanel();
-    const backdrop = getPanelBackdrop();
-
-    if (!panel) return;
-
-    clearPendingNavigationTimer();
-    stopRecognition(true);
-    stopSpeech();
-
-    panel.classList.remove("is-open");
-    if (backdrop) backdrop.classList.remove("is-open");
-    panel.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("zyverion-ai-open");
-    launcher.classList.remove("is-active");
-    launcher.classList.remove("is-listening");
-
-    isPanelOpen = false;
-    hasWelcomedThisOpen = false;
-    isProcessing = false;
-    currentTranscriptText = "";
-
-    setTranscript("");
-    setStatus("idle");
-    updateOrbState(getSavedLanguage() || "en");
-  }
-
-  function toggleAssistantPanel() {
-    if (isPanelOpen) {
-      closeAssistantPanel();
-    } else {
-      openAssistantPanel();
-    }
-  }
   function stopRecognition(discardTranscript) {
     shouldAutoSendOnEnd = !discardTranscript;
 
@@ -1469,6 +1212,135 @@
     }
   }
 
+  function hideLegacyControls() {
+    const legacyControls = qs(SELECTORS.legacyControls);
+    const startBtn = qs(SELECTORS.legacyStartBtn);
+    const stopBtn = qs(SELECTORS.legacyStopBtn);
+
+    if (legacyControls) legacyControls.style.display = "none";
+    if (startBtn) startBtn.style.display = "none";
+    if (stopBtn) stopBtn.style.display = "none";
+  }
+
+  function getLanguageSwitchMessage(language) {
+    return getLanguagePack(language).switchMessage;
+  }
+
+  async function handleGreeting(language) {
+    const pack = getLanguagePack(language);
+
+    if (hasWelcomedThisOpen) {
+      const switchMessage = getLanguageSwitchMessage(language);
+      setCurrentAnswer(switchMessage);
+      await speakText(switchMessage, language);
+      return;
+    }
+
+    setCurrentAnswer(pack.welcome);
+    await speakText(pack.welcome, language);
+    hasWelcomedThisOpen = true;
+  }
+
+  function showHintOncePerSession() {
+    const hint = getHint();
+    if (!hint) return;
+
+    if (sessionStorage.getItem(STORAGE_KEYS.hintShown) === "true") {
+      hint.classList.remove("show");
+      return;
+    }
+
+    setTimeout(function () {
+      hint.classList.add("show");
+      sessionStorage.setItem(STORAGE_KEYS.hintShown, "true");
+
+      setTimeout(function () {
+        hint.classList.remove("show");
+      }, 4500);
+    }, 1600);
+  }
+
+  function isProjectsPage() {
+    const path = (window.location.pathname || "").toLowerCase();
+    return path.endsWith("/projects.html") || path.endsWith("projects.html");
+  }
+
+  function getWorkPopup() {
+    return document.getElementById("zyverionWorkPopup");
+  }
+
+  function hideWorkPopup() {
+    const popup = getWorkPopup();
+    if (!popup) return;
+    popup.classList.remove("show");
+    popup.setAttribute("aria-hidden", "true");
+  }
+
+  function ensureWorkPopupExists() {
+    if (!isProjectsPage()) return null;
+
+    let popup = getWorkPopup();
+    if (popup) return popup;
+
+    popup = document.createElement("div");
+    popup.id = "zyverionWorkPopup";
+    popup.className = "zyverion-work-popup";
+    popup.setAttribute("aria-hidden", "true");
+
+    popup.innerHTML = `
+      <button
+        type="button"
+        class="zyverion-work-popup-close"
+        aria-label="Close estimator popup"
+      >
+        <span></span>
+        <span></span>
+      </button>
+      <div class="zyverion-work-popup-copy">
+        <strong>Like what you see?</strong>
+        <p>Visit the Estimator to get a price direction for your project.</p>
+      </div>
+      <a class="zyverion-work-popup-btn" href="estimator.html">Open Estimator</a>
+    `;
+
+    document.body.appendChild(popup);
+
+    const closeBtn = popup.querySelector(".zyverion-work-popup-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", hideWorkPopup);
+    }
+
+    return popup;
+  }
+
+  function showWorkPopupIfNeeded() {
+    if (!isProjectsPage()) return;
+    if (sessionStorage.getItem(STORAGE_KEYS.workPopupShown) === "true") return;
+
+    const popup = ensureWorkPopupExists();
+    if (!popup) return;
+
+    setTimeout(function () {
+      popup.classList.add("show");
+      popup.setAttribute("aria-hidden", "false");
+      sessionStorage.setItem(STORAGE_KEYS.workPopupShown, "true");
+
+      setTimeout(function () {
+        hideWorkPopup();
+      }, 5200);
+    }, 1800);
+  }
+
+  function setSavedLanguage(language) {
+    if (!language) return;
+
+    localStorage.setItem(STORAGE_KEYS.language, language);
+    syncLanguageUi(language);
+    showLanguagePicker(false);
+    setHeaderIntro("");
+    setStatus("idle", language);
+    updateOrbState(language);
+  }
   function normalizeAiResult(data) {
     if (!data || typeof data !== "object") {
       return {
@@ -1500,7 +1372,7 @@
         ? data.followUpQuestions
             .filter((item) => typeof item === "string" && item.trim())
             .map((item) => item.trim())
-            .slice(0, 2)
+            .slice(0, 3)
         : [],
       situationSummary: safeText(data.situationSummary),
       recommendedSolutions: Array.isArray(data.recommendedSolutions)
@@ -1555,35 +1427,37 @@
       const data = await response.json();
       return normalizeAiResult(data);
     } catch (error) {
+      const fallbackQuestions =
+        language === "si"
+          ? [
+              "ඔයාගේ main goal එක වැඩි members ගන්න එකද, members manage කරන එකද, නැත්නම් දෙකමද?",
+              "ඔයාට website එක විතරක් ඕනද, නැත්නම් admin හෝ member features එකත් ඕනද?",
+            ]
+          : language === "ta"
+          ? [
+              "உங்கள் main goal அதிக members வாங்குவதா, members manage செய்வதா, அல்லது இரண்டுமா?",
+              "உங்களுக்கு website மட்டும் வேண்டுமா, அல்லது admin அல்லது member features கூட வேண்டுமா?",
+            ]
+          : [
+              "Is your main goal getting more customers, managing current users, or both?",
+              "Do you need only a website, or do you also need admin or member features?",
+            ];
+
       return normalizeAiResult({
         textReply:
           language === "si"
-            ? "දැනට smart reply service එක fallback mode එකෙන් යනවා. තව ටිකක් specific විදිහට business එක ගැන කියන්න."
+            ? "දැනට smart reply service එක fallback mode එකෙන් යනවා. ඒත් මට ඔයාගේ situation එක narrow කරන්න පුළුවන්."
             : language === "ta"
-            ? "இப்போது smart reply service fallback mode இல் உள்ளது. உங்கள் business பற்றி இன்னும் கொஞ்சம் specific ஆக சொல்லுங்கள்."
-            : "The smart reply service is currently in fallback mode. Tell me a little more specifically about your business.",
+            ? "இப்போது smart reply service fallback mode இல் உள்ளது. ஆனாலும் உங்கள் situation ஐ narrow செய்ய நான் உதவ முடியும்."
+            : "The smart reply service is in fallback mode right now, but I can still help narrow down your situation.",
         spokenReply:
           language === "si"
-            ? "දැනට fallback mode එකෙන් යනවා. ඔයාගේ business එක ගැන තව ටිකක් specific විදිහට කියන්න."
+            ? "දැනට fallback mode එකෙන් යනවා. ඒත් මට ඔයාගේ situation එක narrow කරන්න පුළුවන්."
             : language === "ta"
-            ? "இப்போது fallback mode இல் உள்ளது. உங்கள் business பற்றி இன்னும் கொஞ்சம் specific ஆக சொல்லுங்கள்."
-            : "I am in fallback mode right now. Tell me a little more specifically about your business.",
-        answerMode: "support",
-        followUpQuestions:
-          language === "si"
-            ? [
-                "මේක කුමන business type එකකටද?",
-                "ඔයාට website එකක්ද, system එකක්ද, නැත්නම් දෙකමද ඕනේ?",
-              ]
-            : language === "ta"
-            ? [
-                "இது எந்த business type க்காக?",
-                "உங்களுக்கு website வேண்டுமா, system வேண்டுமா, அல்லது இரண்டுமா?",
-              ]
-            : [
-                "What type of business is this for?",
-                "Do you need a website, a system, or both?",
-              ],
+            ? "இப்போது fallback mode இல் உள்ளது. ஆனாலும் உங்கள் situation ஐ narrow செய்ய உதவ முடியும்."
+            : "I am in fallback mode right now, but I can still help narrow down your situation.",
+        answerMode: "discovery",
+        followUpQuestions: fallbackQuestions,
         situationSummary: "",
         recommendedSolutions: [],
         suggestedAction: {
@@ -1634,8 +1508,8 @@
     setTranscript("");
     learnFromUserMessage(cleanText);
 
-    appendMessage("user", cleanText, false);
-    pushHistory("user", cleanText);
+    sessionState.latestUserText = cleanText;
+    persistSessionState();
 
     isProcessing = true;
     setStatus("thinking", language);
@@ -1647,8 +1521,7 @@
       applyAiResultToUi(result);
 
       if (result.textReply) {
-        appendMessage("assistant", result.textReply, false);
-        pushHistory("assistant", result.textReply);
+        setCurrentAnswer(result.textReply);
       }
 
       if (result.spokenReply || result.textReply) {
@@ -1663,6 +1536,7 @@
 
       updateOrbState(language);
       refreshSmartUiFromSession();
+      syncPopupHeight();
     }
   }
 
@@ -1699,6 +1573,7 @@
       launcher.classList.add("is-listening");
       setStatus("listening", language);
       updateOrbState(language);
+      syncPopupHeight();
     };
 
     recognition.onresult = function (event) {
@@ -1710,6 +1585,7 @@
 
       currentTranscriptText = combined.trim();
       setTranscript(currentTranscriptText);
+      syncPopupHeight();
     };
 
     recognition.onerror = function (event) {
@@ -1723,6 +1599,7 @@
 
       recognition = null;
       updateOrbState(language);
+      syncPopupHeight();
     };
 
     recognition.onend = function () {
@@ -1749,6 +1626,8 @@
         setStatus("idle", language);
         updateOrbState(language);
       }
+
+      syncPopupHeight();
     };
 
     try {
@@ -1758,6 +1637,7 @@
       setStatus("unsupported", language);
       recognition = null;
       updateOrbState(language);
+      syncPopupHeight();
     }
   }
 
@@ -1773,6 +1653,7 @@
       stopSpeech();
       setStatus("idle", language);
       updateOrbState(language);
+      syncPopupHeight();
       return;
     }
 
@@ -1786,9 +1667,9 @@
   function getActionMessage(actionType, language) {
     if (actionType === "estimator") {
       return language === "si"
-        ? "හරි. දැන් Estimator එකට යමු."
+        ? "හරි. දැන් Estimator එක බලමු."
         : language === "ta"
-        ? "சரி. இப்போது Estimator க்கு போகலாம்."
+        ? "சரி. இப்போது Estimator ஐ பார்க்கலாம்."
         : "Alright. Let's open the Estimator.";
     }
 
@@ -1825,43 +1706,139 @@
     stopRecognition(true);
     stopSpeech();
 
-    appendMessage("assistant", message, false);
-    pushHistory("assistant", message);
-
+    setCurrentAnswer(message);
     await speakText(message, language);
 
     pendingNavigationTimer = window.setTimeout(function () {
       pendingNavigationTimer = null;
       window.location.href = href;
-    }, isMuted ? 160 : 420);
+    }, isMuted ? 150 : 380);
   }
+
+  function syncPopupHeight() {
+    const shell = getPanelShell();
+    if (!shell) return;
+
+    requestAnimationFrame(function () {
+      const hasExtraContent =
+        !!sessionState.lastSituationSummary ||
+        !!(sessionState.lastRecommendedSolutions || []).length ||
+        !!(sessionState.lastFollowUpQuestions || []).length ||
+        !!currentTranscriptText ||
+        isListening ||
+        isProcessing;
+
+      shell.style.maxHeight = hasExtraContent
+        ? "min(72vh, 560px)"
+        : "min(46vh, 390px)";
+    });
+  }
+  async function openAssistantPanel() {
+    const panel = getPanel();
+    const backdrop = getBackdrop();
+
+    if (!panel || !backdrop) return;
+
+    panel.classList.add("is-open");
+    backdrop.classList.add("is-open");
+    panel.setAttribute("aria-hidden", "false");
+    backdrop.setAttribute("aria-hidden", "false");
+    document.body.classList.add("zyverion-ai-open");
+    launcher.classList.add("is-active");
+
+    isPanelOpen = true;
+    hasWelcomedThisOpen = false;
+    currentTranscriptText = "";
+    setTranscript("");
+    hideWorkPopup();
+    clearPendingNavigationTimer();
+    hideLegacyControls();
+
+    const savedLanguage = getSavedLanguage();
+    syncLanguageUi(savedLanguage);
+    showLanguagePicker(!savedLanguage);
+
+    if (sessionState.latestAssistantText) {
+      setCurrentAnswer(sessionState.latestAssistantText);
+    } else {
+      setCurrentAnswer(
+        "Welcome to Zyverion AI. Tell me what kind of business you have."
+      );
+    }
+
+    setContextSummary(sessionState.lastSituationSummary || "");
+    renderRecommendationRail(sessionState.lastRecommendedSolutions || []);
+    renderFollowUpRail(sessionState.lastFollowUpQuestions || []);
+    applySuggestedAction(sessionState.lastSuggestedAction || { type: "none" });
+
+    if (savedLanguage) {
+      setStatus("idle", savedLanguage);
+      updateOrbState(savedLanguage);
+
+      setTimeout(function () {
+        Promise.resolve(handleGreeting(savedLanguage)).catch(function () {});
+      }, 160);
+    } else {
+      setStatus("chooseLanguage", "en");
+      updateOrbState("en");
+    }
+
+    syncPopupHeight();
+  }
+
+  function closeAssistantPanel() {
+    const panel = getPanel();
+    const backdrop = getBackdrop();
+
+    if (!panel || !backdrop) return;
+
+    clearPendingNavigationTimer();
+    stopRecognition(true);
+    stopSpeech();
+
+    panel.classList.remove("is-open");
+    backdrop.classList.remove("is-open");
+    panel.setAttribute("aria-hidden", "true");
+    backdrop.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("zyverion-ai-open");
+    launcher.classList.remove("is-active");
+    launcher.classList.remove("is-listening");
+
+    isPanelOpen = false;
+    isProcessing = false;
+    hasWelcomedThisOpen = false;
+    currentTranscriptText = "";
+    setTranscript("");
+  }
+
+  function toggleAssistantPanel() {
+    if (isPanelOpen) {
+      closeAssistantPanel();
+    } else {
+      openAssistantPanel();
+    }
+  }
+
   function bindPanelControls() {
-    const panelClose = getPanelClose();
-    const panelBackdrop = getPanelBackdrop();
+    const backdrop = getBackdrop();
+    const panel = getPanel();
     const languageSelect = getLanguageSelect();
+    const orbButton = getOrbButton();
     const muteBtn = getMuteBtn();
     const replayBtn = getReplayBtn();
-    const orbButton = getOrbButton();
-
     const estimatorLink = getEstimatorLink();
     const contactLink = getContactLink();
     const workLink = getWorkLink();
 
-    if (panelClose) {
-      panelClose.addEventListener("click", closeAssistantPanel);
+    if (backdrop) {
+      backdrop.addEventListener("click", function () {
+        closeAssistantPanel();
+      });
     }
 
-    if (panelBackdrop) {
-      panelBackdrop.addEventListener("click", closeAssistantPanel);
-    }
-
-    if (languageSelect) {
-      languageSelect.addEventListener("change", function (event) {
-        const language = event.target.value;
-        if (!language) return;
-
-        setSavedLanguage(language);
-        Promise.resolve(handleGreeting(language, false)).catch(function () {});
+    if (panel) {
+      panel.addEventListener("click", function (event) {
+        event.stopPropagation();
       });
     }
 
@@ -1873,8 +1850,27 @@
       if (!language) return;
 
       setSavedLanguage(language);
-      Promise.resolve(handleGreeting(language, true)).catch(function () {});
+      Promise.resolve(handleGreeting(language)).catch(function () {});
+      syncPopupHeight();
     });
+
+    if (languageSelect) {
+      languageSelect.addEventListener("change", function (event) {
+        const language = event.target.value;
+        if (!language) return;
+
+        setSavedLanguage(language);
+        Promise.resolve(handleGreeting(language)).catch(function () {});
+        syncPopupHeight();
+      });
+    }
+
+    if (orbButton) {
+      orbButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        handleOrbTap();
+      });
+    }
 
     if (muteBtn) {
       muteBtn.addEventListener("click", function () {
@@ -1902,17 +1898,10 @@
       });
     }
 
-    if (orbButton) {
-      orbButton.addEventListener("click", function () {
-        handleOrbTap();
-      });
-    }
-
     if (estimatorLink) {
       estimatorLink.addEventListener("click", function (event) {
         if (shouldBypassLinkIntercept(event)) return;
         event.preventDefault();
-
         navigateWithAssistantFeedback(
           "estimator",
           estimatorLink.getAttribute("href") || "estimator.html"
@@ -1924,7 +1913,6 @@
       contactLink.addEventListener("click", function (event) {
         if (shouldBypassLinkIntercept(event)) return;
         event.preventDefault();
-
         navigateWithAssistantFeedback(
           "contact",
           contactLink.getAttribute("href") || "contact.html"
@@ -1936,7 +1924,6 @@
       workLink.addEventListener("click", function (event) {
         if (shouldBypassLinkIntercept(event)) return;
         event.preventDefault();
-
         navigateWithAssistantFeedback(
           "work",
           workLink.getAttribute("href") || "projects.html"
@@ -1945,94 +1932,36 @@
     }
   }
 
-  function renderPosition() {
-    const margin = getMargin();
-    const maxLeft = Math.max(
-      margin,
-      window.innerWidth - launcher.offsetWidth - margin
-    );
-    const maxTop = Math.max(
-      margin,
-      window.innerHeight - launcher.offsetHeight - margin
-    );
-
-    currentLeft = clamp(currentLeft, margin, maxLeft);
-    currentTop = clamp(currentTop, margin, maxTop);
-
-    launcher.style.transform =
-      "translate3d(" + currentLeft + "px, " + currentTop + "px, 0)";
-    rafId = null;
-  }
-
-  function queueRender() {
-    if (!rafId) {
-      rafId = requestAnimationFrame(renderPosition);
-    }
-  }
-
-  function setDefaultPosition() {
-    const margin = getMargin();
-    currentLeft = window.innerWidth - launcher.offsetWidth - margin;
-    currentTop = window.innerHeight - launcher.offsetHeight - margin;
-    queueRender();
-  }
-
-  function startDrag(clientX, clientY) {
-    isDragging = true;
-    moved = false;
-    pointerStartX = clientX;
-    pointerStartY = clientY;
-    startLeft = currentLeft;
-    startTop = currentTop;
-    launcher.classList.add("dragging");
-  }
-
-  function moveDrag(clientX, clientY) {
-    if (!isDragging) return;
-
-    const dx = clientX - pointerStartX;
-    const dy = clientY - pointerStartY;
-
-    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-      moved = true;
-    }
-
-    currentLeft = startLeft + dx;
-    currentTop = startTop + dy;
-    queueRender();
-  }
-
-  function endDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    launcher.classList.remove("dragging");
-  }
-
   function bindLauncher() {
     window.addEventListener("load", function () {
+      localStorage.setItem(STORAGE_KEYS.language, DEFAULT_LANGUAGE);
       hideLegacyControls();
-      setDefaultPosition();
       showHintOncePerSession();
       ensureWorkPopupExists();
       showWorkPopupIfNeeded();
 
-      const savedLanguage = getSavedLanguage() || "en";
-      syncLanguageUi(getSavedLanguage());
-      setHeaderIntro(getStatusText("idle", savedLanguage));
-      setStatus(getSavedLanguage() ? "idle" : "chooseLanguage", savedLanguage);
+      const savedLanguage = getSavedLanguage();
+      syncLanguageUi(savedLanguage);
+      showLanguagePicker(!savedLanguage);
 
+      if (sessionState.latestAssistantText) {
+        setCurrentAnswer(sessionState.latestAssistantText);
+      } else {
+        setCurrentAnswer(
+          "Welcome to Zyverion AI. Tell me what kind of business you have."
+        );
+      }
+
+      setContextSummary(sessionState.lastSituationSummary || "");
+      renderRecommendationRail(sessionState.lastRecommendedSolutions || []);
+      renderFollowUpRail(sessionState.lastFollowUpQuestions || []);
+      applySuggestedAction(sessionState.lastSuggestedAction || { type: "none" });
+
+      setStatus(savedLanguage ? "idle" : "chooseLanguage", savedLanguage || "en");
       updateMuteButton();
       updateReplayButton();
-      refreshSmartUiFromSession();
-      updateOrbState(savedLanguage);
-
-      const actionDock = getActionDock();
-      const utilityDock = getUtilityDock();
-      const panelShell = getPanelShell();
-
-      if (actionDock) actionDock.classList.add("is-smart-dock");
-      if (utilityDock) utilityDock.classList.add("is-smart-utility");
-      if (panelShell) panelShell.classList.add("is-orb-upgraded");
+      updateOrbState(savedLanguage || "en");
+      syncPopupHeight();
     });
 
     if (synth) {
@@ -2043,46 +1972,8 @@
       };
     }
 
-    window.addEventListener("resize", setDefaultPosition);
-
-    launcher.addEventListener("mousedown", function (event) {
-      startDrag(event.clientX, event.clientY);
-    });
-
-    window.addEventListener("mousemove", function (event) {
-      moveDrag(event.clientX, event.clientY);
-    });
-
-    window.addEventListener("mouseup", endDrag);
-
-    launcher.addEventListener(
-      "touchstart",
-      function (event) {
-        const touch = event.touches[0];
-        startDrag(touch.clientX, touch.clientY);
-      },
-      { passive: true }
-    );
-
-    window.addEventListener(
-      "touchmove",
-      function (event) {
-        if (!isDragging) return;
-        const touch = event.touches[0];
-        moveDrag(touch.clientX, touch.clientY);
-      },
-      { passive: true }
-    );
-
-    window.addEventListener("touchend", endDrag);
-
     launcher.addEventListener("click", function (event) {
-      if (moved) {
-        event.preventDefault();
-        moved = false;
-        return;
-      }
-
+      event.preventDefault();
       toggleAssistantPanel();
     });
 
@@ -2101,7 +1992,10 @@
       resetSession: function () {
         resetSessionState();
         clearSmartUi();
-        refreshSmartUiFromSession();
+        setCurrentAnswer(
+          "Welcome to Zyverion AI. Tell me what kind of business you have."
+        );
+        syncPopupHeight();
       },
       getLanguage: getSavedLanguage,
       setLanguage: function (language) {
