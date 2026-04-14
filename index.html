@@ -690,7 +690,120 @@
     </div>
   </div>
 
+<div id="zyverionAiHint" class="zyverion-ai-hint" aria-hidden="true">
+    <span class="zyverion-ai-hint-text">Speak to Zyverion AI</span>
+  </div>
 
+  <div id="zyverionAiPanelBackdrop" class="zyverion-ai-panel-backdrop" aria-hidden="true"></div>
+
+  <aside id="zyverionAiPanel" class="zyverion-ai-panel" aria-hidden="true" aria-label="Zyverion AI Assistant">
+    <div class="zyverion-ai-panel-shell">
+      <div class="zyverion-ai-panel-topbar">
+        <div class="zyverion-ai-panel-badge">
+          <span class="zyverion-ai-panel-dot"></span>
+          <span>ZYVERION AI</span>
+        </div>
+
+        <button
+          id="zyverionAiPanelClose"
+          class="zyverion-ai-panel-close"
+          type="button"
+          aria-label="Close assistant"
+        >
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <div class="zyverion-ai-panel-head">
+        <div class="zyverion-ai-panel-copy">
+          <h3 class="zyverion-ai-panel-title">Voice Assistant</h3>
+          <p class="zyverion-ai-panel-text">
+            Choose your language and speak with Zyverion AI about services, pricing guidance, and your project.
+          </p>
+        </div>
+
+        <div class="zyverion-ai-language-switch">
+          <label class="zyverion-ai-language-label" for="zyverionAiLanguageSelect">Language</label>
+          <select id="zyverionAiLanguageSelect" class="zyverion-ai-language-select" aria-label="Choose language">
+            <option value="">Select</option>
+            <option value="si">Sinhala</option>
+            <option value="en">English</option>
+            <option value="ta">Tamil</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="zyverionAiLanguagePicker" class="zyverion-ai-language-picker">
+        <p class="zyverion-ai-language-picker-title">Choose your language</p>
+
+        <div class="zyverion-ai-language-grid">
+          <button type="button" class="zyverion-ai-language-option" data-ai-language="si">
+            <strong>සිංහල</strong>
+            <span>Sinhala</span>
+          </button>
+
+          <button type="button" class="zyverion-ai-language-option" data-ai-language="en">
+            <strong>English</strong>
+            <span>English</span>
+          </button>
+
+          <button type="button" class="zyverion-ai-language-option" data-ai-language="ta">
+            <strong>தமிழ்</strong>
+            <span>Tamil</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="zyverion-ai-status-wrap">
+        <div id="zyverionAiStatus" class="zyverion-ai-status">
+          Tap the mic and ask about Zyverion services, pricing, or your project
+        </div>
+
+        <div id="zyverionAiTranscript" class="zyverion-ai-transcript" hidden>
+          Your voice will appear here...
+        </div>
+      </div>
+
+      <div id="zyverionAiMessages" class="zyverion-ai-messages" aria-live="polite">
+        <div class="zyverion-ai-message assistant">
+          <div class="zyverion-ai-message-bubble">
+            Welcome to Zyverion AI. Select a language to begin.
+          </div>
+        </div>
+      </div>
+
+      <div class="zyverion-ai-controls">
+        <button id="zyverionAiStartBtn" class="zyverion-ai-control primary" type="button">
+          Start Listening
+        </button>
+
+        <button id="zyverionAiStopBtn" class="zyverion-ai-control" type="button">
+          Stop
+        </button>
+
+        <button id="zyverionAiMuteBtn" class="zyverion-ai-control" type="button">
+          Mute
+        </button>
+
+        <button id="zyverionAiReplayBtn" class="zyverion-ai-control" type="button">
+          Replay
+        </button>
+      </div>
+
+      <div class="zyverion-ai-actions">
+        <a id="zyverionAiEstimatorLink" class="zyverion-ai-action-link" href="estimator.html">
+          Open Estimator
+        </a>
+        <a id="zyverionAiContactLink" class="zyverion-ai-action-link" href="contact.html">
+          Contact Zyverion
+        </a>
+        <a id="zyverionAiWorkLink" class="zyverion-ai-action-link" href="projects.html">
+          View Our Work
+        </a>
+      </div>
+    </div>
+  </aside>
 
   <div class="mobile-sticky-cta">
     <a class="btn primary" href="contact.html">Start Project</a>
