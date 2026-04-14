@@ -1877,3 +1877,951 @@ body.zyverion-ai-open {
     font-size: 13px;
   }
 }
+/* =========================================================
+   ZYVERION AI ORB PANEL REBUILD OVERRIDE — PART 1
+========================================================= */
+
+.zyverion-ai-panel {
+  right: 12px;
+  left: 12px;
+  top: max(10px, env(safe-area-inset-top));
+  bottom: 82px;
+  width: auto;
+  max-width: 460px;
+  margin-left: auto;
+}
+
+.zyverion-ai-panel-shell.is-orb-upgraded {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 28px;
+  min-height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(66, 219, 255, 0.12), transparent 22%),
+    radial-gradient(circle at 100% 100%, rgba(173, 68, 255, 0.1), transparent 26%),
+    linear-gradient(180deg, rgba(8, 15, 28, 0.98), rgba(4, 10, 18, 0.985));
+}
+
+.zyverion-ai-panel-shell.is-orb-upgraded::before {
+  background-size: 22px 22px;
+  opacity: 0.55;
+}
+
+.zyverion-ai-panel-topbar {
+  margin-bottom: 0;
+}
+
+.zyverion-ai-panel-head-upgraded {
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.zyverion-ai-panel-title {
+  margin: 0 0 5px;
+  font-size: 21px;
+  line-height: 1.02;
+}
+
+.zyverion-ai-panel-intro {
+  margin: 0;
+  font-size: 13.2px;
+  line-height: 1.5;
+  color: rgba(221, 242, 255, 0.8);
+}
+
+.zyverion-ai-language-switch {
+  gap: 6px;
+}
+
+.zyverion-ai-language-select {
+  min-height: 42px;
+  border-radius: 13px;
+  font-size: 13px;
+}
+
+.zyverion-ai-language-picker {
+  margin-bottom: 0;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.zyverion-ai-language-picker-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.zyverion-ai-language-grid {
+  gap: 8px;
+}
+
+.zyverion-ai-language-option {
+  padding: 12px 13px;
+  border-radius: 15px;
+}
+
+.zyverion-ai-language-option strong {
+  font-size: 14px;
+}
+
+.zyverion-ai-language-option span {
+  font-size: 12px;
+}
+
+.zyverion-ai-orb-zone {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 2px 0 0;
+}
+
+.zyverion-ai-orb-button {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.24s ease;
+}
+
+.zyverion-ai-orb-button:hover {
+  transform: scale(1.02);
+}
+
+.zyverion-ai-orb-button:active {
+  transform: scale(0.985);
+}
+
+.zyverion-ai-orb-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.zyverion-ai-orb-ring.ring-1 {
+  border: 1px solid rgba(117, 232, 255, 0.28);
+  box-shadow:
+    0 0 26px rgba(75, 210, 255, 0.18),
+    inset 0 0 18px rgba(163, 240, 255, 0.04);
+}
+
+.zyverion-ai-orb-ring.ring-2 {
+  inset: 9px;
+  border: 1px solid rgba(167, 79, 255, 0.18);
+  box-shadow: 0 0 20px rgba(167, 79, 255, 0.08);
+}
+
+.zyverion-ai-orb-ring.ring-3 {
+  inset: 18px;
+  border: 1px solid rgba(100, 219, 255, 0.12);
+}
+
+.zyverion-ai-orb-core {
+  position: absolute;
+  inset: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(231, 252, 255, 0.98), rgba(80, 216, 255, 0.68) 30%, rgba(115, 70, 255, 0.2) 58%, rgba(7, 12, 24, 0.98) 82%);
+  border: 1px solid rgba(122, 239, 255, 0.22);
+  box-shadow:
+    0 0 26px rgba(77, 219, 255, 0.28),
+    0 0 58px rgba(167, 79, 255, 0.12),
+    inset 0 0 26px rgba(203, 250, 255, 0.08);
+}
+
+.zyverion-ai-orb-glow {
+  position: absolute;
+  inset: 10%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(112, 238, 255, 0.3), rgba(168, 74, 255, 0.09) 44%, transparent 72%);
+  filter: blur(12px);
+}
+
+.zyverion-ai-orb-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(178, 245, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(178, 245, 255, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(circle at center, black 36%, transparent 88%);
+  opacity: 0.55;
+}
+
+.zyverion-ai-orb-mic {
+  position: relative;
+  z-index: 2;
+  width: 34px;
+  height: 48px;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(130, 239, 255, 0.28));
+}
+
+.zyverion-ai-orb-mic .mic-head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 22px;
+  height: 26px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(244, 252, 255, 0.98), rgba(136, 232, 255, 0.88));
+  box-shadow:
+    0 0 12px rgba(132, 238, 255, 0.3),
+    inset 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.zyverion-ai-orb-mic .mic-body {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  width: 8px;
+  height: 14px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(228, 249, 255, 0.96), rgba(111, 223, 255, 0.78));
+}
+
+.zyverion-ai-orb-mic .mic-base {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 24px;
+  height: 12px;
+  transform: translateX(-50%);
+}
+
+.zyverion-ai-orb-mic .mic-base::before,
+.zyverion-ai-orb-mic .mic-base::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(224, 248, 255, 0.94), rgba(115, 227, 255, 0.74));
+}
+
+.zyverion-ai-orb-mic .mic-base::before {
+  top: 0;
+  width: 2px;
+  height: 8px;
+}
+
+.zyverion-ai-orb-mic .mic-base::after {
+  bottom: 0;
+  width: 20px;
+  height: 3px;
+}
+
+.zyverion-ai-orb-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.zyverion-ai-orb-copy strong {
+  color: #f5fbff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.zyverion-ai-orb-copy span {
+  color: rgba(210, 234, 248, 0.78);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.zyverion-ai-orb-zone.is-idle .zyverion-ai-orb-button {
+  animation: zyverionOrbFloat 4.2s ease-in-out infinite;
+}
+
+.zyverion-ai-orb-zone.is-idle .zyverion-ai-orb-core {
+  animation: zyverionOrbBreathe 3.1s ease-in-out infinite;
+}
+
+.zyverion-ai-orb-zone.is-listening .ring-1,
+.zyverion-ai-orb-zone.is-listening .ring-2,
+.zyverion-ai-orb-zone.is-listening .ring-3 {
+  animation: zyverionOrbListenPulse 1.6s ease-out infinite;
+}
+
+.zyverion-ai-orb-zone.is-listening .ring-2 {
+  animation-delay: 0.2s;
+}
+
+.zyverion-ai-orb-zone.is-listening .ring-3 {
+  animation-delay: 0.4s;
+}
+
+.zyverion-ai-orb-zone.is-listening .zyverion-ai-orb-core {
+  animation: zyverionOrbListeningCore 1.5s ease-in-out infinite;
+}
+
+.zyverion-ai-orb-zone.is-thinking .zyverion-ai-orb-core {
+  animation: zyverionOrbThinking 1.8s linear infinite;
+}
+
+.zyverion-ai-orb-zone.is-speaking .zyverion-ai-orb-core {
+  animation: zyverionOrbSpeaking 1.4s ease-in-out infinite;
+}
+
+.zyverion-ai-orb-zone.is-speaking .ring-1,
+.zyverion-ai-orb-zone.is-speaking .ring-2,
+.zyverion-ai-orb-zone.is-speaking .ring-3 {
+  animation: zyverionOrbSpeakPulse 1.25s ease-out infinite;
+}
+
+.zyverion-ai-orb-zone.is-speaking .ring-2 {
+  animation-delay: 0.16s;
+}
+
+.zyverion-ai-orb-zone.is-speaking .ring-3 {
+  animation-delay: 0.32s;
+}
+
+.zyverion-ai-orb-zone.is-muted .zyverion-ai-orb-core {
+  filter: grayscale(0.28) brightness(0.82);
+  box-shadow:
+    0 0 16px rgba(79, 190, 225, 0.12),
+    0 0 30px rgba(120, 120, 160, 0.08),
+    inset 0 0 22px rgba(220, 235, 255, 0.04);
+}
+
+.zyverion-ai-orb-zone.is-muted .zyverion-ai-orb-ring {
+  opacity: 0.46;
+}
+
+.zyverion-ai-status-wrap-upgraded {
+  margin-bottom: 0;
+}
+
+.zyverion-ai-status {
+  padding: 11px 13px;
+  border-radius: 15px;
+  font-size: 12.8px;
+  line-height: 1.55;
+}
+
+.zyverion-ai-transcript {
+  margin-top: 8px;
+  padding: 11px 13px;
+  border-radius: 15px;
+  font-size: 12.6px;
+}
+
+.zyverion-ai-context-summary {
+  padding: 11px 13px;
+  border-radius: 15px;
+  background:
+    linear-gradient(180deg, rgba(13, 28, 48, 0.84), rgba(8, 16, 30, 0.9));
+  border: 1px solid rgba(124, 236, 255, 0.1);
+  color: rgba(225, 244, 255, 0.88);
+  font-size: 12.8px;
+  line-height: 1.55;
+}
+
+.zyverion-ai-messages-upgraded {
+  flex: 1 1 auto;
+  min-height: 220px;
+  max-height: none;
+  margin-bottom: 0;
+  padding: 2px 4px 2px 0;
+  gap: 9px;
+}
+
+.zyverion-ai-message-bubble {
+  padding: 11px 13px;
+  border-radius: 16px;
+  font-size: 12.9px;
+  line-height: 1.58;
+}
+
+.zyverion-ai-message.assistant .zyverion-ai-message-bubble {
+  background:
+    linear-gradient(180deg, rgba(13, 28, 47, 0.92), rgba(8, 15, 28, 0.97));
+}
+
+.zyverion-ai-message.user .zyverion-ai-message-bubble {
+  background:
+    linear-gradient(180deg, rgba(41, 187, 255, 0.18), rgba(161, 74, 255, 0.12));
+}
+
+@keyframes zyverionOrbFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes zyverionOrbBreathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 26px rgba(77, 219, 255, 0.26),
+      0 0 58px rgba(167, 79, 255, 0.1),
+      inset 0 0 26px rgba(203, 250, 255, 0.08);
+  }
+  50% {
+    transform: scale(1.035);
+    box-shadow:
+      0 0 32px rgba(77, 219, 255, 0.34),
+      0 0 70px rgba(167, 79, 255, 0.14),
+      inset 0 0 28px rgba(203, 250, 255, 0.1);
+  }
+}
+
+@keyframes zyverionOrbListenPulse {
+  0% {
+    transform: scale(0.88);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes zyverionOrbListeningCore {
+  0%, 100% {
+    transform: scale(0.98);
+    box-shadow:
+      0 0 34px rgba(64, 223, 255, 0.36),
+      0 0 76px rgba(76, 210, 255, 0.18),
+      0 0 92px rgba(170, 79, 255, 0.12),
+      inset 0 0 28px rgba(232, 250, 255, 0.1);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow:
+      0 0 40px rgba(64, 223, 255, 0.46),
+      0 0 92px rgba(76, 210, 255, 0.24),
+      0 0 108px rgba(170, 79, 255, 0.16),
+      inset 0 0 34px rgba(232, 250, 255, 0.13);
+  }
+}
+
+@keyframes zyverionOrbThinking {
+  0% {
+    transform: rotate(0deg) scale(1.01);
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.01);
+    filter: hue-rotate(10deg);
+  }
+}
+
+@keyframes zyverionOrbSpeaking {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 34px rgba(81, 223, 255, 0.34),
+      0 0 76px rgba(81, 223, 255, 0.18),
+      0 0 98px rgba(170, 79, 255, 0.14),
+      inset 0 0 28px rgba(233, 250, 255, 0.11);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 42px rgba(81, 223, 255, 0.44),
+      0 0 98px rgba(81, 223, 255, 0.24),
+      0 0 120px rgba(170, 79, 255, 0.18),
+      inset 0 0 32px rgba(233, 250, 255, 0.15);
+  }
+}
+
+@keyframes zyverionOrbSpeakPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.78;
+  }
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+/* =========================================================
+   ZYVERION AI ORB PANEL REBUILD OVERRIDE — PART 2
+========================================================= */
+
+.zyverion-ai-recommendation-rail,
+.zyverion-ai-followup-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zyverion-ai-section-label {
+  color: rgba(210, 235, 248, 0.72);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding-inline: 2px;
+}
+
+.zyverion-ai-solution-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.zyverion-ai-solution-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 12px 13px;
+  border: 1px solid rgba(124, 236, 255, 0.12);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top right, rgba(69, 220, 255, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(12, 24, 43, 0.94), rgba(7, 13, 24, 0.98));
+  color: #eefaff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+}
+
+.zyverion-ai-solution-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(124, 236, 255, 0.28);
+  box-shadow:
+    0 0 18px rgba(62, 208, 255, 0.12),
+    0 0 28px rgba(166, 71, 255, 0.06);
+  background:
+    radial-gradient(circle at top right, rgba(69, 220, 255, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(16, 30, 53, 0.96), rgba(8, 16, 29, 0.99));
+}
+
+.zyverion-ai-solution-category {
+  color: rgba(137, 229, 255, 0.84);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.zyverion-ai-solution-title {
+  color: #f4fbff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.zyverion-ai-solution-purpose {
+  color: rgba(220, 242, 255, 0.82);
+  font-size: 12.2px;
+  line-height: 1.5;
+}
+
+.zyverion-ai-followup-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zyverion-ai-followup-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 236, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(11, 20, 38, 0.94), rgba(7, 12, 22, 0.98));
+  color: rgba(237, 249, 255, 0.9);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+}
+
+.zyverion-ai-followup-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 236, 255, 0.28);
+  box-shadow:
+    0 0 14px rgba(62, 208, 255, 0.1),
+    0 0 24px rgba(166, 71, 255, 0.05);
+  background:
+    linear-gradient(180deg, rgba(16, 28, 49, 0.98), rgba(7, 13, 24, 1));
+}
+
+.zyverion-ai-utility-dock {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.zyverion-ai-utility-btn {
+  min-height: 36px;
+  padding: 0 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(124, 236, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(10, 18, 34, 0.92), rgba(6, 12, 22, 0.97));
+  color: #eefaff;
+  font-size: 11.8px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.zyverion-ai-utility-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 236, 255, 0.28);
+  box-shadow:
+    0 0 14px rgba(62, 208, 255, 0.08),
+    0 0 22px rgba(166, 71, 255, 0.04);
+}
+
+.zyverion-ai-utility-btn.is-active {
+  border-color: rgba(124, 236, 255, 0.32);
+  background:
+    linear-gradient(180deg, rgba(30, 87, 127, 0.34), rgba(8, 18, 31, 0.98));
+  box-shadow:
+    0 0 14px rgba(62, 208, 255, 0.14),
+    0 0 24px rgba(166, 71, 255, 0.06);
+}
+
+.zyverion-ai-utility-btn:disabled,
+.zyverion-ai-utility-btn.is-disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.zyverion-ai-action-dock.is-smart-dock,
+.zyverion-ai-action-dock {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.zyverion-ai-action-link {
+  min-height: 42px;
+  padding: 0 10px;
+  border-radius: 14px;
+  font-size: 11.7px;
+  font-weight: 800;
+  text-align: center;
+  line-height: 1.2;
+  white-space: normal;
+  background:
+    linear-gradient(180deg, rgba(10, 18, 34, 0.92), rgba(6, 12, 24, 0.97));
+}
+
+.zyverion-ai-action-link.is-suggested {
+  border-color: rgba(124, 236, 255, 0.34);
+  background:
+    linear-gradient(180deg, rgba(28, 93, 136, 0.38), rgba(10, 26, 41, 0.98));
+  box-shadow:
+    0 0 18px rgba(62, 208, 255, 0.16),
+    0 0 30px rgba(166, 71, 255, 0.08);
+}
+
+#aiLauncher {
+  z-index: 99991;
+}
+
+#aiLauncher.is-active .ai-core,
+#aiLauncher.is-listening .ai-core,
+#aiLauncher.is-speaking .ai-core {
+  box-shadow:
+    0 0 20px rgba(62, 208, 255, 0.24),
+    0 0 42px rgba(166, 71, 255, 0.1);
+}
+
+#aiLauncher.is-listening .ai-core {
+  animation: zyverionLauncherPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes zyverionLauncherPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 20px rgba(62, 208, 255, 0.24),
+      0 0 42px rgba(166, 71, 255, 0.1);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow:
+      0 0 24px rgba(62, 208, 255, 0.32),
+      0 0 56px rgba(166, 71, 255, 0.14);
+  }
+}
+
+@media (min-width: 769px) {
+  .zyverion-ai-panel {
+    right: 18px;
+    left: auto;
+    width: min(450px, calc(100vw - 36px));
+    top: 14px;
+    bottom: 92px;
+  }
+
+  .zyverion-ai-panel-shell.is-orb-upgraded {
+    padding: 16px;
+    gap: 13px;
+  }
+
+  .zyverion-ai-orb-button {
+    width: 158px;
+    height: 158px;
+  }
+
+  .zyverion-ai-orb-copy strong {
+    font-size: 13.5px;
+  }
+
+  .zyverion-ai-messages-upgraded {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .zyverion-ai-panel {
+    right: 10px;
+    left: 10px;
+    top: max(8px, env(safe-area-inset-top));
+    bottom: 74px;
+  }
+
+  .zyverion-ai-panel-shell.is-orb-upgraded {
+    padding: 13px;
+    gap: 11px;
+    border-radius: 24px;
+  }
+
+  .zyverion-ai-panel-title {
+    font-size: 19px;
+  }
+
+  .zyverion-ai-panel-intro {
+    font-size: 12.8px;
+  }
+
+  .zyverion-ai-orb-button {
+    width: 136px;
+    height: 136px;
+  }
+
+  .zyverion-ai-orb-core {
+    inset: 22px;
+  }
+
+  .zyverion-ai-orb-copy strong {
+    font-size: 12.2px;
+    letter-spacing: 0.12em;
+  }
+
+  .zyverion-ai-orb-copy span {
+    font-size: 11.5px;
+  }
+
+  .zyverion-ai-context-summary,
+  .zyverion-ai-status,
+  .zyverion-ai-transcript {
+    font-size: 12.4px;
+  }
+
+  .zyverion-ai-solution-title {
+    font-size: 13.3px;
+  }
+
+  .zyverion-ai-solution-purpose {
+    font-size: 11.9px;
+  }
+
+  .zyverion-ai-messages-upgraded {
+    min-height: 200px;
+  }
+
+  .zyverion-ai-action-dock {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .zyverion-ai-action-link {
+    min-height: 40px;
+    font-size: 11.2px;
+    padding: 0 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .zyverion-ai-panel {
+    right: 8px;
+    left: 8px;
+    top: max(6px, env(safe-area-inset-top));
+    bottom: 70px;
+  }
+
+  .zyverion-ai-panel-shell.is-orb-upgraded {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 22px;
+  }
+
+  .zyverion-ai-panel-badge {
+    padding: 8px 11px;
+    font-size: 9.6px;
+    letter-spacing: 0.13em;
+  }
+
+  .zyverion-ai-panel-close {
+    width: 38px;
+    height: 38px;
+  }
+
+  .zyverion-ai-panel-title {
+    font-size: 18px;
+  }
+
+  .zyverion-ai-panel-intro {
+    font-size: 12.3px;
+    line-height: 1.45;
+  }
+
+  .zyverion-ai-language-picker {
+    padding: 13px;
+    border-radius: 16px;
+  }
+
+  .zyverion-ai-language-option {
+    padding: 11px 12px;
+  }
+
+  .zyverion-ai-orb-zone {
+    gap: 8px;
+  }
+
+  .zyverion-ai-orb-button {
+    width: 126px;
+    height: 126px;
+  }
+
+  .zyverion-ai-orb-core {
+    inset: 20px;
+  }
+
+  .zyverion-ai-orb-mic {
+    width: 30px;
+    height: 43px;
+  }
+
+  .zyverion-ai-orb-mic .mic-head {
+    width: 20px;
+    height: 24px;
+  }
+
+  .zyverion-ai-orb-mic .mic-body {
+    top: 22px;
+    height: 13px;
+  }
+
+  .zyverion-ai-orb-copy strong {
+    font-size: 11.4px;
+  }
+
+  .zyverion-ai-orb-copy span {
+    font-size: 10.8px;
+  }
+
+  .zyverion-ai-context-summary,
+  .zyverion-ai-status,
+  .zyverion-ai-transcript {
+    padding: 10px 12px;
+    font-size: 12px;
+    border-radius: 14px;
+  }
+
+  .zyverion-ai-messages-upgraded {
+    min-height: 180px;
+    gap: 8px;
+  }
+
+  .zyverion-ai-message-bubble {
+    max-width: 92%;
+    padding: 10px 12px;
+    border-radius: 15px;
+    font-size: 12.2px;
+  }
+
+  .zyverion-ai-solution-card {
+    padding: 11px 12px;
+    border-radius: 15px;
+  }
+
+  .zyverion-ai-solution-title {
+    font-size: 13px;
+  }
+
+  .zyverion-ai-solution-purpose {
+    font-size: 11.6px;
+  }
+
+  .zyverion-ai-followup-chip {
+    min-height: 36px;
+    font-size: 11.5px;
+  }
+
+  .zyverion-ai-utility-dock {
+    gap: 7px;
+  }
+
+  .zyverion-ai-utility-btn {
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 11.2px;
+  }
+
+  .zyverion-ai-action-dock {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .zyverion-ai-action-link {
+    width: 100%;
+    min-height: 40px;
+    font-size: 11.5px;
+  }
+}
