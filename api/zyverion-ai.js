@@ -2,7 +2,6 @@ import {
   ZYVERION_BRAND,
   createSituationBlueprint,
   buildSystemKnowledgePrompt,
-  getTrustLines,
   getObjectionAnswer,
 } from "./zyverion-knowledge.js";
 
@@ -14,6 +13,10 @@ export async function OPTIONS() {
 }
 
 export async function POST(request) {
+  let message = "";
+  let language = "en";
+  let sessionContext = {};
+
   try {
     const apiKey =
       process.env.OPENAI_API_KEY ||
@@ -31,9 +34,9 @@ export async function POST(request) {
       return json({ error: "Invalid JSON body." }, 400);
     }
 
-    const message = typeof body?.message === "string" ? body.message.trim() : "";
-    const language = normalizeLanguage(body?.language);
-    const sessionContext = sanitizeSessionContext(body?.sessionContext);
+    message = typeof body?.message === "string" ? body.message.trim() : "";
+    language = normalizeLanguage(body?.language);
+    sessionContext = sanitizeSessionContext(body?.sessionContext);
 
     if (!message) {
       return json({ error: "Message is required." }, 400);
@@ -44,6 +47,7 @@ export async function POST(request) {
     }
 
     const analysisSeed = buildAnalysisSeed(message, sessionContext);
+    
     const blueprint = createSituationBlueprint(analysisSeed, { language });
     const intent = detectIntent(message);
 
@@ -168,18 +172,22 @@ export async function POST(request) {
 
     if (!response.ok) {
       const detail = await safeReadText(response);
-      return json({
-        ...fallback,
-        debug: {
-          source: "openai_http_error",
-          status: response.status,
-          detail: detail.slice(0, 500),
+      return json(
+        {
+          ...fallback,
+          debug: {
+            source: "openai_http_error",
+            status: response.status,
+            detail: detail.slice(0, 500),
+          },
         },
-      }, 200);
+        200
+      );
     }
 
     const data = await response.json();
-    const outputText = typeof data?.output_text === "string" ? data.output_text.trim() : "";
+    const outputText =
+      typeof data?.output_text === "string" ? data.output_text.trim() : "";
 
     if (!outputText) {
       return json(fallback, 200);
@@ -204,12 +212,17 @@ export async function POST(request) {
   } catch {
     return json(
       buildFallbackReply({
-        message: "",
-        language: "en",
+        message,
+        language,
         intent: "general",
-        blueprint: createSituationBlueprint("", { language: "en" }),
-        sessionContext: {},
-        forceSupport: "Zyverion AI is temporarily unavailable. Please try again in a moment.",
+        blueprint: createSituationBlueprint(message || "", { language }),
+        sessionContext,
+        forceSupport:
+          language === "si"
+            ? "Zyverion AI එකට temporary issue එකක් තියෙනවා. ඒත් ඔයාගේ business type එක හෝ project goal එක කියන්න, next step එක narrow කරන්න මම help කරන්නම්."
+            : language === "ta"
+            ? "Zyverion AI இல் temporary issue உள்ளது. ஆனாலும் உங்கள் business type அல்லது project goal ஐ சொல்லுங்கள், next step ஐ narrow செய்ய நான் உதவுகிறேன்."
+            : "Zyverion AI has a temporary issue right now, but tell me your business type or project goal and I’ll still help narrow the next step.",
       }),
       200
     );
@@ -251,11 +264,18 @@ function sanitizeSessionContext(value) {
   }
 
   return {
-    businessSummary: typeof value.businessSummary === "string" ? value.businessSummary.trim() : "",
-    userGoal: typeof value.userGoal === "string" ? value.userGoal.trim() : "",
-    knownBusinessTypeId: typeof value.knownBusinessTypeId === "string" ? value.knownBusinessTypeId.trim() : "",
-    knownStage: typeof value.knownStage === "string" ? value.knownStage.trim() : "",
-    notes: typeof value.notes === "string" ? value.notes.trim() : "",
+    businessSummary:
+      typeof value.businessSummary === "string" ? value.businessSummary.trim() : "",
+    userGoal:
+      typeof value.userGoal === "string" ? value.userGoal.trim() : "",
+    knownBusinessTypeId:
+      typeof value.knownBusinessTypeId === "string"
+        ? value.knownBusinessTypeId.trim()
+        : "",
+    knownStage:
+      typeof value.knownStage === "string" ? value.knownStage.trim() : "",
+    notes:
+      typeof value.notes === "string" ? value.notes.trim() : "",
   };
 }
 
@@ -270,6 +290,9 @@ function buildAnalysisSeed(message, sessionContext) {
   ]
     .filter(Boolean)
     .join(" ");
+}
+function normalizeText(value) {
+  return String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
 function buildSystemPrompt(language, blueprint, sessionContext) {
@@ -295,14 +318,14 @@ Current inferred situation:
 
 Possible solution direction:
 ${(snapshot.recommendedWebsiteTypes || [])
-  .slice(0, 3)
+  .slice(0, 2)
   .map((item) => `- ${item.name} (${item.category}): ${item.purpose}`)
   .join("\n")}
 
 Critical response rules:
 - Never say "Zyverion is not designed to answer like a simple website menu."
-- Never give generic brand-pitch filler when the user is asking about their own business.
-- If the user gives a business type such as gym, salon, restaurant, clinic, store, course, or company, ask the next specific question needed for that business.
+- Never act like a generic menu or a generic website pitch bot.
+- If the user gives a business type such as gym, salon, restaurant, clinic, course business, shop, or company, ask the next specific question needed for that business.
 - Discovery answers should usually be 2 to 4 sentences only.
 - For discovery answers, keep situationSummary empty unless it adds real value.
 - For discovery answers, keep recommendedSolutions empty unless enough detail exists for a real recommendation.
@@ -352,15 +375,17 @@ Reply like a smart business consultant. If more detail is needed, ask the next s
 function sanitizeReply({ parsed, language, fallback, blueprint }) {
   const answerMode = normalizeAnswerMode(parsed?.answerMode, fallback.answerMode);
 
-  let textReply = typeof parsed?.textReply === "string" && parsed.textReply.trim()
-    ? parsed.textReply.trim()
-    : fallback.textReply;
+  let textReply =
+    typeof parsed?.textReply === "string" && parsed.textReply.trim()
+      ? parsed.textReply.trim()
+      : fallback.textReply;
 
   textReply = postprocessTextReply(textReply, language, answerMode, blueprint);
 
-  const spokenReplyRaw = typeof parsed?.spokenReply === "string" && parsed.spokenReply.trim()
-    ? parsed.spokenReply.trim()
-    : textReply;
+  const spokenReplyRaw =
+    typeof parsed?.spokenReply === "string" && parsed.spokenReply.trim()
+      ? parsed.spokenReply.trim()
+      : textReply;
 
   const followUpQuestions = Array.isArray(parsed?.followUpQuestions)
     ? parsed.followUpQuestions
@@ -369,9 +394,10 @@ function sanitizeReply({ parsed, language, fallback, blueprint }) {
         .slice(0, 3)
     : fallback.followUpQuestions;
 
-  let situationSummary = typeof parsed?.situationSummary === "string" && parsed.situationSummary.trim()
-    ? parsed.situationSummary.trim()
-    : fallback.situationSummary;
+  let situationSummary =
+    typeof parsed?.situationSummary === "string" && parsed.situationSummary.trim()
+      ? parsed.situationSummary.trim()
+      : fallback.situationSummary;
 
   let recommendedSolutions = sanitizeRecommendedSolutions(
     parsed?.recommendedSolutions,
@@ -403,7 +429,15 @@ function sanitizeReply({ parsed, language, fallback, blueprint }) {
 }
 
 function normalizeAnswerMode(value, fallback = "support") {
-  const allowed = new Set(["direct", "discovery", "recommendation", "pricing", "objection", "support"]);
+  const allowed = new Set([
+    "direct",
+    "discovery",
+    "recommendation",
+    "pricing",
+    "objection",
+    "support",
+  ]);
+
   return allowed.has(value) ? value : fallback;
 }
 
@@ -426,8 +460,11 @@ function sanitizeRecommendedSolutions(value, fallback) {
 }
 
 function sanitizeSuggestedAction(value, fallback) {
-  const type = typeof value?.type === "string" ? value.type.trim() : fallback?.type || "none";
-  const safeType = ["estimator", "contact", "work", "none"].includes(type) ? type : fallback?.type || "none";
+  const type =
+    typeof value?.type === "string" ? value.type.trim() : fallback?.type || "none";
+  const safeType = ["estimator", "contact", "work", "none"].includes(type)
+    ? type
+    : fallback?.type || "none";
 
   let label = typeof value?.label === "string" ? value.label.trim() : "";
   let href = typeof value?.href === "string" ? value.href.trim() : "";
@@ -471,45 +508,64 @@ function sanitizeSituation(value, fallback, blueprint) {
         ? value.stage.trim()
         : safeFallback.stage,
     goals: Array.isArray(value.goals)
-      ? value.goals.filter((item) => typeof item === "string" && item.trim()).map((item) => item.trim()).slice(0, 6)
+      ? value.goals
+          .filter((item) => typeof item === "string" && item.trim())
+          .map((item) => item.trim())
+          .slice(0, 6)
       : safeFallback.goals,
     capabilities: Array.isArray(value.capabilities)
-      ? value.capabilities.filter((item) => typeof item === "string" && item.trim()).map((item) => item.trim()).slice(0, 6)
+      ? value.capabilities
+          .filter((item) => typeof item === "string" && item.trim())
+          .map((item) => item.trim())
+          .slice(0, 6)
       : safeFallback.capabilities,
   };
 }
 
-function buildFallbackReply({ message, language, intent, blueprint, sessionContext, forceSupport = "" }) {
+function buildFallbackReply({
+  message,
+  language,
+  intent,
+  blueprint,
+  sessionContext,
+  forceSupport = "",
+}) {
   const profile = blueprint.profile;
   const snapshot = blueprint.snapshot;
   const answerMode = decideFallbackAnswerMode(intent, profile);
   const discoveryQuestions = (snapshot.discoveryQuestions || []).slice(0, 3);
 
-  const textReply = forceSupport || buildSupportAnswer({
-    message,
-    intent,
-    language,
-    profile,
-    snapshot,
-    sessionContext,
-    followUpQuestions: discoveryQuestions,
-  });
+  const textReply =
+    forceSupport ||
+    buildSupportAnswer({
+      message,
+      intent,
+      language,
+      profile,
+      snapshot,
+      sessionContext,
+      followUpQuestions: discoveryQuestions,
+    });
 
-  const recommendedSolutions = answerMode === "recommendation" || answerMode === "pricing"
-    ? (snapshot.recommendedWebsiteTypes || []).slice(0, 2).map((item) => ({
-        id: item.id,
-        name: item.name,
-        category: item.category,
-        purpose: item.purpose,
-      }))
-    : [];
+  const recommendedSolutions =
+    answerMode === "recommendation" || answerMode === "pricing"
+      ? (snapshot.recommendedWebsiteTypes || []).slice(0, 2).map((item) => ({
+          id: item.id,
+          name: item.name,
+          category: item.category,
+          purpose: item.purpose,
+        }))
+      : [];
 
   return {
     textReply,
     spokenReply: cleanupSpokenReply(textReply, language),
     answerMode,
     followUpQuestions: answerMode === "discovery" ? discoveryQuestions : [],
-    situationSummary: answerMode === "recommendation" ? buildSituationSummary(profile, language, sessionContext) : "",
+    situationSummary:
+      answerMode === "recommendation"
+        ? buildSituationSummary(profile, language, sessionContext)
+        : "",
     recommendedSolutions,
     suggestedAction: sanitizeSuggestedAction(
       answerMode === "pricing"
@@ -534,7 +590,13 @@ function decideFallbackAnswerMode(intent, profile) {
   return "support";
 }
 
-function buildDeterministicReply({ message, language, intent, blueprint, sessionContext }) {
+function buildDeterministicReply({
+  message,
+  language,
+  intent,
+  blueprint,
+  sessionContext,
+}) {
   const profile = blueprint.profile;
   const businessTypeId = getActiveBusinessTypeId(profile, sessionContext);
 
@@ -562,7 +624,13 @@ function buildDeterministicReply({ message, language, intent, blueprint, session
   }
 
   if (businessTypeId === "gym_fitness") {
-    return buildGymReply({ message, language, profile, snapshot: blueprint.snapshot, sessionContext });
+    return buildGymReply({
+      message,
+      language,
+      profile,
+      snapshot: blueprint.snapshot,
+      sessionContext,
+    });
   }
 
   return buildGenericBusinessReply({
@@ -576,11 +644,12 @@ function buildDeterministicReply({ message, language, intent, blueprint, session
 }
 
 function buildOfftopicReply(language, profile) {
-  const textReply = language === "si"
-    ? "මම Zyverion related business guidance සඳහා build කරලා තියෙන්නේ. ඔයාගේ business type එක හෝ project goal එක කියන්න, මම next step එක guide කරන්නම්."
-    : language === "ta"
-    ? "நான் Zyverion தொடர்பான business guidance க்காக உருவாக்கப்பட்டுள்ளேன். உங்கள் business type அல்லது project goal ஐ சொல்லுங்கள், அடுத்த step ஐ guide செய்கிறேன்."
-    : "I’m built for Zyverion-related business guidance. Tell me your business type or project goal, and I’ll guide the next step.";
+  const textReply =
+    language === "si"
+      ? "මම Zyverion related business guidance සඳහා build කරලා තියෙන්නේ. ඔයාගේ business type එක හෝ project goal එක කියන්න, මම next step එක guide කරන්නම්."
+      : language === "ta"
+      ? "நான் Zyverion தொடர்பான business guidance க்காக உருவாக்கப்பட்டுள்ளேன். உங்கள் business type அல்லது project goal ஐ சொல்லுங்கள், அடுத்த step ஐ guide செய்கிறேன்."
+      : "I’m built for Zyverion-related business guidance. Tell me your business type or project goal, and I’ll guide the next step.";
 
   return {
     textReply,
@@ -601,11 +670,12 @@ function buildOfftopicReply(language, profile) {
 
 function buildDeterministicPricingReply(language, profile, snapshot) {
   const top = snapshot?.recommendedWebsiteTypes?.[0];
-  const textReply = language === "si"
-    ? `Pricing එක depend වෙන්නේ project type එක, features, design level එක, සහ website-only build එකක්ද නැත්නම් system features එකත් ඇතුළත්ද කියන එක මතයි.${top ? ` දැනට ඔයාගේ situation එක ${top.name} වගේ direction එකකට fit වෙනවා.` : ""} Accurate direction එකකට Estimator එක තමයි best next step.`
-    : language === "ta"
-    ? `Pricing என்பது project type, features, design level, மற்றும் website-only build ஆ அல்லது system features உடனா என்பதின் மீது பொருந்தும்.${top ? ` இப்போது உங்கள் situation ${top.name} direction க்கு fit ஆகிறது.` : ""} Accurate direction க்கு Estimator தான் best next step.`
-    : `Pricing depends on the project type, the features, the design level, and whether this is a website-only build or a website plus system build.${top ? ` Right now your situation looks closer to a ${top.name} direction.` : ""} For accurate direction, the Estimator is the best next step.`;
+  const textReply =
+    language === "si"
+      ? `Pricing එක depend වෙන්නේ project type එක, features, design level එක, සහ website-only build එකක්ද නැත්නම් system features එකත් ඇතුළත්ද කියන එක මතයි.${top ? ` දැනට ඔයාගේ situation එක ${top.name} වගේ direction එකකට fit වෙනවා.` : ""} Accurate direction එකකට Estimator එක තමයි best next step.`
+      : language === "ta"
+      ? `Pricing என்பது project type, features, design level, மற்றும் website-only build ஆ அல்லது system features உடனா என்பதின் மீது பொருந்தும்.${top ? ` இப்போது உங்கள் situation ${top.name} direction க்கு fit ஆகிறது.` : ""} Accurate direction க்கு Estimator தான் best next step.`
+      : `Pricing depends on the project type, the features, the design level, and whether this is a website-only build or a website plus system build.${top ? ` Right now your situation looks closer to a ${top.name} direction.` : ""} For accurate direction, the Estimator is the best next step.`;
 
   return {
     textReply,
@@ -613,8 +683,14 @@ function buildDeterministicPricingReply(language, profile, snapshot) {
     answerMode: "pricing",
     followUpQuestions: [],
     situationSummary: "",
-    recommendedSolutions: top ? [{ id: top.id, name: top.name, category: top.category, purpose: top.purpose }] : [],
-    suggestedAction: { type: "estimator", label: "Open Estimator", href: "estimator.html" },
+    recommendedSolutions: top
+      ? [{ id: top.id, name: top.name, category: top.category, purpose: top.purpose }]
+      : [],
+    suggestedAction: {
+      type: "estimator",
+      label: "Open Estimator",
+      href: "estimator.html",
+    },
     situation: {
       businessTypeId: profile.businessTypeId || "general_service_business",
       stage: profile.stage || "unknown",
@@ -647,21 +723,21 @@ function buildDeterministicObjectionReply(language, profile) {
 }
 
 function buildBusinessTypeFirstReply(language, profile) {
-  const textReply = language === "si"
-    ? "මට first thing එක තේරුම් ගන්න ඕනේ — මේක කුමන business type එකකටද? example විදිහට gym, salon, restaurant, clinic, course business, shop, හෝ company website කියලා කියන්න."
-    : language === "ta"
-    ? "முதலில் ஒரு விஷயம் புரிந்துகொள்ள வேண்டும் — இது எந்த business type க்காக? உதாரணமாக gym, salon, restaurant, clinic, course business, shop, அல்லது company website என்று சொல்லுங்கள்."
-    : "First, I need to understand one thing — what type of business is this for? For example: gym, salon, restaurant, clinic, course business, shop, or a company website.";
+  const textReply =
+    language === "si"
+      ? "මට first thing එක තේරුම් ගන්න ඕනේ — මේක කුමන business type එකකටද? example විදිහට gym, salon, restaurant, clinic, course business, shop, හෝ company website කියලා කියන්න."
+      : language === "ta"
+      ? "முதலில் ஒரு விஷயம் புரிந்துகொள்ள வேண்டும் — இது எந்த business type க்காக? உதாரணமாக gym, salon, restaurant, clinic, course business, shop, அல்லது company website என்று சொல்லுங்கள்."
+      : "First, I need to understand one thing — what type of business is this for? For example: gym, salon, restaurant, clinic, course business, shop, or a company website.";
 
   return {
     textReply,
     spokenReply: cleanupSpokenReply(textReply, language),
     answerMode: "discovery",
-    followUpQuestions: language === "si"
-      ? ["Gym", "Salon", "Restaurant", "Company website"]
-      : language === "ta"
-      ? ["Gym", "Salon", "Restaurant", "Company website"]
-      : ["Gym", "Salon", "Restaurant", "Company website"],
+    followUpQuestions:
+      language === "si" || language === "ta"
+        ? ["Gym", "Salon", "Restaurant", "Company website"]
+        : ["Gym", "Salon", "Restaurant", "Company website"],
     situationSummary: "",
     recommendedSolutions: [],
     suggestedAction: { type: "none", label: "", href: "" },
@@ -689,11 +765,12 @@ function buildGymReply({ message, language, profile, snapshot }) {
   const route = parseGymRoute(message, profile);
 
   if (!route.goal) {
-    const textReply = language === "si"
-      ? "හරි — මේක gym business එකක්. First question එක මෙන්න: දැන් ඔයාට වැඩියෙන් ඕනේ new members ගන්න එකද, current members manage කරන එකද, නැත්නම් දෙකමද?"
-      : language === "ta"
-      ? "சரி — இது gym business. முதல் question இது: இப்போது உங்களுக்கு அதிகம் வேண்டியது new members வாங்குவதா, current members manage செய்வதா, அல்லது இரண்டுமா?"
-      : "Got it — this is for a gym. First question: right now, do you mainly want more new members, better current member management, or both?";
+    const textReply =
+      language === "si"
+        ? "හරි — මේක gym business එකක්. First question එක මෙන්න: දැන් ඔයාට වැඩියෙන් ඕනේ new members ගන්න එකද, current members manage කරන එකද, නැත්නම් දෙකමද?"
+        : language === "ta"
+        ? "சரி — இது gym business. முதல் question இது: இப்போது உங்களுக்கு அதிகம் வேண்டியது new members வாங்குவதா, current members manage செய்வதா, அல்லது இரண்டுமா?"
+        : "Got it — this is for a gym. First question: right now, do you mainly want more new members, better current member management, or both?";
 
     return buildGuidedReply({
       language,
@@ -711,21 +788,23 @@ function buildGymReply({ message, language, profile, snapshot }) {
   }
 
   if (!route.depth) {
-    const textReply = route.goal === "new_members"
-      ? language === "si"
-        ? "හරි — එහෙනම් new members පැත්ත main focus එක. Next thing එක: ඔයාට trust-building website එකක් විතරක් first stage එකට enough ද, නැත්නම් later member හෝ admin features එකත් ඇතුළත් direction එකක්ද ඕනේ?"
+    const textReply =
+      route.goal === "new_members"
+        ? language === "si"
+          ? "හරි — එහෙනම් new members පැත්ත main focus එක. Next thing එක: ඔයාට trust-building website එකක් විතරක් first stage එකට enough ද, නැත්නම් later member හෝ admin features එකත් ඇතුළත් direction එකක්ද ඕනේ?"
+          : language === "ta"
+          ? "சரி — அப்படியானால் new members தான் main focus. அடுத்தது: first stage க்கு trust-building website மட்டும் போதுமா, அல்லது later member அல்லது admin features உடன் direction வேண்டுமா?"
+          : "Understood — so new members are the main focus. Next question: is a trust-building website enough for the first stage, or do you also want a direction that leaves room for member or admin features later?"
+        : language === "si"
+        ? "හරි — එහෙනම් member handling පැත්ත important. Next thing එක: ඔයාට member login, QR check-in, admin dashboard, නැත්නම් full member system එකක්ද ඕනේ?"
         : language === "ta"
-        ? "சரி — அப்படியானால் new members தான் main focus. அடுத்தது: first stage க்கு trust-building website மட்டும் போதுமா, அல்லது later member அல்லது admin features உடன் direction வேண்டுமா?"
-        : "Understood — so new members are the main focus. Next question: is a trust-building website enough for the first stage, or do you also want a direction that leaves room for member or admin features later?"
-      : language === "si"
-      ? "හරි — එහෙනම් member handling පැත්ත important. Next thing එක: ඔයාට member login, QR check-in, admin dashboard, නැත්නම් full member system එකක්ද ඕනේ?"
-      : language === "ta"
-      ? "சரி — அப்படியானால் member handling முக்கியம். அடுத்தது: member login, QR check-in, admin dashboard, அல்லது full member system வேண்டுமா?"
-      : "Got it — so member handling matters. Next question: do you need member login, QR check-in, an admin dashboard, or a full member system?";
+        ? "சரி — அப்படியானால் member handling முக்கியம். அடுத்தது: member login, QR check-in, admin dashboard, அல்லது full member system வேண்டுமா?"
+        : "Got it — so member handling matters. Next question: do you need member login, QR check-in, an admin dashboard, or a full member system?";
 
-    const followUpQuestions = route.goal === "new_members"
-      ? ["Only website first", "Website + member features later", "Website + admin system later", "Not sure yet"]
-      : ["Member login", "QR check-in", "Admin dashboard", "Full member system"];
+    const followUpQuestions =
+      route.goal === "new_members"
+        ? ["Only website first", "Website + member features later", "Website + admin system later", "Not sure yet"]
+        : ["Member login", "QR check-in", "Admin dashboard", "Full member system"];
 
     return buildGuidedReply({
       language,
@@ -745,13 +824,23 @@ function buildGymReply({ message, language, profile, snapshot }) {
     profile,
     textReply,
     recommendedSolutions: topSolutions,
-    suggestedAction: { type: "contact", label: "Contact Zyverion", href: "contact.html" },
+    suggestedAction: {
+      type: "contact",
+      label: "Contact Zyverion",
+      href: "contact.html",
+    },
     goals: buildGoalsForGym(route.goal),
     capabilities: buildCapabilitiesForGym(route),
   });
 }
 
-function buildGenericBusinessReply({ message, language, businessTypeId, profile, snapshot }) {
+function buildGenericBusinessReply({
+  message,
+  language,
+  businessTypeId,
+  profile,
+  snapshot,
+}) {
   const route = parseGenericRoute(message, businessTypeId, profile);
 
   if (!route.goal) {
@@ -788,13 +877,13 @@ function buildGenericBusinessReply({ message, language, businessTypeId, profile,
           : "Got it — this is an education or training business. Is the main focus student inquiries, a student portal, or both?",
     };
 
-    const textReply = promptMap[businessTypeId] || (
-      language === "si"
+    const textReply =
+      promptMap[businessTypeId] ||
+      (language === "si"
         ? "හරි — business type එක තේරුණා. දැන් main goal එක මොකද්ද: trust build කරන එකද, more inquiries ගන්න එකද, bookings ද, sales ද, නැත්නම් system features ද?"
         : language === "ta"
         ? "சரி — business type புரிந்தது. இப்போது main goal என்ன: trust build செய்வதா, more inquiries வாங்குவதா, bookings ஆ, sales ஆ, அல்லது system features ஆ?"
-        : "Got it — I understand the business type. Now tell me the main goal: trust, more inquiries, bookings, sales, or system features?"
-    );
+        : "Got it — I understand the business type. Now tell me the main goal: trust, more inquiries, bookings, sales, or system features?");
 
     return buildGuidedReply({
       language,
@@ -807,11 +896,12 @@ function buildGenericBusinessReply({ message, language, businessTypeId, profile,
   }
 
   if (!route.depth) {
-    const textReply = language === "si"
-      ? "හරි — main goal එක clear. Next thing එක: ඔයාට simple website එකක් enough ද, නැත්නම් admin, booking, portal, හෝ selling features වගේ deeper functionality එකක්ද ඕනේ?"
-      : language === "ta"
-      ? "சரி — main goal clear. அடுத்தது: simple website போதுமா, அல்லது admin, booking, portal, அல்லது selling features போன்ற deeper functionality வேண்டுமா?"
-      : "Understood — the main goal is clear. Next question: is a simple website enough, or do you need deeper functionality such as admin, booking, portal, or selling features?";
+    const textReply =
+      language === "si"
+        ? "හරි — main goal එක clear. Next thing එක: ඔයාට simple website එකක් enough ද, නැත්නම් admin, booking, portal, හෝ selling features වගේ deeper functionality එකක්ද ඕනේ?"
+        : language === "ta"
+        ? "சரி — main goal clear. அடுத்தது: simple website போதுமா, அல்லது admin, booking, portal, அல்லது selling features போன்ற deeper functionality வேண்டுமா?"
+        : "Understood — the main goal is clear. Next question: is a simple website enough, or do you need deeper functionality such as admin, booking, portal, or selling features?";
 
     return buildGuidedReply({
       language,
@@ -824,20 +914,36 @@ function buildGenericBusinessReply({ message, language, businessTypeId, profile,
   }
 
   const topSolutions = pickGenericSolutions(route, snapshot);
-  const textReply = buildGenericRecommendationText(route, businessTypeId, language, topSolutions[0]);
+  const textReply = buildGenericRecommendationText(
+    route,
+    businessTypeId,
+    language,
+    topSolutions[0]
+  );
 
   return buildRecommendationShape({
     language,
     profile,
     textReply,
     recommendedSolutions: topSolutions,
-    suggestedAction: { type: "contact", label: "Contact Zyverion", href: "contact.html" },
+    suggestedAction: {
+      type: "contact",
+      label: "Contact Zyverion",
+      href: "contact.html",
+    },
     goals: route.goals,
     capabilities: route.capabilities,
   });
 }
 
-function buildGuidedReply({ language, profile, textReply, followUpQuestions, goals, capabilities }) {
+function buildGuidedReply({
+  language,
+  profile,
+  textReply,
+  followUpQuestions,
+  goals,
+  capabilities,
+}) {
   return {
     textReply,
     spokenReply: cleanupSpokenReply(textReply, language),
@@ -855,7 +961,15 @@ function buildGuidedReply({ language, profile, textReply, followUpQuestions, goa
   };
 }
 
-function buildRecommendationShape({ language, profile, textReply, recommendedSolutions, suggestedAction, goals, capabilities }) {
+function buildRecommendationShape({
+  language,
+  profile,
+  textReply,
+  recommendedSolutions,
+  suggestedAction,
+  goals,
+  capabilities,
+}) {
   return {
     textReply,
     spokenReply: cleanupSpokenReply(textReply, language),
@@ -868,7 +982,11 @@ function buildRecommendationShape({ language, profile, textReply, recommendedSol
       category: item.category,
       purpose: item.purpose,
     })),
-    suggestedAction: sanitizeSuggestedAction(suggestedAction, { type: "none", label: "", href: "" }),
+    suggestedAction: sanitizeSuggestedAction(suggestedAction, {
+      type: "none",
+      label: "",
+      href: "",
+    }),
     situation: {
       businessTypeId: profile.businessTypeId || "general_service_business",
       stage: profile.stage || "unknown",
@@ -877,13 +995,17 @@ function buildRecommendationShape({ language, profile, textReply, recommendedSol
     },
   };
 }
-
 function getActiveBusinessTypeId(profile, sessionContext) {
-  return sessionContext?.knownBusinessTypeId || profile?.businessTypeId || "general_service_business";
+  return (
+    sessionContext?.knownBusinessTypeId ||
+    profile?.businessTypeId ||
+    "general_service_business"
+  );
 }
 
 function looksLikeBusinessIntro(message) {
   const value = normalizeText(message);
+
   return [
     "my business is",
     "i have a",
@@ -905,6 +1027,7 @@ function looksLikeBusinessIntro(message) {
 
 function looksLikeSelectionReply(message) {
   const value = normalizeText(message);
+
   return [
     "both",
     "only website",
@@ -930,23 +1053,84 @@ function parseGymRoute(message, profile) {
 
   let goal = "";
   if (value.includes("both")) goal = "both";
-  else if (value.includes("manage") || value.includes("current members") || value.includes("member management") || value.includes("qr") || value.includes("portal") || value.includes("admin")) goal = "manage_members";
-  else if (value.includes("new members") || value.includes("more members") || value.includes("inquiries") || value.includes("leads") || value.includes("more customers")) goal = "new_members";
-  else if (goals.has("member_management") && goals.has("leads")) goal = "both";
-  else if (goals.has("member_management") || goals.has("operations")) goal = "manage_members";
-  else if (goals.has("leads") || goals.has("trust") || goals.has("visibility")) goal = "new_members";
+  else if (
+    value.includes("manage") ||
+    value.includes("current members") ||
+    value.includes("member management") ||
+    value.includes("qr") ||
+    value.includes("portal") ||
+    value.includes("admin")
+  ) {
+    goal = "manage_members";
+  } else if (
+    value.includes("new members") ||
+    value.includes("more members") ||
+    value.includes("inquiries") ||
+    value.includes("leads") ||
+    value.includes("more customers")
+  ) {
+    goal = "new_members";
+  } else if (goals.has("member_management") && goals.has("leads")) {
+    goal = "both";
+  } else if (goals.has("member_management") || goals.has("operations")) {
+    goal = "manage_members";
+  } else if (goals.has("leads") || goals.has("trust") || goals.has("visibility")) {
+    goal = "new_members";
+  }
 
   let depth = "";
-  if (value.includes("only website") || value.includes("just website") || value.includes("simple website")) depth = "website_only";
-  else if (value.includes("website +") || value.includes("website and") || value.includes("system") || value.includes("portal") || value.includes("member login") || value.includes("admin dashboard") || value.includes("qr") || value.includes("full member system")) depth = "system_features";
-  else if (capabilities.has("website_plus_system") || capabilities.has("user_accounts") || capabilities.has("admin_tools")) depth = "system_features";
-  else if (capabilities.has("just_website")) depth = "website_only";
+  if (
+    value.includes("only website") ||
+    value.includes("just website") ||
+    value.includes("simple website")
+  ) {
+    depth = "website_only";
+  } else if (
+    value.includes("website +") ||
+    value.includes("website and") ||
+    value.includes("system") ||
+    value.includes("portal") ||
+    value.includes("member login") ||
+    value.includes("admin dashboard") ||
+    value.includes("qr") ||
+    value.includes("full member system")
+  ) {
+    depth = "system_features";
+  } else if (
+    capabilities.has("website_plus_system") ||
+    capabilities.has("user_accounts") ||
+    capabilities.has("admin_tools")
+  ) {
+    depth = "system_features";
+  } else if (capabilities.has("just_website")) {
+    depth = "website_only";
+  }
 
   const features = [];
-  if (value.includes("member login") || value.includes("portal") || capabilities.has("user_accounts")) features.push("member_login");
-  if (value.includes("qr") || value.includes("check in") || value.includes("check-in")) features.push("qr_checkin");
-  if (value.includes("admin") || value.includes("dashboard") || capabilities.has("admin_tools")) features.push("admin_dashboard");
-  if (value.includes("full member system") || value.includes("all")) features.push("full_system");
+  if (
+    value.includes("member login") ||
+    value.includes("portal") ||
+    capabilities.has("user_accounts")
+  ) {
+    features.push("member_login");
+  }
+  if (
+    value.includes("qr") ||
+    value.includes("check in") ||
+    value.includes("check-in")
+  ) {
+    features.push("qr_checkin");
+  }
+  if (
+    value.includes("admin") ||
+    value.includes("dashboard") ||
+    capabilities.has("admin_tools")
+  ) {
+    features.push("admin_dashboard");
+  }
+  if (value.includes("full member system") || value.includes("all")) {
+    features.push("full_system");
+  }
 
   return { goal, depth, features };
 }
@@ -960,15 +1144,23 @@ function buildGoalsForGym(goal) {
 
 function buildCapabilitiesForGym(route) {
   if (route.depth === "website_only") return ["just_website"];
+
   const values = [];
   if (route.depth === "system_features") values.push("website_plus_system");
-  if (route.features.includes("member_login") || route.features.includes("full_system")) values.push("user_accounts");
-  if (route.features.includes("admin_dashboard") || route.features.includes("full_system")) values.push("admin_tools");
+  if (route.features.includes("member_login") || route.features.includes("full_system")) {
+    values.push("user_accounts");
+  }
+  if (route.features.includes("admin_dashboard") || route.features.includes("full_system")) {
+    values.push("admin_tools");
+  }
+
   return values.length ? values : ["website_plus_system"];
 }
 
 function pickGymSolutions(route, snapshot) {
-  const byId = new Map((snapshot?.recommendedWebsiteTypes || []).map((item) => [item.id, item]));
+  const byId = new Map(
+    (snapshot?.recommendedWebsiteTypes || []).map((item) => [item.id, item])
+  );
   const out = [];
 
   const push = (id) => {
@@ -999,21 +1191,29 @@ function buildGymRecommendationText(route, language, topSolution) {
     if (route.goal === "new_members" && route.depth === "website_only") {
       return `Gym එකක් සඳහා new members main focus නම්, first stage එකට ${topName} direction එක strong fit එකක්. ඒක trust build කරන්න, services explain කරන්න, සහ inquiries හෝ signups වැඩි කරන්න help කරනවා.`;
     }
-    return `Gym එකක් සඳහා ${route.goal === "both" ? "new members සහ member handling දෙකම" : "member handling"} important නම්, strongest direction එක ${topName} වගේ website + system setup එකක්. Public website එක trust සහ inquiries handle කරනවා, system side එක member access, admin flow, හෝ QR style management handle කරනවා.`;
+
+    return `Gym එකක් සඳහා ${
+      route.goal === "both" ? "new members සහ member handling දෙකම" : "member handling"
+    } important නම්, strongest direction එක ${topName} වගේ website + system setup එකක්. Public website එක trust සහ inquiries handle කරනවා, system side එක member access, admin flow, හෝ QR style management handle කරනවා.`;
   }
 
   if (language === "ta") {
     if (route.goal === "new_members" && route.depth === "website_only") {
       return `Gym க்கு new members தான் main focus என்றால், first stage க்கு ${topName} direction strong fit. அது trust build செய்ய, services explain செய்ய, மற்றும் inquiries அல்லது signups அதிகரிக்க உதவும்.`;
     }
-    return `Gym க்கு ${route.goal === "both" ? "new members மற்றும் member handling இரண்டும்" : "member handling"} முக்கியமானால், strongest direction ${topName} போன்ற website + system setup. Public website trust மற்றும் inquiries க்கு உதவும், system side member access, admin flow, அல்லது QR style management ஐ handle செய்யும்.`;
+
+    return `Gym க்கு ${
+      route.goal === "both" ? "new members மற்றும் member handling இரண்டும்" : "member handling"
+    } முக்கியமானால், strongest direction ${topName} போன்ற website + system setup. Public website trust மற்றும் inquiries க்கு உதவும், system side member access, admin flow, அல்லது QR style management ஐ handle செய்யும்.`;
   }
 
   if (route.goal === "new_members" && route.depth === "website_only") {
     return `For a gym where new members are the main focus, a ${topName} direction is a strong first-stage fit. It helps build trust, explain your services clearly, and turn visitors into inquiries or signups.`;
   }
 
-  return `For a gym where ${route.goal === "both" ? "both new members and member handling matter" : "member handling matters"}, the strongest direction is a ${topName} style website plus system setup. The public website handles trust and inquiries, while the system side supports member access, admin flow, or QR-style management.`;
+  return `For a gym where ${
+    route.goal === "both" ? "both new members and member handling matter" : "member handling matters"
+  }, the strongest direction is a ${topName} style website plus system setup. The public website handles trust and inquiries, while the system side supports member access, admin flow, or QR-style management.`;
 }
 
 function parseGenericRoute(message, businessTypeId, profile) {
@@ -1023,21 +1223,61 @@ function parseGenericRoute(message, businessTypeId, profile) {
 
   let goal = "";
   if (value.includes("both")) goal = "both";
-  else if (value.includes("booking") || value.includes("appointment") || goals.has("bookings")) goal = "bookings";
-  else if (value.includes("sell") || value.includes("orders") || value.includes("checkout") || goals.has("sales")) goal = "sales";
-  else if (value.includes("portal") || value.includes("admin") || value.includes("system") || goals.has("member_management") || goals.has("operations")) goal = "system";
-  else if (value.includes("trust") || value.includes("more inquiries") || value.includes("leads") || goals.has("leads") || goals.has("trust") || goals.has("visibility")) goal = "trust_leads";
+  else if (value.includes("booking") || value.includes("appointment") || goals.has("bookings")) {
+    goal = "bookings";
+  } else if (
+    value.includes("sell") ||
+    value.includes("orders") ||
+    value.includes("checkout") ||
+    goals.has("sales")
+  ) {
+    goal = "sales";
+  } else if (
+    value.includes("portal") ||
+    value.includes("admin") ||
+    value.includes("system") ||
+    goals.has("member_management") ||
+    goals.has("operations")
+  ) {
+    goal = "system";
+  } else if (
+    value.includes("trust") ||
+    value.includes("more inquiries") ||
+    value.includes("leads") ||
+    goals.has("leads") ||
+    goals.has("trust") ||
+    goals.has("visibility")
+  ) {
+    goal = "trust_leads";
+  }
 
   let depth = "";
-  if (value.includes("only website") || value.includes("just website")) depth = "website_only";
-  else if (value.includes("system") || value.includes("portal") || value.includes("admin") || value.includes("booking") || value.includes("checkout") || capabilities.has("website_plus_system") || capabilities.has("admin_tools") || capabilities.has("user_accounts") || capabilities.has("booking_flow") || capabilities.has("ecommerce")) depth = "extended";
+  if (value.includes("only website") || value.includes("just website")) {
+    depth = "website_only";
+  } else if (
+    value.includes("system") ||
+    value.includes("portal") ||
+    value.includes("admin") ||
+    value.includes("booking") ||
+    value.includes("checkout") ||
+    capabilities.has("website_plus_system") ||
+    capabilities.has("admin_tools") ||
+    capabilities.has("user_accounts") ||
+    capabilities.has("booking_flow") ||
+    capabilities.has("ecommerce")
+  ) {
+    depth = "extended";
+  }
 
   return {
     goal,
     depth,
     goals: profile.goals,
     capabilities: profile.capabilities,
-    defaultFollowUps: defaultFollowUpsForBusinessType(businessTypeId, languageAgnosticLabelSet(businessTypeId)),
+    defaultFollowUps: defaultFollowUpsForBusinessType(
+      businessTypeId,
+      languageAgnosticLabelSet(businessTypeId)
+    ),
   };
 }
 
@@ -1049,7 +1289,13 @@ function languageAgnosticLabelSet(businessTypeId) {
     medical_clinic: ["Information", "Appointments", "Both", "Not sure yet"],
     education_training: ["More student inquiries", "Student portal", "Both", "Not sure yet"],
   };
-  return map[businessTypeId] || ["Trust and inquiries", "Bookings", "System features", "Not sure yet"];
+
+  return map[businessTypeId] || [
+    "Trust and inquiries",
+    "Bookings",
+    "System features",
+    "Not sure yet",
+  ];
 }
 
 function defaultFollowUpsForBusinessType(_businessTypeId, labels) {
@@ -1057,8 +1303,11 @@ function defaultFollowUpsForBusinessType(_businessTypeId, labels) {
 }
 
 function pickGenericSolutions(route, snapshot) {
-  const byId = new Map((snapshot?.recommendedWebsiteTypes || []).map((item) => [item.id, item]));
+  const byId = new Map(
+    (snapshot?.recommendedWebsiteTypes || []).map((item) => [item.id, item])
+  );
   const out = [];
+
   const push = (id) => {
     if (byId.has(id)) out.push(byId.get(id));
   };
@@ -1124,29 +1373,48 @@ function goalSentence(goal, language) {
 }
 
 function buildSituationSummary(profile, language, sessionContext = {}) {
-  const businessName = sessionContext.businessSummary || profile?.businessType?.name || businessTypeLabel(profile?.businessTypeId);
+  const businessName =
+    sessionContext.businessSummary ||
+    profile?.businessType?.name ||
+    businessTypeLabel(profile?.businessTypeId);
+
   const stageLabel = stageLabelForLanguage(profile?.stage, language);
-  const goalLabels = (profile?.goals || []).slice(0, 2).map((goal) => goalLabelForLanguage(goal, language));
+  const goalLabels = (profile?.goals || [])
+    .slice(0, 2)
+    .map((goal) => goalLabelForLanguage(goal, language));
 
   if (goalLabels.length === 0 && (!profile?.capabilities || profile.capabilities.length === 0)) {
     return "";
   }
 
   if (language === "si") {
-    const goalText = goalLabels.length ? ` ප්‍රධාන focus එක ${goalLabels.join(" සහ ")} වගේ පේනවා.` : "";
+    const goalText = goalLabels.length
+      ? ` ප්‍රධාන focus එක ${goalLabels.join(" සහ ")} වගේ පේනවා.`
+      : "";
     return `දැනට පේන්නේ මේක ${businessName || "business"} situation එකක්, stage එක ${stageLabel} වගේ.${goalText}`.trim();
   }
 
   if (language === "ta") {
-    const goalText = goalLabels.length ? ` முக்கிய focus ${goalLabels.join(" மற்றும் ")} போல தெரிகிறது.` : "";
+    const goalText = goalLabels.length
+      ? ` முக்கிய focus ${goalLabels.join(" மற்றும் ")} போல தெரிகிறது.`
+      : "";
     return `இப்போது இது ${businessName || "business"} situation போல தெரிகிறது, stage ${stageLabel} போல உள்ளது.${goalText}`.trim();
   }
 
-  const goalText = goalLabels.length ? ` The main focus appears to be ${goalLabels.join(" and ")}.` : "";
+  const goalText = goalLabels.length
+    ? ` The main focus appears to be ${goalLabels.join(" and ")}.`
+    : "";
   return `This currently looks like a ${businessName || "business"} situation at a ${stageLabel} stage.${goalText}`;
 }
 
-function buildSupportAnswer({ message, intent, language, profile, snapshot, followUpQuestions }) {
+function buildSupportAnswer({
+  message,
+  intent,
+  language,
+  profile,
+  snapshot,
+  followUpQuestions,
+}) {
   if (intent === "objection") return buildObjectionAnswer(language);
   if (intent === "pricing") return buildPricingAnswer(profile, snapshot, language);
 
@@ -1162,13 +1430,13 @@ function buildSupportAnswer({ message, intent, language, profile, snapshot, foll
 }
 
 function buildDiscoveryAnswer(profile, _snapshot, language, followUpQuestions) {
-  const question = followUpQuestions?.[0] || (
-    language === "si"
+  const question =
+    followUpQuestions?.[0] ||
+    (language === "si"
       ? "මේක කුමන business type එකකටද?"
       : language === "ta"
       ? "இது எந்த business type க்காக?"
-      : "What type of business is this for?"
-  );
+      : "What type of business is this for?");
 
   if (language === "si") {
     return `Properly guide කරන්න කලින් මට එක detail එකක් ඕනේ. ${question}`;
@@ -1200,12 +1468,15 @@ function buildRecommendationAnswer(profile, snapshot, language) {
 
 function buildPricingAnswer(profile, snapshot, language) {
   const top = snapshot?.recommendedWebsiteTypes?.[0];
+
   if (language === "si") {
     return `Pricing එක depend වෙන්නේ build type එක, features, design level, සහ website-only ද system features එක්කද කියන එක මතයි.${top ? ` දැනට ඔයාගේ situation එක ${top.name} වගේ direction එකකට fit වෙනවා.` : ""} Exact direction එකකට Estimator එක best next step.`;
   }
+
   if (language === "ta") {
     return `Pricing என்பது build type, features, design level, மற்றும் website-only ஆ system features உடனா என்பதின் மீது பொருந்தும்.${top ? ` இப்போது உங்கள் situation ${top.name} direction க்கு fit ஆகிறது.` : ""} Exact direction க்கு Estimator best next step.`;
   }
+
   return `Pricing depends on the build type, features, design level, and whether this is website-only or includes system features.${top ? ` Right now your situation looks closer to a ${top.name} direction.` : ""} For exact direction, the Estimator is the best next step.`;
 }
 
@@ -1217,9 +1488,11 @@ function buildGeneralConsultativeAnswer(message, profile, language) {
     if (language === "si") {
       return `${businessType} type situation එකක් වගේ පේනවා. Next best step එක වෙන්නේ main goal එක narrow කරන එක — more inquiries ද, bookings ද, sales ද, නැත්නම් system features ද?`;
     }
+
     if (language === "ta") {
       return `${businessType} type situation போல தெரிகிறது. Next best step என்பது main goal ஐ narrow செய்வது — more inquiries ஆ, bookings ஆ, sales ஆ, அல்லது system features ஆ?`;
     }
+
     return `This looks like a ${businessType} type situation. The next best step is narrowing the main goal — more inquiries, bookings, sales, or system features?`;
   }
 
@@ -1259,25 +1532,6 @@ function postprocessTextReply(text, language, answerMode, blueprint) {
   return cleaned;
 }
 
-function buildSpokenReply({ intent, language, profile, snapshot, followUpQuestions }) {
-  if (intent === "pricing") {
-    return cleanupSpokenReply(buildPricingAnswer(profile, snapshot, language), language);
-  }
-
-  if (profile?.unsureUser || profile?.intentMode === "discovery") {
-    const question = followUpQuestions?.[0] || "your business";
-    if (language === "si") {
-      return `මට next thing එක narrow කරන්න ${question} ගැන detail එකක් ඕනේ.`;
-    }
-    if (language === "ta") {
-      return `Next thing ஐ narrow செய்ய ${question} பற்றி ஒரு detail வேண்டும்.`;
-    }
-    return `To narrow the next step, I need one more detail about ${question}.`;
-  }
-
-  return cleanupSpokenReply(buildGeneralConsultativeAnswer("", profile, language), language);
-}
-
 function businessTypeLabel(id) {
   const map = {
     general_service_business: "general service business",
@@ -1291,15 +1545,32 @@ function businessTypeLabel(id) {
     construction_real_estate: "construction or real estate business",
     corporate_professional: "corporate or professional brand",
   };
+
   return map[id] || "business";
 }
 
 function stageLabelForLanguage(stage, language) {
   const labels = {
-    en: { idea_stage: "very early or planning", existing_business: "existing business", digital_upgrade: "digital upgrade", unknown: "unclear" },
-    si: { idea_stage: "very early හෝ planning", existing_business: "existing business", digital_upgrade: "digital upgrade", unknown: "unclear" },
-    ta: { idea_stage: "very early அல்லது planning", existing_business: "existing business", digital_upgrade: "digital upgrade", unknown: "unclear" },
+    en: {
+      idea_stage: "very early or planning",
+      existing_business: "existing business",
+      digital_upgrade: "digital upgrade",
+      unknown: "unclear",
+    },
+    si: {
+      idea_stage: "very early හෝ planning",
+      existing_business: "existing business",
+      digital_upgrade: "digital upgrade",
+      unknown: "unclear",
+    },
+    ta: {
+      idea_stage: "very early அல்லது planning",
+      existing_business: "existing business",
+      digital_upgrade: "digital upgrade",
+      unknown: "unclear",
+    },
   };
+
   return labels[language]?.[stage] || labels.en[stage] || "unclear";
 }
 
@@ -1315,6 +1586,7 @@ function goalLabelForLanguage(goalId, language) {
     clarity: { en: "clarity", si: "clarity", ta: "clarity" },
     growth: { en: "long-term growth", si: "long-term growth", ta: "long-term growth" },
   };
+
   return labels[goalId]?.[language] || labels[goalId]?.en || goalId;
 }
 
@@ -1363,15 +1635,75 @@ function detectIntent(text) {
   const value = String(text || "").toLowerCase();
   const hasAny = (words) => words.some((word) => value.includes(word));
 
-  if (hasAny(["weather", "movie", "movies", "song", "songs", "football", "cricket", "politics", "president", "game", "games", "homework", "doctor", "medical", "law", "news", "වර්ෂාව", "ගේම්", "දේශපාලන", "காலநிலை", "சினிமா", "அரசியல்", "விளையாட்டு"])) {
+  if (
+    hasAny([
+      "weather",
+      "movie",
+      "movies",
+      "song",
+      "songs",
+      "football",
+      "cricket",
+      "politics",
+      "president",
+      "game",
+      "games",
+      "homework",
+      "doctor",
+      "medical",
+      "law",
+      "news",
+      "වර්ෂාව",
+      "ගේම්",
+      "දේශපාලන",
+      "காலநிலை",
+      "சினிமா",
+      "அரசியல்",
+      "விளையாட்டு",
+    ])
+  ) {
     return "offtopic";
   }
 
-  if (hasAny(["why zyverion", "why should i choose", "can i trust", "are you only websites", "do you only build websites", "why your agency", "why your business", "trust your company", "why choose you", "ඇයි zyverion", "trust කරන්න පුලුවන්ද", "உங்களை ஏன் தேர்வு செய்ய வேண்டும்", "நம்பலாமா"])) {
+  if (
+    hasAny([
+      "why zyverion",
+      "why should i choose",
+      "can i trust",
+      "are you only websites",
+      "do you only build websites",
+      "why your agency",
+      "why your business",
+      "trust your company",
+      "why choose you",
+      "ඇයි zyverion",
+      "trust කරන්න පුලුවන්ද",
+      "உங்களை ஏன் தேர்வு செய்ய வேண்டும்",
+      "நம்பலாமா",
+    ])
+  ) {
     return "objection";
   }
 
-  if (hasAny(["price", "pricing", "cost", "quote", "quotation", "estimate", "estimator", "budget", "මිල", "ගාන", "ගාණ", "වැය", "விலை", "காசு", "கட்டணம்"])) {
+  if (
+    hasAny([
+      "price",
+      "pricing",
+      "cost",
+      "quote",
+      "quotation",
+      "estimate",
+      "estimator",
+      "budget",
+      "මිල",
+      "ගාන",
+      "ගාණ",
+      "වැය",
+      "விலை",
+      "காசு",
+      "கட்டணம்",
+    ])
+  ) {
     return "pricing";
   }
 

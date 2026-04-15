@@ -4,12 +4,16 @@
 
   if (!launcher) return;
 
+  const DEFAULT_LANGUAGE = "en";
+  const DEFAULT_ANSWER =
+    "Welcome to Zyverion AI. Tell me what kind of business you have.";
+
   const STORAGE_KEYS = {
     language: "zyverion-ai-language",
-    preferredVoice: "zyverion-ai-voice-v2",
-    hintShown: "zyverion-ai-hint-shown-v3",
-    workPopupShown: "zyverion-work-popup-shown-v3",
-    sessionState: "zyverion-ai-session-state-v2",
+    preferredVoice: "zyverion-ai-voice-v3",
+    hintShown: "zyverion-ai-hint-shown-v4",
+    workPopupShown: "zyverion-work-popup-shown-v4",
+    sessionState: "zyverion-ai-session-state-v3",
   };
 
   const SELECTORS = {
@@ -28,7 +32,6 @@
     contextSummary: "#zyverionAiContextSummary",
 
     messages: "#zyverionAiMessages",
-    answerCard: ".zyverion-ai-answer-card",
     answerText: ".zyverion-ai-answer-text",
 
     orbZone: "#zyverionAiOrbZone",
@@ -39,12 +42,10 @@
     recommendationRail: "#zyverionAiRecommendationRail",
     followUpRail: "#zyverionAiFollowUpRail",
 
-    actionDock: "#zyverionAiActionDock",
     estimatorLink: "#zyverionAiEstimatorLink",
     contactLink: "#zyverionAiContactLink",
     workLink: "#zyverionAiWorkLink",
 
-    utilityDock: "#zyverionAiUtilityDock",
     muteBtn: "#zyverionAiMuteBtn",
     replayBtn: "#zyverionAiReplayBtn",
 
@@ -116,44 +117,36 @@
       recognition: "en-GB",
       speech: "en-GB",
       welcome:
-        "Hello. I'm Zyverion AI. Tell me what kind of business you have, and I’ll guide you toward the right website or system direction.",
-      switchMessage:
-        "Language switched to English.",
+        "Hello. I'm Zyverion AI. Tell me what kind of business you have, and I’ll guide you step by step toward the right website or system direction.",
+      switchMessage: "Language switched to English.",
       orbHintIdle: "Tap to speak",
       orbHintListening: "Tap to stop",
       orbHintSpeaking: "Tap to stop voice",
-      overlaySpeaking: "Speaking...",
       preferredVoice: "marin",
     },
     si: {
       recognition: "si-LK",
       speech: "si-LK",
       welcome:
-        "ආයුබෝවන්. මම Zyverion AI. ඔයාගේ business එක මොන type එකක්ද කියන්න, ඒකට fit වෙන website හෝ system direction එක මම guide කරන්නම්.",
-      switchMessage:
-        "සිංහල භාෂාවට මාරු වුණා.",
+        "ආයුබෝවන්. මම Zyverion AI. ඔයාගේ business එක මොන type එකක්ද කියන්න, මම step by step right website හෝ system direction එකට guide කරන්නම්.",
+      switchMessage: "සිංහල භාෂාවට මාරු වුණා.",
       orbHintIdle: "කතා කරන්න තට්ටු කරන්න",
       orbHintListening: "නවත්වන්න ආයෙත් තට්ටු කරන්න",
       orbHintSpeaking: "හඬ නවත්වන්න තට්ටු කරන්න",
-      overlaySpeaking: "කතා කරමින් සිටියි...",
       preferredVoice: "marin",
     },
     ta: {
       recognition: "ta-IN",
       speech: "ta-IN",
       welcome:
-        "வணக்கம். நான் Zyverion AI. உங்கள் business type என்ன என்று சொல்லுங்கள், அதற்கு பொருத்தமான website அல்லது system direction ஐ நான் guide செய்கிறேன்.",
-      switchMessage:
-        "தமிழ் மொழிக்கு மாற்றப்பட்டது.",
+        "வணக்கம். நான் Zyverion AI. உங்கள் business type என்ன என்று சொல்லுங்கள், சரியான website அல்லது system direction க்கு நான் step by step guide செய்கிறேன்.",
+      switchMessage: "தமிழ் மொழிக்கு மாற்றப்பட்டது.",
       orbHintIdle: "பேச தட்டவும்",
       orbHintListening: "நிறுத்த மீண்டும் தட்டவும்",
       orbHintSpeaking: "குரலை நிறுத்த தட்டவும்",
-      overlaySpeaking: "பேசுகிறது...",
       preferredVoice: "marin",
     },
   };
-
-  const DEFAULT_LANGUAGE = "en";
 
   const SpeechRecognitionCtor =
     window.SpeechRecognition || window.webkitSpeechRecognition || null;
@@ -170,37 +163,44 @@
   let isProcessing = false;
   let isSpeaking = false;
   let currentTranscriptText = "";
+  let currentAnswerText = DEFAULT_ANSWER;
   let shouldAutoSendOnEnd = false;
   let lastSpokenText = "";
-  let lastSpokenLanguage = null;
+  let lastSpokenLanguage = "";
   let hasWelcomedThisOpen = false;
   let pendingNavigationTimer = null;
 
-  let sessionState = loadSessionState();
+  const conversationState = loadConversationState();
+  let liveUiState = createEmptyLiveUiState();
 
-  function createEmptySessionState() {
+  function createEmptyConversationState() {
     return {
       businessSummary: "",
       userGoal: "",
       knownBusinessTypeId: "",
       knownStage: "",
       notes: "",
-      lastSituationSummary: "",
-      lastRecommendedSolutions: [],
-      lastFollowUpQuestions: [],
-      lastSuggestedAction: {
+      latestUserText: "",
+    };
+  }
+
+  function createEmptyLiveUiState() {
+    return {
+      headerIntro: "",
+      contextSummary: "",
+      followUpQuestions: [],
+      recommendedSolutions: [],
+      suggestedAction: {
         type: "none",
         label: "",
         href: "",
       },
       answerMode: "",
-      latestUserText: "",
-      latestAssistantText: "",
     };
   }
 
-  function normalizeSessionState(value) {
-    const base = createEmptySessionState();
+  function normalizeConversationState(value) {
+    const base = createEmptyConversationState();
 
     if (!value || typeof value !== "object" || Array.isArray(value)) {
       return base;
@@ -208,7 +208,9 @@
 
     return {
       businessSummary:
-        typeof value.businessSummary === "string" ? value.businessSummary.trim() : "",
+        typeof value.businessSummary === "string"
+          ? value.businessSummary.trim()
+          : "",
       userGoal:
         typeof value.userGoal === "string" ? value.userGoal.trim() : "",
       knownBusinessTypeId:
@@ -219,63 +221,38 @@
         typeof value.knownStage === "string" ? value.knownStage.trim() : "",
       notes:
         typeof value.notes === "string" ? value.notes.trim() : "",
-      lastSituationSummary:
-        typeof value.lastSituationSummary === "string"
-          ? value.lastSituationSummary.trim()
-          : "",
-      lastRecommendedSolutions: Array.isArray(value.lastRecommendedSolutions)
-        ? value.lastRecommendedSolutions.slice(0, 3)
-        : [],
-      lastFollowUpQuestions: Array.isArray(value.lastFollowUpQuestions)
-        ? value.lastFollowUpQuestions.slice(0, 3)
-        : [],
-      lastSuggestedAction:
-        value.lastSuggestedAction && typeof value.lastSuggestedAction === "object"
-          ? {
-              type: typeof value.lastSuggestedAction.type === "string"
-                ? value.lastSuggestedAction.type.trim()
-                : "none",
-              label: typeof value.lastSuggestedAction.label === "string"
-                ? value.lastSuggestedAction.label.trim()
-                : "",
-              href: typeof value.lastSuggestedAction.href === "string"
-                ? value.lastSuggestedAction.href.trim()
-                : "",
-            }
-          : base.lastSuggestedAction,
-      answerMode:
-        typeof value.answerMode === "string" ? value.answerMode.trim() : "",
       latestUserText:
-        typeof value.latestUserText === "string" ? value.latestUserText.trim() : "",
-      latestAssistantText:
-        typeof value.latestAssistantText === "string"
-          ? value.latestAssistantText.trim()
+        typeof value.latestUserText === "string"
+          ? value.latestUserText.trim()
           : "",
     };
   }
 
-  function loadSessionState() {
+  function loadConversationState() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEYS.sessionState);
-      if (!raw) return createEmptySessionState();
-      return normalizeSessionState(JSON.parse(raw));
+      const raw = sessionStorage.getItem(STORAGE_KEYS.sessionState);
+      if (!raw) return createEmptyConversationState();
+      return normalizeConversationState(JSON.parse(raw));
     } catch (error) {
-      return createEmptySessionState();
+      return createEmptyConversationState();
     }
   }
 
-  function persistSessionState() {
+  function persistConversationState() {
     try {
-      localStorage.setItem(
+      sessionStorage.setItem(
         STORAGE_KEYS.sessionState,
-        JSON.stringify(sessionState)
+        JSON.stringify(conversationState)
       );
     } catch (error) {}
   }
 
-  function resetSessionState() {
-    sessionState = createEmptySessionState();
-    persistSessionState();
+  function resetConversationState() {
+    const base = createEmptyConversationState();
+    Object.keys(base).forEach(function (key) {
+      conversationState[key] = base[key];
+    });
+    persistConversationState();
   }
 
   function qs(selector) {
@@ -342,10 +319,6 @@
     return qs(SELECTORS.messages);
   }
 
-  function getAnswerCard() {
-    return qs(SELECTORS.answerCard);
-  }
-
   function getAnswerText() {
     return qs(SELECTORS.answerText);
   }
@@ -374,10 +347,6 @@
     return qs(SELECTORS.followUpRail);
   }
 
-  function getActionDock() {
-    return qs(SELECTORS.actionDock);
-  }
-
   function getEstimatorLink() {
     return qs(SELECTORS.estimatorLink);
   }
@@ -388,10 +357,6 @@
 
   function getWorkLink() {
     return qs(SELECTORS.workLink);
-  }
-
-  function getUtilityDock() {
-    return qs(SELECTORS.utilityDock);
   }
 
   function getMuteBtn() {
@@ -410,11 +375,26 @@
     return voiceOverlay ? voiceOverlay.querySelector("span") : null;
   }
 
-function getSavedLanguage() {
+  function getSavedLanguage() {
     const value = localStorage.getItem(STORAGE_KEYS.language);
-    return value === "si" || value === "en" || value === "ta"
+    return value === "si" || value === "ta" || value === "en"
       ? value
       : DEFAULT_LANGUAGE;
+  }
+
+  function setSavedLanguage(language) {
+    if (!language) return;
+    localStorage.setItem(STORAGE_KEYS.language, language);
+  }
+
+  function getSavedPreferredVoice() {
+    return localStorage.getItem(STORAGE_KEYS.preferredVoice) || "";
+  }
+
+  function getPreferredVoice(language) {
+    const saved = getSavedPreferredVoice();
+    if (saved) return saved;
+    return getLanguagePack(language).preferredVoice || "marin";
   }
 
   function getLanguagePack(language) {
@@ -422,9 +402,8 @@ function getSavedLanguage() {
   }
 
   function getStatusText(key, language) {
-    const lang = language || getSavedLanguage() || "en";
+    const lang = language || getSavedLanguage();
     const table = STATUS_TEXT[key];
-
     if (table && table[lang]) return table[lang];
     if (table && table.en) return table.en;
     return key;
@@ -440,42 +419,27 @@ function getSavedLanguage() {
     const transcript = getTranscript();
     if (!transcript) return;
 
-    if (!text) {
-      transcript.hidden = true;
-      transcript.textContent = "";
-      return;
-    }
-
-    transcript.hidden = false;
-    transcript.textContent = text;
+    const finalText = safeText(text);
+    transcript.hidden = !finalText;
+    transcript.textContent = finalText;
   }
 
   function setHeaderIntro(text) {
     const el = getHeaderIntro();
     if (!el) return;
 
-    if (!text) {
-      el.hidden = true;
-      el.textContent = "";
-      return;
-    }
-
-    el.hidden = false;
-    el.textContent = text;
+    const finalText = safeText(text);
+    el.hidden = !finalText;
+    el.textContent = finalText;
   }
 
   function setContextSummary(text) {
     const el = getContextSummary();
     if (!el) return;
 
-    if (!text) {
-      el.hidden = true;
-      el.textContent = "";
-      return;
-    }
-
-    el.hidden = false;
-    el.textContent = text;
+    const finalText = safeText(text);
+    el.hidden = !finalText;
+    el.textContent = finalText;
   }
 
   function setCurrentAnswer(text) {
@@ -483,12 +447,10 @@ function getSavedLanguage() {
     const messages = getMessages();
     if (!answerText || !messages) return;
 
-    const finalText = safeText(text) || "Welcome to Zyverion AI. Tell me what kind of business you have.";
-    answerText.textContent = finalText;
-
-    sessionState.latestAssistantText = finalText;
-    persistSessionState();
+    currentAnswerText = safeText(text) || DEFAULT_ANSWER;
+    answerText.textContent = currentAnswerText;
   }
+
   function syncLanguageSelect(language) {
     const select = getLanguageSelect();
     if (select) select.value = language || "";
@@ -513,23 +475,13 @@ function getSavedLanguage() {
     picker.style.display = show ? "" : "none";
   }
 
-  function getSavedPreferredVoice() {
-    return localStorage.getItem(STORAGE_KEYS.preferredVoice) || "";
+  function setVoiceOverlayCopy() {
+    const title = getVoiceOverlayTitle();
+    const subtitle = getVoiceOverlaySubtitle();
+
+    if (title) title.textContent = "ZYVERION AI";
+    if (subtitle) subtitle.textContent = "";
   }
-
-  function getPreferredVoice(language) {
-    const saved = getSavedPreferredVoice();
-    if (saved) return saved;
-    return getLanguagePack(language).preferredVoice || "marin";
-  }
-
-function setVoiceOverlayCopy(language) {
-  const title = getVoiceOverlayTitle();
-  const subtitle = getVoiceOverlaySubtitle();
-
-  if (title) title.textContent = "ZYVERION AI";
-  if (subtitle) subtitle.textContent = "";
-}
 
   function showVoiceOverlay() {
     if (!voiceOverlay) return;
@@ -543,9 +495,10 @@ function setVoiceOverlayCopy(language) {
     voiceOverlay.setAttribute("aria-hidden", "true");
   }
 
-  function updateMuteButton() {
+function updateMuteButton() {
     const btn = getMuteBtn();
     if (!btn) return;
+
     btn.textContent = isMuted ? "Unmute" : "Mute";
     btn.classList.toggle("is-active", isMuted);
     btn.setAttribute("aria-pressed", isMuted ? "true" : "false");
@@ -554,28 +507,39 @@ function setVoiceOverlayCopy(language) {
   function updateReplayButton() {
     const btn = getReplayBtn();
     if (!btn) return;
+
     const enabled = !!(lastSpokenText && lastSpokenLanguage);
     btn.disabled = !enabled;
     btn.classList.toggle("is-disabled", !enabled);
   }
 
   function setOrbTexts(stateKey, language) {
-    const pack = getLanguagePack(language || getSavedLanguage() || "en");
+    const pack = getLanguagePack(language || getSavedLanguage());
     const stateText = getOrbStateText();
     const hintText = getOrbHintText();
 
     if (stateText) {
-      if (stateKey === "listening") stateText.textContent = getStatusText("listening", language);
-      else if (stateKey === "thinking") stateText.textContent = getStatusText("thinking", language);
-      else if (stateKey === "speaking") stateText.textContent = getStatusText("speaking", language);
-      else if (stateKey === "muted") stateText.textContent = getStatusText("muted", language);
-      else stateText.textContent = "ZYVERION AI";
+      if (stateKey === "listening") {
+        stateText.textContent = getStatusText("listening", language);
+      } else if (stateKey === "thinking") {
+        stateText.textContent = getStatusText("thinking", language);
+      } else if (stateKey === "speaking") {
+        stateText.textContent = getStatusText("speaking", language);
+      } else if (stateKey === "muted") {
+        stateText.textContent = getStatusText("muted", language);
+      } else {
+        stateText.textContent = "ZYVERION AI";
+      }
     }
 
     if (hintText) {
-      if (stateKey === "listening") hintText.textContent = pack.orbHintListening;
-      else if (stateKey === "speaking") hintText.textContent = pack.orbHintSpeaking;
-      else hintText.textContent = pack.orbHintIdle;
+      if (stateKey === "listening") {
+        hintText.textContent = pack.orbHintListening;
+      } else if (stateKey === "speaking") {
+        hintText.textContent = pack.orbHintSpeaking;
+      } else {
+        hintText.textContent = pack.orbHintIdle;
+      }
     }
   }
 
@@ -611,109 +575,7 @@ function setVoiceOverlayCopy(language) {
     }
 
     orbButton.setAttribute("data-state", stateKey);
-    setOrbTexts(stateKey, language || getSavedLanguage() || "en");
-  }
-
-  function createSolutionCard(solution) {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "zyverion-ai-solution-card";
-    card.setAttribute("data-solution-id", solution.id || "");
-
-    const category = document.createElement("span");
-    category.className = "zyverion-ai-solution-category";
-    category.textContent = solution.category || "solution";
-
-    const title = document.createElement("strong");
-    title.className = "zyverion-ai-solution-title";
-    title.textContent = solution.name || "Recommended Solution";
-
-    const purpose = document.createElement("span");
-    purpose.className = "zyverion-ai-solution-purpose";
-    purpose.textContent = solution.purpose || "";
-
-    card.appendChild(category);
-    card.appendChild(title);
-    card.appendChild(purpose);
-
-    card.addEventListener("click", function () {
-      const message =
-        solution.name && solution.purpose
-          ? solution.name + " — " + solution.purpose
-          : solution.name || "";
-
-      if (!message) return;
-      setCurrentAnswer(message);
-    });
-
-    return card;
-  }
-
-  function renderRecommendationRail(solutions) {
-    const rail = getRecommendationRail();
-    if (!rail) return;
-
-    rail.innerHTML = "";
-
-    if (!Array.isArray(solutions) || !solutions.length) {
-      rail.hidden = true;
-      return;
-    }
-
-    const label = document.createElement("div");
-    label.className = "zyverion-ai-section-label";
-    label.textContent = "Recommended Direction";
-
-    const list = document.createElement("div");
-    list.className = "zyverion-ai-solution-list";
-
-    solutions.slice(0, 3).forEach(function (solution) {
-      list.appendChild(createSolutionCard(solution));
-    });
-
-    rail.appendChild(label);
-    rail.appendChild(list);
-    rail.hidden = false;
-  }
-
-  function createFollowUpChip(question) {
-    const chip = document.createElement("button");
-    chip.type = "button";
-    chip.className = "zyverion-ai-followup-chip";
-    chip.textContent = question;
-
-    chip.addEventListener("click", function () {
-      processUserMessage(question);
-    });
-
-    return chip;
-  }
-
-  function renderFollowUpRail(questions) {
-    const rail = getFollowUpRail();
-    if (!rail) return;
-
-    rail.innerHTML = "";
-
-    if (!Array.isArray(questions) || !questions.length) {
-      rail.hidden = true;
-      return;
-    }
-
-    const label = document.createElement("div");
-    label.className = "zyverion-ai-section-label";
-    label.textContent = "Next Questions";
-
-    const list = document.createElement("div");
-    list.className = "zyverion-ai-followup-list";
-
-    questions.slice(0, 3).forEach(function (question) {
-      list.appendChild(createFollowUpChip(question));
-    });
-
-    rail.appendChild(label);
-    rail.appendChild(list);
-    rail.hidden = false;
+    setOrbTexts(stateKey, language || getSavedLanguage());
   }
 
   function clearSuggestedActionState() {
@@ -721,20 +583,6 @@ function setVoiceOverlayCopy(language) {
       if (!link) return;
       link.classList.remove("is-suggested");
     });
-  }
-
-  function updateSuggestedAction(type) {
-    clearSuggestedActionState();
-
-    let target = null;
-
-    if (type === "estimator") target = getEstimatorLink();
-    else if (type === "contact") target = getContactLink();
-    else if (type === "work") target = getWorkLink();
-
-    if (target) {
-      target.classList.add("is-suggested");
-    }
   }
 
   function normalizeSuggestedAction(action) {
@@ -781,130 +629,262 @@ function setVoiceOverlayCopy(language) {
 
   function applySuggestedAction(action) {
     const normalized = normalizeSuggestedAction(action);
-    updateSuggestedAction(normalized.type);
-    sessionState.lastSuggestedAction = normalized;
-    persistSessionState();
+    clearSuggestedActionState();
+
+    let target = null;
+    if (normalized.type === "estimator") target = getEstimatorLink();
+    if (normalized.type === "contact") target = getContactLink();
+    if (normalized.type === "work") target = getWorkLink();
+
+    if (target) {
+      target.classList.add("is-suggested");
+    }
+
+    liveUiState.suggestedAction = normalized;
   }
 
-  function buildSessionContextPayload() {
-    return {
-      businessSummary: sessionState.businessSummary,
-      userGoal: sessionState.userGoal,
-      knownBusinessTypeId: sessionState.knownBusinessTypeId,
-      knownStage: sessionState.knownStage,
-      notes: sessionState.notes,
-    };
+  function createSolutionCard(solution) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "zyverion-ai-solution-card";
+    card.setAttribute("data-solution-id", safeText(solution.id));
+
+    const category = document.createElement("span");
+    category.className = "zyverion-ai-solution-category";
+    category.textContent = safeText(solution.category) || "solution";
+
+    const title = document.createElement("strong");
+    title.className = "zyverion-ai-solution-title";
+    title.textContent = safeText(solution.name) || "Recommended Solution";
+
+    const purpose = document.createElement("span");
+    purpose.className = "zyverion-ai-solution-purpose";
+    purpose.textContent = safeText(solution.purpose);
+
+    card.appendChild(category);
+    card.appendChild(title);
+    card.appendChild(purpose);
+
+    card.addEventListener("click", function () {
+      const summary = [safeText(solution.name), safeText(solution.purpose)]
+        .filter(Boolean)
+        .join(" — ");
+
+      if (summary) {
+        setCurrentAnswer(summary);
+        syncPopupHeight();
+      }
+    });
+
+    return card;
   }
 
-  function mergeSessionStateFromAi(result) {
-    if (!result || typeof result !== "object") return;
+  function renderRecommendationRail(solutions) {
+    const rail = getRecommendationRail();
+    if (!rail) return;
 
-    if (safeText(result.situationSummary)) {
-      sessionState.lastSituationSummary = safeText(result.situationSummary);
+    rail.innerHTML = "";
+
+    if (!Array.isArray(solutions) || !solutions.length) {
+      rail.hidden = true;
+      return;
     }
 
-    if (Array.isArray(result.followUpQuestions)) {
-      sessionState.lastFollowUpQuestions = result.followUpQuestions
-        .filter((item) => typeof item === "string" && item.trim())
-        .slice(0, 3);
+    const label = document.createElement("div");
+    label.className = "zyverion-ai-section-label";
+    label.textContent = "Recommended Direction";
+
+    const list = document.createElement("div");
+    list.className = "zyverion-ai-solution-list";
+
+    solutions.slice(0, 3).forEach(function (solution) {
+      if (!solution || typeof solution !== "object") return;
+      list.appendChild(createSolutionCard(solution));
+    });
+
+    if (!list.children.length) {
+      rail.hidden = true;
+      return;
     }
 
-    if (Array.isArray(result.recommendedSolutions)) {
-      sessionState.lastRecommendedSolutions = result.recommendedSolutions
-        .filter((item) => item && typeof item === "object")
-        .slice(0, 3);
-    }
-
-    if (safeText(result.answerMode)) {
-      sessionState.answerMode = safeText(result.answerMode);
-    }
-
-    if (result.situation && typeof result.situation === "object") {
-      if (safeText(result.situation.businessTypeId)) {
-        sessionState.knownBusinessTypeId = safeText(result.situation.businessTypeId);
-      }
-      if (safeText(result.situation.stage)) {
-        sessionState.knownStage = safeText(result.situation.stage);
-      }
-      if (Array.isArray(result.situation.goals) && result.situation.goals.length) {
-        sessionState.userGoal = result.situation.goals.join(", ");
-      }
-    }
-
-    persistSessionState();
+    rail.appendChild(label);
+    rail.appendChild(list);
+    rail.hidden = false;
   }
 
-  function learnFromUserMessage(text) {
-    const value = normalizeText(text);
-    if (!value) return;
+  function createFollowUpChip(question) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "zyverion-ai-followup-chip";
+    chip.textContent = question;
 
-    sessionState.latestUserText = safeText(text);
+    chip.addEventListener("click", function () {
+      processUserMessage(question);
+    });
 
-    if (!sessionState.businessSummary && value.length < 180) {
-      if (
-        value.includes("business") ||
-        value.includes("company") ||
-        value.includes("gym") ||
-        value.includes("salon") ||
-        value.includes("restaurant") ||
-        value.includes("shop") ||
-        value.includes("clinic") ||
-        value.includes("agency") ||
-        value.includes("brand") ||
-        value.includes("institute")
-      ) {
-        sessionState.businessSummary = safeText(text);
-      }
-    }
-
-    if (!sessionState.userGoal) {
-      if (
-        value.includes("more customers") ||
-        value.includes("leads") ||
-        value.includes("sales") ||
-        value.includes("bookings") ||
-        value.includes("trust") ||
-        value.includes("website") ||
-        value.includes("system") ||
-        value.includes("guidance")
-      ) {
-        sessionState.userGoal = safeText(text);
-      }
-    }
-
-    if (value.length < 240) {
-      sessionState.notes = uniqueArray(
-        [sessionState.notes, safeText(text)].filter(Boolean)
-      ).join(" | ");
-
-      if (sessionState.notes.length > 420) {
-        sessionState.notes = sessionState.notes.slice(-420);
-      }
-    }
-
-    persistSessionState();
+    return chip;
   }
 
-  function refreshSmartUiFromSession() {
-    setContextSummary(sessionState.lastSituationSummary || "");
-    renderRecommendationRail(sessionState.lastRecommendedSolutions || []);
-    renderFollowUpRail(sessionState.lastFollowUpQuestions || []);
-    applySuggestedAction(sessionState.lastSuggestedAction || { type: "none" });
-    updateReplayButton();
-    updateMuteButton();
-    updateOrbState(getSavedLanguage() || "en");
+  function renderFollowUpRail(questions) {
+    const rail = getFollowUpRail();
+    if (!rail) return;
 
-    if (sessionState.latestAssistantText) {
-      setCurrentAnswer(sessionState.latestAssistantText);
+    rail.innerHTML = "";
+
+    if (!Array.isArray(questions) || !questions.length) {
+      rail.hidden = true;
+      return;
     }
+
+    const label = document.createElement("div");
+    label.className = "zyverion-ai-section-label";
+    label.textContent = "Next Questions";
+
+    const list = document.createElement("div");
+    list.className = "zyverion-ai-followup-list";
+
+    questions.slice(0, 4).forEach(function (question) {
+      const cleanQuestion = safeText(question);
+      if (!cleanQuestion) return;
+      list.appendChild(createFollowUpChip(cleanQuestion));
+    });
+
+    if (!list.children.length) {
+      rail.hidden = true;
+      return;
+    }
+
+    rail.appendChild(label);
+    rail.appendChild(list);
+    rail.hidden = false;
   }
 
-  function clearSmartUi() {
+  function clearLiveUiState() {
+    liveUiState = createEmptyLiveUiState();
     setHeaderIntro("");
     setContextSummary("");
     renderRecommendationRail([]);
     renderFollowUpRail([]);
     clearSuggestedActionState();
+  }
+
+  function applyLiveUiState() {
+    setHeaderIntro(liveUiState.headerIntro || "");
+    setContextSummary(liveUiState.contextSummary || "");
+    renderRecommendationRail(liveUiState.recommendedSolutions || []);
+    renderFollowUpRail(liveUiState.followUpQuestions || []);
+    applySuggestedAction(liveUiState.suggestedAction || { type: "none" });
+    updateMuteButton();
+    updateReplayButton();
+    updateOrbState(getSavedLanguage());
+  }
+
+  function setFreshResultUi(result) {
+    liveUiState.headerIntro = safeText(result.headerIntro);
+    liveUiState.contextSummary = safeText(result.situationSummary);
+    liveUiState.followUpQuestions = Array.isArray(result.followUpQuestions)
+      ? result.followUpQuestions
+          .filter((item) => typeof item === "string" && item.trim())
+          .slice(0, 4)
+      : [];
+    liveUiState.recommendedSolutions = Array.isArray(result.recommendedSolutions)
+      ? result.recommendedSolutions
+          .filter((item) => item && typeof item === "object")
+          .slice(0, 3)
+      : [];
+    liveUiState.suggestedAction = normalizeSuggestedAction(result.suggestedAction);
+    liveUiState.answerMode = safeText(result.answerMode);
+
+    applyLiveUiState();
+  }
+
+  function buildSessionContextPayload() {
+    return {
+      businessSummary: conversationState.businessSummary,
+      userGoal: conversationState.userGoal,
+      knownBusinessTypeId: conversationState.knownBusinessTypeId,
+      knownStage: conversationState.knownStage,
+      notes: conversationState.notes,
+    };
+  }
+
+  function learnFromUserMessage(text) {
+    const cleanText = safeText(text);
+    const value = normalizeText(cleanText);
+    if (!value) return;
+
+    conversationState.latestUserText = cleanText;
+
+    if (!conversationState.businessSummary) {
+      if (
+        value.includes("my business is") ||
+        value.includes("i run a") ||
+        value.includes("i have a") ||
+        value.includes("for my gym") ||
+        value.includes("for my salon") ||
+        value.includes("for my restaurant") ||
+        value.includes("for my clinic") ||
+        value.includes("for my shop") ||
+        value.includes("for my company")
+      ) {
+        conversationState.businessSummary = cleanText.slice(0, 180);
+      }
+    }
+
+    if (!conversationState.userGoal) {
+      if (
+        value.includes("more customers") ||
+        value.includes("more leads") ||
+        value.includes("more sales") ||
+        value.includes("more bookings") ||
+        value.includes("manage members") ||
+        value.includes("member management") ||
+        value.includes("website") ||
+        value.includes("system")
+      ) {
+        conversationState.userGoal = cleanText.slice(0, 180);
+      }
+    }
+
+    if (cleanText.length <= 160) {
+      const notes = uniqueArray(
+        [conversationState.notes, cleanText]
+          .filter(Boolean)
+          .join(" | ")
+          .split(" | ")
+          .map((item) => item.trim())
+      );
+
+      conversationState.notes = notes.slice(-4).join(" | ");
+    }
+
+    persistConversationState();
+  }
+
+  function mergeConversationStateFromAi(result) {
+    if (!result || typeof result !== "object") return;
+
+    if (result.situation && typeof result.situation === "object") {
+      const businessTypeId = safeText(result.situation.businessTypeId);
+      const stage = safeText(result.situation.stage);
+
+      if (businessTypeId) {
+        conversationState.knownBusinessTypeId = businessTypeId;
+      }
+
+      if (stage) {
+        conversationState.knownStage = stage;
+      }
+
+      if (Array.isArray(result.situation.goals) && result.situation.goals.length) {
+        conversationState.userGoal = result.situation.goals
+          .filter((item) => typeof item === "string" && item.trim())
+          .slice(0, 4)
+          .join(", ");
+      }
+    }
+
+    persistConversationState();
   }
 
   function clearPendingNavigationTimer() {
@@ -987,7 +967,7 @@ function setVoiceOverlayCopy(language) {
     hideVoiceOverlay();
     launcher.classList.remove("is-speaking");
     isSpeaking = false;
-    updateOrbState(getSavedLanguage() || "en");
+    updateOrbState(getSavedLanguage());
   }
 
   async function speakWithBackendTts(text, language) {
@@ -1040,7 +1020,7 @@ function setVoiceOverlayCopy(language) {
       activeAudioUrl = audioUrl;
       activeTtsController = null;
 
-      setVoiceOverlayCopy(language);
+      setVoiceOverlayCopy();
 
       return await new Promise(function (resolve) {
         let finished = false;
@@ -1073,7 +1053,11 @@ function setVoiceOverlayCopy(language) {
           hideVoiceOverlay();
           launcher.classList.remove("is-speaking");
           isSpeaking = false;
-          if (!isListening) setStatus("idle", language);
+
+          if (!isListening) {
+            setStatus("idle", language);
+          }
+
           updateOrbState(language);
           finalize(true);
         };
@@ -1083,7 +1067,11 @@ function setVoiceOverlayCopy(language) {
           hideVoiceOverlay();
           launcher.classList.remove("is-speaking");
           isSpeaking = false;
-          if (!isListening) setStatus("ttsFallback", language);
+
+          if (!isListening) {
+            setStatus("ttsFallback", language);
+          }
+
           updateOrbState(language);
           finalize(false);
         };
@@ -1132,7 +1120,7 @@ function setVoiceOverlayCopy(language) {
 
     utterance.onstart = function () {
       isSpeaking = true;
-      setVoiceOverlayCopy(language);
+      setVoiceOverlayCopy();
       showVoiceOverlay();
       launcher.classList.add("is-speaking");
       setStatus("speaking", language);
@@ -1143,7 +1131,11 @@ function setVoiceOverlayCopy(language) {
       hideVoiceOverlay();
       launcher.classList.remove("is-speaking");
       isSpeaking = false;
-      if (!isListening) setStatus("idle", language);
+
+      if (!isListening) {
+        setStatus("idle", language);
+      }
+
       updateOrbState(language);
     };
 
@@ -1151,7 +1143,11 @@ function setVoiceOverlayCopy(language) {
       hideVoiceOverlay();
       launcher.classList.remove("is-speaking");
       isSpeaking = false;
-      if (!isListening) setStatus("ttsFallback", language);
+
+      if (!isListening) {
+        setStatus("ttsFallback", language);
+      }
+
       updateOrbState(language);
     };
 
@@ -1159,9 +1155,10 @@ function setVoiceOverlayCopy(language) {
   }
 
   async function speakText(text, language) {
-    if (!text) return;
+    const cleanText = safeText(text);
+    if (!cleanText) return;
 
-    lastSpokenText = text;
+    lastSpokenText = cleanText;
     lastSpokenLanguage = language;
     updateReplayButton();
 
@@ -1173,7 +1170,7 @@ function setVoiceOverlayCopy(language) {
 
     stopSpeech();
 
-    const backendWorked = await speakWithBackendTts(text, language);
+    const backendWorked = await speakWithBackendTts(cleanText, language);
     if (backendWorked) return;
 
     if (!synth) {
@@ -1182,13 +1179,135 @@ function setVoiceOverlayCopy(language) {
       return;
     }
 
-    speakWithBrowserFallback(text, language);
+    speakWithBrowserFallback(cleanText, language);
   }
 
+  function normalizeAiResult(data) {
+    if (!data || typeof data !== "object") {
+      return {
+        textReply: "",
+        spokenReply: "",
+        answerMode: "support",
+        followUpQuestions: [],
+        situationSummary: "",
+        recommendedSolutions: [],
+        suggestedAction: {
+          type: "none",
+          label: "",
+          href: "",
+        },
+        situation: {
+          businessTypeId: "",
+          stage: "",
+          goals: [],
+          capabilities: [],
+        },
+      };
+    }
+
+    return {
+      textReply: safeText(data.textReply),
+      spokenReply: safeText(data.spokenReply || data.textReply),
+      answerMode: safeText(data.answerMode || "support"),
+      followUpQuestions: Array.isArray(data.followUpQuestions)
+        ? data.followUpQuestions
+            .filter((item) => typeof item === "string" && item.trim())
+            .map((item) => item.trim())
+            .slice(0, 4)
+        : [],
+      situationSummary: safeText(data.situationSummary),
+      recommendedSolutions: Array.isArray(data.recommendedSolutions)
+        ? data.recommendedSolutions
+            .filter((item) => item && typeof item === "object")
+            .slice(0, 3)
+        : [],
+      suggestedAction: normalizeSuggestedAction(data.suggestedAction),
+      situation:
+        data.situation && typeof data.situation === "object"
+          ? {
+              businessTypeId: safeText(data.situation.businessTypeId),
+              stage: safeText(data.situation.stage),
+              goals: Array.isArray(data.situation.goals)
+                ? data.situation.goals
+                    .filter((item) => typeof item === "string" && item.trim())
+                    .slice(0, 6)
+                : [],
+              capabilities: Array.isArray(data.situation.capabilities)
+                ? data.situation.capabilities
+                    .filter((item) => typeof item === "string" && item.trim())
+                    .slice(0, 6)
+                : [],
+            }
+          : {
+              businessTypeId: "",
+              stage: "",
+              goals: [],
+              capabilities: [],
+            },
+    };
+  }
+
+  async function fetchAiReply(text, language) {
+    try {
+      const response = await fetch("/api/zyverion-ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text,
+          language: language,
+          sessionContext: buildSessionContextPayload(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("AI request failed");
+      }
+
+      const data = await response.json();
+      return normalizeAiResult(data);
+    } catch (error) {
+      return normalizeAiResult({
+        textReply:
+          language === "si"
+            ? "Live assistant service එකට පොඩි connection issue එකක් තියෙනවා. ඒත් ඔයාගේ business type එක හෝ goal එක කියන්න, මම next step එක narrow කරන්න help කරන්නම්."
+            : language === "ta"
+            ? "Live assistant service இல் சிறிய connection issue உள்ளது. ஆனாலும் உங்கள் business type அல்லது goal ஐ சொல்லுங்கள், அடுத்த step ஐ narrow செய்ய நான் உதவுகிறேன்."
+            : "There is a small connection issue with the live assistant service right now. Tell me your business type or goal, and I’ll still help narrow the next step.",
+        spokenReply:
+          language === "si"
+            ? "Connection issue එකක් තියෙනවා. ඒත් business type එක හෝ goal එක කියන්න, මම next step එක guide කරන්නම්."
+            : language === "ta"
+            ? "Connection issue உள்ளது. ஆனாலும் உங்கள் business type அல்லது goal ஐ சொல்லுங்கள், அடுத்த step ஐ guide செய்கிறேன்."
+            : "There is a connection issue right now, but tell me your business type or goal and I will still guide the next step.",
+        answerMode: "support",
+        followUpQuestions:
+          language === "si"
+            ? ["My business is a gym", "I need more leads", "I need a website", "I need a system"]
+            : language === "ta"
+            ? ["My business is a gym", "I need more leads", "I need a website", "I need a system"]
+            : ["My business is a gym", "I need more leads", "I need a website", "I need a system"],
+        situationSummary: "",
+        recommendedSolutions: [],
+        suggestedAction: {
+          type: "none",
+          label: "",
+          href: "",
+        },
+        situation: {
+          businessTypeId: "",
+          stage: "",
+          goals: [],
+          capabilities: [],
+        },
+      });
+    }
+  }
   function resetListeningUi() {
     isListening = false;
     launcher.classList.remove("is-listening");
-    updateOrbState(getSavedLanguage() || "en");
+    updateOrbState(getSavedLanguage());
   }
 
   function stopRecognition(discardTranscript) {
@@ -1196,7 +1315,10 @@ function setVoiceOverlayCopy(language) {
 
     if (!recognition) {
       resetListeningUi();
-      if (discardTranscript) setTranscript("");
+      if (discardTranscript) {
+        currentTranscriptText = "";
+        setTranscript("");
+      }
       return;
     }
 
@@ -1204,6 +1326,8 @@ function setVoiceOverlayCopy(language) {
       if (discardTranscript) {
         shouldAutoSendOnEnd = false;
         recognition.abort();
+        currentTranscriptText = "";
+        setTranscript("");
       } else {
         recognition.stop();
       }
@@ -1232,11 +1356,15 @@ function setVoiceOverlayCopy(language) {
     if (hasWelcomedThisOpen) {
       const switchMessage = getLanguageSwitchMessage(language);
       setCurrentAnswer(switchMessage);
+      clearLiveUiState();
+      syncPopupHeight();
       await speakText(switchMessage, language);
       return;
     }
 
+    clearLiveUiState();
     setCurrentAnswer(pack.welcome);
+    syncPopupHeight();
     await speakText(pack.welcome, language);
     hasWelcomedThisOpen = true;
   }
@@ -1272,6 +1400,7 @@ function setVoiceOverlayCopy(language) {
   function hideWorkPopup() {
     const popup = getWorkPopup();
     if (!popup) return;
+
     popup.classList.remove("show");
     popup.setAttribute("aria-hidden", "true");
   }
@@ -1331,185 +1460,16 @@ function setVoiceOverlayCopy(language) {
     }, 1800);
   }
 
-  function setSavedLanguage(language) {
-    if (!language) return;
-
-    localStorage.setItem(STORAGE_KEYS.language, language);
-    syncLanguageUi(language);
-    showLanguagePicker(false);
-    setHeaderIntro("");
-    setStatus("idle", language);
-    updateOrbState(language);
-  }
-  function normalizeAiResult(data) {
-    if (!data || typeof data !== "object") {
-      return {
-        textReply: "",
-        spokenReply: "",
-        answerMode: "support",
-        followUpQuestions: [],
-        situationSummary: "",
-        recommendedSolutions: [],
-        suggestedAction: {
-          type: "none",
-          label: "",
-          href: "",
-        },
-        situation: {
-          businessTypeId: "",
-          stage: "",
-          goals: [],
-          capabilities: [],
-        },
-      };
-    }
-
-    return {
-      textReply: safeText(data.textReply),
-      spokenReply: safeText(data.spokenReply || data.textReply),
-      answerMode: safeText(data.answerMode || "support"),
-      followUpQuestions: Array.isArray(data.followUpQuestions)
-        ? data.followUpQuestions
-            .filter((item) => typeof item === "string" && item.trim())
-            .map((item) => item.trim())
-            .slice(0, 3)
-        : [],
-      situationSummary: safeText(data.situationSummary),
-      recommendedSolutions: Array.isArray(data.recommendedSolutions)
-        ? data.recommendedSolutions
-            .filter((item) => item && typeof item === "object")
-            .slice(0, 3)
-        : [],
-      suggestedAction: normalizeSuggestedAction(data.suggestedAction),
-      situation:
-        data.situation && typeof data.situation === "object"
-          ? {
-              businessTypeId: safeText(data.situation.businessTypeId),
-              stage: safeText(data.situation.stage),
-              goals: Array.isArray(data.situation.goals)
-                ? data.situation.goals
-                    .filter((item) => typeof item === "string" && item.trim())
-                    .slice(0, 6)
-                : [],
-              capabilities: Array.isArray(data.situation.capabilities)
-                ? data.situation.capabilities
-                    .filter((item) => typeof item === "string" && item.trim())
-                    .slice(0, 6)
-                : [],
-            }
-          : {
-              businessTypeId: "",
-              stage: "",
-              goals: [],
-              capabilities: [],
-            },
-    };
-  }
-
-  async function fetchAiReply(text, language) {
-    try {
-      const response = await fetch("/api/zyverion-ai", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: text,
-          language: language,
-          sessionContext: buildSessionContextPayload(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("AI request failed");
-      }
-
-      const data = await response.json();
-      return normalizeAiResult(data);
-    } catch (error) {
-      const fallbackQuestions =
-        language === "si"
-          ? [
-              "ඔයාගේ main goal එක වැඩි members ගන්න එකද, members manage කරන එකද, නැත්නම් දෙකමද?",
-              "ඔයාට website එක විතරක් ඕනද, නැත්නම් admin හෝ member features එකත් ඕනද?",
-            ]
-          : language === "ta"
-          ? [
-              "உங்கள் main goal அதிக members வாங்குவதா, members manage செய்வதா, அல்லது இரண்டுமா?",
-              "உங்களுக்கு website மட்டும் வேண்டுமா, அல்லது admin அல்லது member features கூட வேண்டுமா?",
-            ]
-          : [
-              "Is your main goal getting more customers, managing current users, or both?",
-              "Do you need only a website, or do you also need admin or member features?",
-            ];
-
-      return normalizeAiResult({
-        textReply:
-          language === "si"
-            ? "දැනට smart reply service එක fallback mode එකෙන් යනවා. ඒත් මට ඔයාගේ situation එක narrow කරන්න පුළුවන්."
-            : language === "ta"
-            ? "இப்போது smart reply service fallback mode இல் உள்ளது. ஆனாலும் உங்கள் situation ஐ narrow செய்ய நான் உதவ முடியும்."
-            : "The smart reply service is in fallback mode right now, but I can still help narrow down your situation.",
-        spokenReply:
-          language === "si"
-            ? "දැනට fallback mode එකෙන් යනවා. ඒත් මට ඔයාගේ situation එක narrow කරන්න පුළුවන්."
-            : language === "ta"
-            ? "இப்போது fallback mode இல் உள்ளது. ஆனாலும் உங்கள் situation ஐ narrow செய்ய உதவ முடியும்."
-            : "I am in fallback mode right now, but I can still help narrow down your situation.",
-        answerMode: "discovery",
-        followUpQuestions: fallbackQuestions,
-        situationSummary: "",
-        recommendedSolutions: [],
-        suggestedAction: {
-          type: "none",
-          label: "",
-          href: "",
-        },
-        situation: {
-          businessTypeId: "",
-          stage: "",
-          goals: [],
-          capabilities: [],
-        },
-      });
-    }
-  }
-
-  function applyAiResultToUi(result) {
-    mergeSessionStateFromAi(result);
-
-    setContextSummary(result.situationSummary || sessionState.lastSituationSummary || "");
-    renderRecommendationRail(
-      result.recommendedSolutions.length
-        ? result.recommendedSolutions
-        : sessionState.lastRecommendedSolutions || []
-    );
-    renderFollowUpRail(
-      result.followUpQuestions.length
-        ? result.followUpQuestions
-        : sessionState.lastFollowUpQuestions || []
-    );
-    applySuggestedAction(result.suggestedAction);
-  }
-
   async function processUserMessage(text) {
     const language = getSavedLanguage();
     const cleanText = safeText(text);
 
-    if (!language) {
-      setStatus("chooseLanguage");
-      showLanguagePicker(true);
-      return;
-    }
-
     if (!cleanText || isProcessing) return;
 
+    stopSpeech();
     currentTranscriptText = "";
     setTranscript("");
     learnFromUserMessage(cleanText);
-
-    sessionState.latestUserText = cleanText;
-    persistSessionState();
 
     isProcessing = true;
     setStatus("thinking", language);
@@ -1518,15 +1478,16 @@ function setVoiceOverlayCopy(language) {
     try {
       const result = await fetchAiReply(cleanText, language);
 
-      applyAiResultToUi(result);
+      mergeConversationStateFromAi(result);
+      setFreshResultUi(result);
 
-      if (result.textReply) {
-        setCurrentAnswer(result.textReply);
-      }
+      const finalAnswer = safeText(result.textReply) || DEFAULT_ANSWER;
+      const spokenAnswer = safeText(result.spokenReply) || finalAnswer;
 
-if (result.textReply || result.spokenReply) {
-  await speakText(result.textReply || result.spokenReply, language);
-}
+      setCurrentAnswer(finalAnswer);
+      syncPopupHeight();
+
+      await speakText(spokenAnswer, language);
     } finally {
       isProcessing = false;
 
@@ -1534,20 +1495,15 @@ if (result.textReply || result.spokenReply) {
         setStatus("idle", language);
       }
 
+      updateReplayButton();
+      updateMuteButton();
       updateOrbState(language);
-      refreshSmartUiFromSession();
       syncPopupHeight();
     }
   }
 
   function startListening() {
     const language = getSavedLanguage();
-
-    if (!language) {
-      setStatus("chooseLanguage");
-      showLanguagePicker(true);
-      return;
-    }
 
     if (!SpeechRecognitionCtor) {
       setStatus("unsupported", language);
@@ -1634,15 +1590,15 @@ if (result.textReply || result.spokenReply) {
       recognition.start();
     } catch (error) {
       resetListeningUi();
-      setStatus("unsupported", language);
       recognition = null;
+      setStatus("unsupported", language);
       updateOrbState(language);
       syncPopupHeight();
     }
   }
 
   function handleOrbTap() {
-    const language = getSavedLanguage() || "en";
+    const language = getSavedLanguage();
 
     if (isListening) {
       stopRecognition(false);
@@ -1697,7 +1653,7 @@ if (result.textReply || result.spokenReply) {
   }
 
   async function navigateWithAssistantFeedback(actionType, href) {
-    const language = getSavedLanguage() || "en";
+    const language = getSavedLanguage();
     const message = getActionMessage(actionType, language);
 
     clearPendingNavigationTimer();
@@ -1707,6 +1663,8 @@ if (result.textReply || result.spokenReply) {
     stopSpeech();
 
     setCurrentAnswer(message);
+    clearLiveUiState();
+    syncPopupHeight();
     await speakText(message, language);
 
     pendingNavigationTimer = window.setTimeout(function () {
@@ -1721,9 +1679,9 @@ if (result.textReply || result.spokenReply) {
 
     requestAnimationFrame(function () {
       const hasExtraContent =
-        !!sessionState.lastSituationSummary ||
-        !!(sessionState.lastRecommendedSolutions || []).length ||
-        !!(sessionState.lastFollowUpQuestions || []).length ||
+        !!safeText(liveUiState.contextSummary) ||
+        !!(liveUiState.recommendedSolutions || []).length ||
+        !!(liveUiState.followUpQuestions || []).length ||
         !!currentTranscriptText ||
         isListening ||
         isProcessing;
@@ -1756,34 +1714,18 @@ if (result.textReply || result.spokenReply) {
 
     const savedLanguage = getSavedLanguage();
     syncLanguageUi(savedLanguage);
-    showLanguagePicker(!savedLanguage);
+    showLanguagePicker(false);
 
-    if (sessionState.latestAssistantText) {
-      setCurrentAnswer(sessionState.latestAssistantText);
-    } else {
-      setCurrentAnswer(
-        "Welcome to Zyverion AI. Tell me what kind of business you have."
-      );
-    }
+    setCurrentAnswer(currentAnswerText || DEFAULT_ANSWER);
+    applyLiveUiState();
 
-    setContextSummary(sessionState.lastSituationSummary || "");
-    renderRecommendationRail(sessionState.lastRecommendedSolutions || []);
-    renderFollowUpRail(sessionState.lastFollowUpQuestions || []);
-    applySuggestedAction(sessionState.lastSuggestedAction || { type: "none" });
-
-    if (savedLanguage) {
-      setStatus("idle", savedLanguage);
-      updateOrbState(savedLanguage);
-
-      setTimeout(function () {
-        Promise.resolve(handleGreeting(savedLanguage)).catch(function () {});
-      }, 160);
-    } else {
-      setStatus("chooseLanguage", "en");
-      updateOrbState("en");
-    }
-
+    setStatus("idle", savedLanguage);
+    updateOrbState(savedLanguage);
     syncPopupHeight();
+
+    setTimeout(function () {
+      Promise.resolve(handleGreeting(savedLanguage)).catch(function () {});
+    }, 140);
   }
 
   function closeAssistantPanel() {
@@ -1850,18 +1792,30 @@ if (result.textReply || result.spokenReply) {
       if (!language) return;
 
       setSavedLanguage(language);
-      Promise.resolve(handleGreeting(language)).catch(function () {});
-      syncPopupHeight();
+      syncLanguageUi(language);
+      showLanguagePicker(false);
+      setStatus("idle", language);
+      updateOrbState(language);
+
+      if (isPanelOpen) {
+        Promise.resolve(handleGreeting(language)).catch(function () {});
+      }
     });
 
     if (languageSelect) {
       languageSelect.addEventListener("change", function (event) {
-        const language = event.target.value;
+        const language = safeText(event.target.value);
         if (!language) return;
 
         setSavedLanguage(language);
-        Promise.resolve(handleGreeting(language)).catch(function () {});
-        syncPopupHeight();
+        syncLanguageUi(language);
+        showLanguagePicker(false);
+        setStatus("idle", language);
+        updateOrbState(language);
+
+        if (isPanelOpen) {
+          Promise.resolve(handleGreeting(language)).catch(function () {});
+        }
       });
     }
 
@@ -1874,7 +1828,7 @@ if (result.textReply || result.spokenReply) {
 
     if (muteBtn) {
       muteBtn.addEventListener("click", function () {
-        const language = getSavedLanguage() || "en";
+        const language = getSavedLanguage();
         isMuted = !isMuted;
 
         if (isMuted) {
@@ -1934,7 +1888,10 @@ if (result.textReply || result.spokenReply) {
 
   function bindLauncher() {
     window.addEventListener("load", function () {
-      localStorage.setItem(STORAGE_KEYS.language, DEFAULT_LANGUAGE);
+      if (!localStorage.getItem(STORAGE_KEYS.language)) {
+        setSavedLanguage(DEFAULT_LANGUAGE);
+      }
+
       hideLegacyControls();
       showHintOncePerSession();
       ensureWorkPopupExists();
@@ -1942,25 +1899,14 @@ if (result.textReply || result.spokenReply) {
 
       const savedLanguage = getSavedLanguage();
       syncLanguageUi(savedLanguage);
-      showLanguagePicker(!savedLanguage);
+      showLanguagePicker(false);
 
-      if (sessionState.latestAssistantText) {
-        setCurrentAnswer(sessionState.latestAssistantText);
-      } else {
-        setCurrentAnswer(
-          "Welcome to Zyverion AI. Tell me what kind of business you have."
-        );
-      }
-
-      setContextSummary(sessionState.lastSituationSummary || "");
-      renderRecommendationRail(sessionState.lastRecommendedSolutions || []);
-      renderFollowUpRail(sessionState.lastFollowUpQuestions || []);
-      applySuggestedAction(sessionState.lastSuggestedAction || { type: "none" });
-
-      setStatus(savedLanguage ? "idle" : "chooseLanguage", savedLanguage || "en");
+      clearLiveUiState();
+      setCurrentAnswer(DEFAULT_ANSWER);
+      setStatus("idle", savedLanguage);
       updateMuteButton();
       updateReplayButton();
-      updateOrbState(savedLanguage || "en");
+      updateOrbState(savedLanguage);
       syncPopupHeight();
     });
 
@@ -1990,22 +1936,25 @@ if (result.textReply || result.spokenReply) {
       close: closeAssistantPanel,
       toggle: toggleAssistantPanel,
       resetSession: function () {
-        resetSessionState();
-        clearSmartUi();
-        setCurrentAnswer(
-          "Welcome to Zyverion AI. Tell me what kind of business you have."
-        );
+        resetConversationState();
+        clearLiveUiState();
+        currentAnswerText = DEFAULT_ANSWER;
+        setCurrentAnswer(DEFAULT_ANSWER);
         syncPopupHeight();
       },
       getLanguage: getSavedLanguage,
       setLanguage: function (language) {
-        setSavedLanguage(language);
+        const cleanLanguage = safeText(language);
+        if (!cleanLanguage) return;
+        setSavedLanguage(cleanLanguage);
+        syncLanguageUi(cleanLanguage);
+        updateOrbState(cleanLanguage);
       },
-      getSessionState: function () {
-        return JSON.parse(JSON.stringify(sessionState));
+      getConversationState: function () {
+        return JSON.parse(JSON.stringify(conversationState));
       },
       speak: function (text, language) {
-        return speakText(text, language || getSavedLanguage() || "en");
+        return speakText(text, language || getSavedLanguage());
       },
       stopSpeech: stopSpeech,
       startListening: startListening,

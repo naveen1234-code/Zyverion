@@ -10,32 +10,32 @@ export const ZYVERION_BRAND = {
   positioning:
     "A premium digital business agency focused on websites, software systems, automation workflows, and operational digital solutions.",
   marketFocus:
-    "Businesses that need stronger trust, better presentation, more inquiries, smoother operations, or scalable digital systems.",
+    "Businesses that need stronger trust, clearer presentation, more inquiries, smoother operations, or scalable digital systems.",
   operatingStyle: [
     "Structured consultation before serious projects",
     "Scope clarification before major builds",
-    "Solution-first recommendations rather than generic website selling",
+    "Situation-first recommendations instead of generic website selling",
     "Professional communication, agreements, and phased execution",
     "Support-minded delivery with business practicality",
   ],
   trustSignals: {
     en: [
       "Zyverion operates like a structured business solution provider, not a casual freelancer setup.",
-      "Serious projects are guided through consultation, scope clarification, and proper execution planning.",
-      "Zyverion supports both customer-facing websites and business-side systems or workflows when needed.",
-      "The agency is positioned around long-term digital value, not just quick visual design.",
+      "Serious projects are guided through consultation, scope clarification, and practical execution planning.",
+      "Zyverion supports both customer-facing websites and business-side systems when the situation actually needs more than presentation alone.",
+      "The agency is positioned around long-term digital value, not just surface-level design output.",
     ],
     si: [
       "Zyverion කියන්නේ casual freelancer setup එකක් නොව structured business solution provider එකක්.",
-      "Serious projects consultation, scope clarification, සහ proper execution planning එක්ක handle කරනවා.",
-      "Customer-facing websites වලට අමතරව business-side systems සහ workflows ද Zyverion විසින් build කරන්න පුළුවන්.",
-      "Quick design එකකට වඩා long-term digital value එකට focus කරන agency එකක් තමයි Zyverion.",
+      "Serious projects consultation, scope clarification, සහ practical execution planning එක්ක handle කරනවා.",
+      "Customer-facing websites වලට අමතරව business-side systems ද situation එකට fit වුනොත් Zyverion විසින් build කරන්න පුළුවන්.",
+      "Surface-level design එකකට වඩා long-term digital value එකට focus කරන agency එකක් තමයි Zyverion.",
     ],
     ta: [
       "Zyverion என்பது casual freelancer setup அல்ல, structured business solution provider ஆகும்.",
-      "Serious projects consultation, scope clarification, மற்றும் proper execution planning மூலம் handle செய்யப்படும்.",
-      "Customer-facing websites மட்டுமல்லாமல் business-side systems மற்றும் workflows க்கும் Zyverion உதவ முடியும்.",
-      "Quick design மட்டும் அல்லாமல் long-term digital value மீது focus செய்யும் agency ஆகும்.",
+      "Serious projects consultation, scope clarification, மற்றும் practical execution planning மூலம் handle செய்யப்படும்.",
+      "Customer-facing websites மட்டுமல்லாமல், situation சரியானால் business-side systems க்கும் Zyverion உதவ முடியும்.",
+      "Surface-level design மட்டும் அல்லாமல் long-term digital value மீது focus செய்யும் agency ஆகும்.",
     ],
   },
 };
@@ -45,7 +45,7 @@ export const ZYVERION_SERVICE_BUCKETS = [
     id: "business_websites",
     label: "Business Websites",
     summary:
-      "Professional presentation websites designed to build trust, explain services clearly, and create business inquiries.",
+      "Professional presentation websites designed to build trust, explain services clearly, and generate serious inquiries.",
     includes: [
       "Business profile websites",
       "Corporate websites",
@@ -59,14 +59,14 @@ export const ZYVERION_SERVICE_BUCKETS = [
       "Agencies",
       "Service businesses",
       "Professional brands",
-      "New businesses that need a strong digital presence",
+      "New businesses that need a strong digital base",
     ],
   },
   {
     id: "ecommerce_and_catalog",
     label: "E-commerce and Catalog Solutions",
     summary:
-      "Product-oriented experiences for businesses that need online selling, product showcasing, or structured catalog browsing.",
+      "Product-oriented solutions for businesses that need online selling, product showcasing, or structured catalog browsing.",
     includes: [
       "Online stores",
       "Catalog websites",
@@ -79,34 +79,34 @@ export const ZYVERION_SERVICE_BUCKETS = [
       "Fashion",
       "Beauty products",
       "Gift businesses",
-      "Any product-based business",
+      "Product-based businesses",
     ],
   },
   {
     id: "booking_and_service_flows",
     label: "Booking and Service Flow Websites",
     summary:
-      "Sites designed to convert visitors into bookings, requests, appointments, or service-based inquiries.",
+      "Sites designed to move visitors into bookings, appointments, consultation requests, or service-based inquiries.",
     includes: [
       "Booking websites",
       "Appointment websites",
       "Inquiry-first service websites",
       "Consultation request websites",
-      "Lead capture service flows",
+      "Lead-capture service flows",
     ],
     bestFor: [
       "Salons",
       "Clinics",
       "Coaches",
-      "Service providers",
-      "Professional appointment-based businesses",
+      "Consultants",
+      "Appointment-based businesses",
     ],
   },
   {
     id: "portals_and_membership",
     label: "Portals and Membership Systems",
     summary:
-      "Protected user-side systems for members, clients, students, or internal access flows.",
+      "Protected user-side systems for members, clients, students, or repeat-access workflows.",
     includes: [
       "Member portals",
       "Client portals",
@@ -126,7 +126,7 @@ export const ZYVERION_SERVICE_BUCKETS = [
     id: "admin_and_operations",
     label: "Admin and Operations Systems",
     summary:
-      "Internal tools for businesses that need better workflow handling, records, approvals, admin control, or operational visibility.",
+      "Internal tools for businesses that need stronger workflow handling, records, approvals, admin control, or operational visibility.",
     includes: [
       "Admin dashboards",
       "Record management systems",
@@ -147,7 +147,7 @@ export const ZYVERION_SERVICE_BUCKETS = [
     id: "automation_and_process_design",
     label: "Automation and Process Design",
     summary:
-      "Workflow thinking and automation-focused solutions that reduce manual handling and improve consistency.",
+      "Workflow and automation thinking that reduces manual handling and improves consistency.",
     includes: [
       "Workflow design",
       "Automation ideas",
@@ -179,9 +179,9 @@ export const ZYVERION_WEBSITE_TYPES = [
       "Service providers",
     ],
     whenToRecommend: [
-      "The user needs credibility first",
-      "The business mainly needs presentation and trust",
-      "The user is early-stage and does not need a complex system yet",
+      "The business mainly needs credibility and clarity",
+      "A strong first-stage website is enough for now",
+      "The project does not clearly require system logic yet",
     ],
     zyverionFit:
       "This fits Zyverion's website design and business presentation services.",
@@ -202,30 +202,30 @@ export const ZYVERION_WEBSITE_TYPES = [
     ],
     whenToRecommend: [
       "The main goal is more inquiries",
-      "The business depends on consultation or quotation requests",
-      "The user wants to improve conversion from visitors",
+      "The business depends on quotation or consultation requests",
+      "The user wants stronger conversion from visitors",
     ],
     zyverionFit:
-      "This fits Zyverion's business websites, messaging structure, and digital lead flow services.",
+      "This fits Zyverion's business websites, messaging structure, and lead-flow support.",
   },
   {
     id: "booking_appointment",
     name: "Booking or Appointment Website",
     category: "website",
     purpose:
-      "Help visitors understand services and take action through bookings, appointments, or service requests.",
+      "Help visitors understand services and take action through bookings, appointments, or structured requests.",
     bestFor: [
       "Salons",
       "Spas",
       "Clinics",
       "Consultants",
-      "Coaching businesses",
+      "Coaches",
       "Service booking businesses",
     ],
     whenToRecommend: [
-      "The business works on appointments",
+      "The business works through appointments",
       "Visitors need to request a slot or consultation",
-      "The user needs more structured service conversion",
+      "The site needs a stronger booking-style flow",
     ],
     zyverionFit:
       "This fits Zyverion's service-flow design and operational website support.",
@@ -244,9 +244,9 @@ export const ZYVERION_WEBSITE_TYPES = [
       "Product businesses",
     ],
     whenToRecommend: [
-      "The user sells products",
-      "The user wants direct ordering or cart-based browsing",
-      "The business needs product-first digital flow",
+      "The user sells products directly",
+      "The business wants ordering or cart-based browsing",
+      "The digital flow is product-first",
     ],
     zyverionFit:
       "This fits Zyverion's e-commerce frontend and storefront solution direction.",
@@ -264,7 +264,7 @@ export const ZYVERION_WEBSITE_TYPES = [
     ],
     whenToRecommend: [
       "The user has products but is not ready for full checkout",
-      "The business mainly needs presentation plus inquiry flow",
+      "The business needs presentation plus inquiry flow",
     ],
     zyverionFit:
       "This fits Zyverion's staged build strategy and scalable site planning.",
@@ -274,7 +274,7 @@ export const ZYVERION_WEBSITE_TYPES = [
     name: "Portfolio or Visual Showcase Website",
     category: "website",
     purpose:
-      "Highlight visual work, projects, samples, and capability to attract serious clients.",
+      "Highlight visual work, projects, samples, and proof of capability to attract serious clients.",
     bestFor: [
       "Designers",
       "Photographers",
@@ -284,10 +284,10 @@ export const ZYVERION_WEBSITE_TYPES = [
     ],
     whenToRecommend: [
       "The business sells through proof of work",
-      "The strongest conversion factor is visual credibility",
+      "The strongest conversion factor is visual trust",
     ],
     zyverionFit:
-      "This fits Zyverion's premium presentation and trust-building approach.",
+      "This fits Zyverion's premium presentation and proof-first approach.",
   },
   {
     id: "landing_page",
@@ -304,7 +304,7 @@ export const ZYVERION_WEBSITE_TYPES = [
     ],
     whenToRecommend: [
       "The business needs one focused conversion flow",
-      "The user is running a campaign or a single offer",
+      "The user is running a campaign or single offer",
     ],
     zyverionFit:
       "This fits Zyverion's conversion-focused digital strategy support.",
@@ -324,8 +324,8 @@ export const ZYVERION_WEBSITE_TYPES = [
     ],
     whenToRecommend: [
       "The business has repeat users or members",
-      "Users need login or account-based access",
-      "The site needs more than public presentation",
+      "Users need login or account access",
+      "A public website alone is not enough",
     ],
     zyverionFit:
       "This fits Zyverion's portal, dashboard, and member-system capability.",
@@ -361,15 +361,15 @@ export const ZYVERION_WEBSITE_TYPES = [
       "Gyms",
       "Growing businesses",
       "Businesses needing both trust and workflow support",
-      "Organizations with public + internal digital needs",
+      "Organizations with public and internal digital needs",
     ],
     whenToRecommend: [
-      "The business needs both presentation and operation support",
+      "The business needs both presentation and operations support",
       "A normal website alone is not enough",
       "The user mentions both customers and internal handling",
     ],
     zyverionFit:
-      "This is one of Zyverion's strongest premium solution directions because it blends digital presence with operational value.",
+      "This is one of Zyverion's strongest premium directions because it blends digital presence with operational value.",
   },
 ];
 
@@ -430,11 +430,11 @@ export const ZYVERION_BUSINESS_TYPES = [
     ],
     recommendedWebsiteTypes: [
       "business_profile",
-      "lead_generation",
-      "catalog_showcase",
       "booking_appointment",
+      "catalog_showcase",
+      "lead_generation",
     ],
-    recommendedGoals: ["visibility", "orders", "bookings", "trust"],
+    recommendedGoals: ["visibility", "bookings", "trust", "leads"],
   },
   {
     id: "salon_spa_beauty",
@@ -455,7 +455,7 @@ export const ZYVERION_BUSINESS_TYPES = [
       "portfolio_showcase",
       "lead_generation",
     ],
-    recommendedGoals: ["bookings", "trust", "visual_credibility"],
+    recommendedGoals: ["bookings", "trust", "leads"],
   },
   {
     id: "medical_clinic",
@@ -475,7 +475,7 @@ export const ZYVERION_BUSINESS_TYPES = [
       "business_profile",
       "lead_generation",
     ],
-    recommendedGoals: ["trust", "appointments", "clarity"],
+    recommendedGoals: ["trust", "bookings", "clarity"],
   },
   {
     id: "education_training",
@@ -496,7 +496,7 @@ export const ZYVERION_BUSINESS_TYPES = [
       "membership_portal",
       "hybrid_website_system",
     ],
-    recommendedGoals: ["trust", "student_inquiries", "member_access"],
+    recommendedGoals: ["trust", "leads", "member_management", "clarity"],
   },
   {
     id: "ecommerce_retail",
@@ -516,7 +516,7 @@ export const ZYVERION_BUSINESS_TYPES = [
       "catalog_showcase",
       "landing_page",
     ],
-    recommendedGoals: ["sales", "product_browsing", "conversion"],
+    recommendedGoals: ["sales", "visibility", "leads"],
   },
   {
     id: "creative_portfolio",
@@ -535,7 +535,7 @@ export const ZYVERION_BUSINESS_TYPES = [
       "business_profile",
       "lead_generation",
     ],
-    recommendedGoals: ["trust", "visual_credibility", "clients"],
+    recommendedGoals: ["trust", "leads", "visibility"],
   },
   {
     id: "construction_real_estate",
@@ -554,7 +554,7 @@ export const ZYVERION_BUSINESS_TYPES = [
       "lead_generation",
       "portfolio_showcase",
     ],
-    recommendedGoals: ["trust", "project_inquiries", "credibility"],
+    recommendedGoals: ["trust", "leads", "clarity"],
   },
   {
     id: "corporate_professional",
@@ -672,7 +672,7 @@ export const ZYVERION_GOAL_SIGNALS = [
   },
   {
     id: "clarity",
-    label: "Explain business clearly",
+    label: "Explain the business clearly",
     indicators: [
       "explain services",
       "clear information",
@@ -810,1056 +810,792 @@ export const ZYVERION_STAGE_SIGNALS = [
     ],
   },
 ];
+const WEBSITE_TYPE_MAP = new Map(
+  ZYVERION_WEBSITE_TYPES.map((item) => [item.id, item])
+);
 
-export const ZYVERION_DISCOVERY_QUESTION_BANK = {
-  core: {
-    en: [
-      "What type of business is this for?",
-      "What is the main result you want from this — more trust, more inquiries, more sales, bookings, or better internal operations?",
-      "Do you need just a website, or do you also need admin tools, member access, or workflow support?",
-      "Is this for a new business or an existing one?",
-      "Do you already have branding, content, and images, or would the project need direction there too?",
-    ],
-    si: [
-      "මේක කුමන business type එකකටද?",
-      "ඔයාට මේකෙන් ප්‍රධානව අවශ්‍ය result එක මොකද්ද — trust, inquiries, sales, bookings, නැත්නම් better internal operations ද?",
-      "ඔයාට website එක විතරක් ඕනද, නැත්නම් admin tools, member access, හෝ workflow support එකත් ඕනද?",
-      "මේක new business එකකටද, නැත්නම් existing business එකක් upgrade කරන්නද?",
-      "Branding, content, සහ images දැනට තිබෙනවද, නැත්නම් ඒ පැත්තෙත් direction අවශ්‍යද?",
-    ],
-    ta: [
-      "இது எந்த business type க்காக?",
-      "இதிலிருந்து உங்களுக்கு முக்கியமாக வேண்டியது என்ன — trust, inquiries, sales, bookings, அல்லது better internal operations ஆ?",
-      "உங்களுக்கு website மட்டும் வேண்டுமா, அல்லது admin tools, member access, workflow support கூட வேண்டுமா?",
-      "இது new business க்கா அல்லது existing business upgrade க்கா?",
-      "Branding, content, மற்றும் images ஏற்கனவே உள்ளதா, அல்லது அதற்கும் direction வேண்டுமா?",
-    ],
-  },
-  businessSpecific: {
-    gym_fitness: {
-      en: [
-        "Is this mainly for attracting new members, managing members, or both?",
-        "Do you need just a public website, or also member-side or admin-side functionality?",
-      ],
-      si: [
-        "මේක mainly new members ගන්නද, current members manage කරන්නද, නැත්නම් දෙකමද?",
-        "Public website එක විතරක් ඕනද, නැත්නම් member-side හෝ admin-side functionality එකත් ඕනද?",
-      ],
-      ta: [
-        "இது mainly new members வாங்குவதற்கா, current members manage செய்வதற்கா, அல்லது இரண்டிற்குமா?",
-        "Public website மட்டும் போதுமா, அல்லது member-side அல்லது admin-side functionality கூட வேண்டுமா?",
-      ],
-    },
-    ecommerce_retail: {
-      en: [
-        "Do you want full online selling, or mainly product showcasing with inquiry flow first?",
-        "How many products or categories do you expect to manage?",
-      ],
-      si: [
-        "Full online selling එකද ඕන, නැත්නම් product showcase + inquiry flow එකෙන් start කරන්නද?",
-        "Products හෝ categories roughly කීයක් manage කරන්න බලාපොරොත්තු වෙනවද?",
-      ],
-      ta: [
-        "Full online selling வேண்டுமா, அல்லது product showcase + inquiry flow கொண்டு ஆரம்பிக்க வேண்டுமா?",
-        "Products அல்லது categories சுமார் எவ்வளவு இருக்கும்?",
-      ],
-    },
-    salon_spa_beauty: {
-      en: [
-        "Is your biggest need more bookings, stronger presentation, or both?",
-        "Do you want appointment requests or a more advanced booking flow?",
-      ],
-      si: [
-        "ඔයාගේ biggest need එක bookings ද, stronger presentation ද, නැත්නම් දෙකමද?",
-        "Appointment requests විතරක්ද ඕන, නැත්නම් advanced booking flow එකක්ද?",
-      ],
-      ta: [
-        "உங்கள் biggest need bookings ஆ, stronger presentation ஆ, அல்லது இரண்டுமா?",
-        "Appointment requests மட்டும் போதுமா, அல்லது advanced booking flow வேண்டுமா?",
-      ],
-    },
-    medical_clinic: {
-      en: [
-        "Do patients mainly need information, bookings, or both?",
-        "Would a trust-focused clinic website be enough first, or do you need a structured appointment flow too?",
-      ],
-      si: [
-        "Patientsලාට mainly information ද ඕන, bookings ද, නැත්නම් දෙකමද?",
-        "Trust-focused clinic website එකක් first stage එකට enough ද, නැත්නම් structured appointment flow එකත් ඕනද?",
-      ],
-      ta: [
-        "Patients க்கு mainly information வேண்டுமா, bookings வேண்டுமா, அல்லது இரண்டுமா?",
-        "Trust-focused clinic website first stage க்கு போதுமா, அல்லது structured appointment flow கூட வேண்டுமா?",
-      ],
-    },
-  },
-};
+const BUSINESS_TYPE_MAP = new Map(
+  ZYVERION_BUSINESS_TYPES.map((item) => [item.id, item])
+);
 
-export const ZYVERION_OBJECTION_HANDLING = {
-  why_zyverion: {
-    en: "Zyverion is positioned around structured digital solutions, not just surface-level website design. The agency focuses on building business value through trust, presentation, operations, and scalable digital direction.",
-    si: "Zyverion කියන්නේ surface-level website design විතරක් කරන එකක් නොව structured digital solutions agency එකක්. Trust, presentation, operations, සහ scalable digital direction එකට value build කිරීම තමයි මේකේ focus එක.",
-    ta: "Zyverion என்பது surface-level website design மட்டும் செய்யும் ஒன்று அல்ல. Trust, presentation, operations, மற்றும் scalable digital direction மூலம் business value உருவாக்கும் structured digital solutions agency ஆகும்.",
-  },
-  only_websites: {
-    en: "No. Zyverion is not limited to presentation websites. It can also support systems, dashboards, portals, workflows, and hybrid solutions when the business situation needs more than a simple site.",
-    si: "නැහැ. Zyverion presentation websites වලට විතරක් සීමා වෙන්නේ නැහැ. Business situation එක simple site එකකට වඩා වැඩි solution එකක් ඉල්ලනවා නම් systems, dashboards, portals, workflows, සහ hybrid solutions ද support කරන්න පුළුවන්.",
-    ta: "இல்லை. Zyverion presentation websites மட்டும் செய்யாது. Business situation simple site ஐ விட அதிக solution கேட்கிறால் systems, dashboards, portals, workflows, மற்றும் hybrid solutions க்கும் உதவ முடியும்.",
-  },
-  trust_business: {
-    en: "Zyverion presents itself as a structured business solution provider, with consultation-first thinking and a stronger focus on serious projects rather than random one-off design work.",
-    si: "Zyverion තමන්ව present කරන්නේ consultation-first structured business solution provider එකක් විදිහට. Random one-off design work එකකට වඩා serious projects වලට strong focus එකක් තියෙනවා.",
-    ta: "Zyverion consultation-first structured business solution provider ஆக தன்னை நிறுத்துகிறது. Random one-off design work ஐ விட serious projects மீது அதிக focus உள்ளது.",
-  },
-  meetings: {
-    en: "For serious work, the process can be handled in a structured professional way, including consultation and proper scope discussion before moving forward.",
-    si: "Serious work සඳහා process එක structured professional way එකකින් handle කරන්න පුළුවන්, consultation සහ proper scope discussion එක්ක.",
-    ta: "Serious work க்கு process structured professional way யில் handle செய்யலாம், consultation மற்றும் proper scope discussion உடன்.",
-  },
-  support_after_launch: {
-    en: "Zyverion's positioning supports long-term business value, so post-launch support and practical continuity are part of the mindset, not just the visual launch itself.",
-    si: "Zyverion long-term business value mindset එකක් තියෙන නිසා post-launch support සහ practical continuity කියන දෙක launch එකෙන් පස්සේ අමතක කරන දේවල් නෙවෙයි.",
-    ta: "Zyverion long-term business value mindset உடையதால் post-launch support மற்றும் practical continuity என்பது launch க்கு பிறகு மறக்கும் விஷயங்கள் அல்ல.",
-  },
-  pricing_concern: {
-    en: "Pricing depends on the type of build, the amount of functionality, the level of design, and whether the project is website-only or includes systems and workflow logic.",
-    si: "Pricing එක depend වෙන්නේ build type එක, functionality amount එක, design level එක, සහ project එක website-only ද නැත්නම් systems සහ workflow logic එකත් ඇතුළත් ද කියන දේවල් මතයි.",
-    ta: "Pricing என்பது build type, functionality அளவு, design level, மற்றும் project website-only ஆ அல்லது systems மற்றும் workflow logic உடன் வருகிறதா என்பதன் மீது பொருந்தும்.",
-  },
-};
+const GOAL_SIGNAL_MAP = new Map(
+  ZYVERION_GOAL_SIGNALS.map((item) => [item.id, item])
+);
 
-export const ZYVERION_CTA_RULES = {
-  estimator: {
-    when: [
-      "pricing questions",
-      "budget direction questions",
-      "early cost estimation needs",
-      "users who want a practical next step without full consultation yet",
-    ],
-    label: "Open Estimator",
-    href: "estimator.html",
-  },
-  contact: {
-    when: [
-      "high intent lead",
-      "ready to start",
-      "needs direct consultation",
-      "complex project discussion",
-      "serious business inquiry",
-    ],
-    label: "Contact Zyverion",
-    href: "contact.html",
-  },
-  work: {
-    when: [
-      "portfolio questions",
-      "proof questions",
-      "example questions",
-      "build something similar questions",
-    ],
-    label: "View Our Work",
-    href: "projects.html",
-  },
-  none: {
-    when: [
-      "the answer itself is enough for now",
-    ],
-    label: "",
-    href: "",
-  },
-};
+const CAPABILITY_SIGNAL_MAP = new Map(
+  ZYVERION_CAPABILITY_SIGNALS.map((item) => [item.id, item])
+);
 
-export const ZYVERION_CONSULTATION_STAGES = [
-  {
-    id: "understand_business",
-    purpose: "Understand the type of business and stage of the business.",
-  },
-  {
-    id: "understand_goal",
-    purpose: "Understand what the business actually wants to achieve.",
-  },
-  {
-    id: "understand_solution_scope",
-    purpose: "Understand whether a website alone is enough or whether a system is needed too.",
-  },
-  {
-    id: "recommend_solution_type",
-    purpose: "Recommend the right website or system type based on the situation.",
-  },
-  {
-    id: "explain_reasoning",
-    purpose: "Explain why the suggested solution fits the user's current situation.",
-  },
-  {
-    id: "guide_next_step",
-    purpose: "Move the user to Estimator, Contact, or Work naturally only after giving value.",
-  },
-];
-export const ZYVERION_RESPONSE_STYLES = {
-  en: {
-    consultantTone:
-      "Premium, calm, intelligent, trustworthy, and consultative.",
-    answerRule:
-      "Answer properly first, then guide to the best next step only after giving value.",
-    recommendationIntro:
-      "Based on your situation, the strongest direction would be",
-    reasoningIntro:
-      "That makes sense because",
-    nextStepIntro:
-      "The best next step from here would be",
-    followUpIntro:
-      "To guide you properly, I would first want to understand",
-  },
-  si: {
-    consultantTone:
-      "Premium, calm, intelligent, trustworthy, and consultative tone එකක්.",
-    answerRule:
-      "මුලින් proper answer එක දෙන්න, ඊට පස්සේ value දීලා best next step එක guide කරන්න.",
-    recommendationIntro:
-      "ඔයාගේ situation එක බලද්දී strongest direction එක වෙන්නේ",
-    reasoningIntro:
-      "ඒකට හේතුව මෙන්න",
-    nextStepIntro:
-      "මෙතැනින් best next step එක වෙන්නේ",
-    followUpIntro:
-      "Properly guide කරන්න නම් මට මුලින් තේරුම් ගන්න ඕනේ",
-  },
-  ta: {
-    consultantTone:
-      "Premium, calm, intelligent, trustworthy, and consultative tone.",
-    answerRule:
-      "முதலில் proper answer கொடுத்து, அதன் பிறகு value கொடுத்து best next step க்கு guide செய்யவும்.",
-    recommendationIntro:
-      "உங்கள் situation பார்த்தால் strongest direction என்பது",
-    reasoningIntro:
-      "அதற்கான காரணம் இதுதான்",
-    nextStepIntro:
-      "இங்கிருந்து best next step என்பது",
-    followUpIntro:
-      "Properly guide செய்ய நான் முதலில் புரிந்துகொள்ள வேண்டியது",
-  },
-};
-
-export const ZYVERION_SITUATION_PROMPTS = {
-  unsure_need: {
-    en: "The user is unsure what they need. Move into discovery mode before recommending a solution.",
-    si: "Userට තමන්ට ඕනේ exact solution එක clear නැහැ. Recommendation එකට කලින් discovery mode එකට යන්න.",
-    ta: "Userக்கு என்ன solution வேண்டும் என்பது clear இல்லை. Recommendation க்கு முன் discovery mode க்கு செல்லவும்.",
-  },
-  website_only_might_be_enough: {
-    en: "A website-only solution may be enough at this stage. Do not overbuild unless the situation clearly requires systems.",
-    si: "මේ stage එකේ website-only solution එකක් enough වෙන්න පුළුවන්. Situation එක clearly systems ඉල්ලනවා නම් විතරක් bigger solution recommend කරන්න.",
-    ta: "இந்த stage இல் website-only solution போதுமானதாக இருக்கலாம். Situation தெளிவாக systems கேட்கிறால் மட்டுமே bigger solution recommend செய்யவும்.",
-  },
-  website_not_enough: {
-    en: "A simple website alone may not be enough. Consider hybrid website + system direction.",
-    si: "Simple website එකක් විතරක් enough නොවෙන්න පුළුවන්. Hybrid website + system direction එක consider කරන්න.",
-    ta: "Simple website மட்டும் போதாமல் இருக்கலாம். Hybrid website + system direction ஐ consider செய்யவும்.",
-  },
-  early_stage_business: {
-    en: "This looks like an early-stage business. Prioritize clarity, trust, and a practical first build.",
-    si: "මේක early-stage business එකක් වගේ. Clarity, trust, සහ practical first build එක prioritize කරන්න.",
-    ta: "இது early-stage business போல தெரிகிறது. Clarity, trust, மற்றும் practical first build ஐ prioritize செய்யவும்.",
-  },
-  existing_business_upgrade: {
-    en: "This looks like an existing business upgrade. Focus on improvement, digital maturity, and stronger conversion or operations.",
-    si: "මේක existing business upgrade එකක් වගේ. Improvement, digital maturity, සහ stronger conversion හෝ operations වලට focus කරන්න.",
-    ta: "இது existing business upgrade போல தெரிகிறது. Improvement, digital maturity, மற்றும் stronger conversion அல்லது operations மீது focus செய்யவும்.",
-  },
-};
-
-function normalizeLanguage(value) {
-  return value === "si" || value === "ta" || value === "en" ? value : "en";
-}
+const STAGE_SIGNAL_MAP = new Map(
+  ZYVERION_STAGE_SIGNALS.map((item) => [item.id, item])
+);
 
 function normalizeText(value) {
-  return String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function uniqueArray(values) {
-  return Array.from(new Set(values.filter(Boolean)));
-}
-
-function includesAny(text, words) {
-  const value = normalizeText(text);
-  return words.some((word) => value.includes(normalizeText(word)));
+function uniqueStrings(values) {
+  return Array.from(
+    new Set(
+      (values || [])
+        .filter((item) => typeof item === "string" && item.trim())
+        .map((item) => item.trim())
+    )
+  );
 }
 
 function scoreIndicators(text, indicators) {
   const value = normalizeText(text);
+  if (!value || !Array.isArray(indicators) || !indicators.length) return 0;
+
   let score = 0;
 
   indicators.forEach((indicator) => {
-    if (value.includes(normalizeText(indicator))) {
-      score += 1;
+    const clean = normalizeText(indicator);
+    if (!clean) return;
+
+    if (value === clean) {
+      score += 5;
+      return;
+    }
+
+    if (value.includes(clean)) {
+      score += clean.includes(" ") ? 4 : 2;
     }
   });
 
   return score;
 }
 
-function getWebsiteTypeById(id) {
-  return ZYVERION_WEBSITE_TYPES.find((item) => item.id === id) || null;
-}
-
 function getBusinessTypeById(id) {
-  return ZYVERION_BUSINESS_TYPES.find((item) => item.id === id) || null;
+  return BUSINESS_TYPE_MAP.get(id) || BUSINESS_TYPE_MAP.get("general_service_business");
 }
 
-function getGoalById(id) {
-  return ZYVERION_GOAL_SIGNALS.find((item) => item.id === id) || null;
+function getWebsiteTypeById(id) {
+  return WEBSITE_TYPE_MAP.get(id) || null;
 }
 
-function getCapabilityById(id) {
-  return ZYVERION_CAPABILITY_SIGNALS.find((item) => item.id === id) || null;
+function getGoalSignalById(id) {
+  return GOAL_SIGNAL_MAP.get(id) || null;
 }
 
-function getStageById(id) {
-  return ZYVERION_STAGE_SIGNALS.find((item) => item.id === id) || null;
+function getCapabilitySignalById(id) {
+  return CAPABILITY_SIGNAL_MAP.get(id) || null;
 }
 
-export function detectBusinessType(text) {
-  const ranked = ZYVERION_BUSINESS_TYPES.map((type) => ({
+function getStageSignalById(id) {
+  return STAGE_SIGNAL_MAP.get(id) || null;
+}
+
+function getLanguageName(language) {
+  return LANGUAGE_NAMES[language] || LANGUAGE_NAMES.en;
+}
+
+function scoreBusinessType(text, businessType) {
+  let score = scoreIndicators(text, businessType.indicators || []);
+
+  const normalized = normalizeText(text);
+
+  if (businessType.id === "gym_fitness") {
+    if (normalized.includes("member")) score += 2;
+    if (normalized.includes("qr")) score += 2;
+  }
+
+  if (businessType.id === "ecommerce_retail") {
+    if (normalized.includes("product")) score += 2;
+    if (normalized.includes("checkout")) score += 2;
+  }
+
+  if (businessType.id === "education_training") {
+    if (normalized.includes("student")) score += 2;
+    if (normalized.includes("course")) score += 2;
+  }
+
+  return score;
+}
+
+function detectBusinessType(text) {
+  const scored = ZYVERION_BUSINESS_TYPES.map((type) => ({
     id: type.id,
-    score: scoreIndicators(text, type.indicators),
+    score: scoreBusinessType(text, type),
+    type,
   }))
-    .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score);
 
-  if (!ranked.length) {
-    return {
-      primary: "general_service_business",
-      confidence: "low",
-      ranked: [],
-    };
+  const top = scored[0];
+
+  if (!top || top.score <= 0) {
+    return getBusinessTypeById("general_service_business");
   }
 
-  return {
-    primary: ranked[0].id,
-    confidence: ranked[0].score >= 2 ? "medium" : "low",
-    ranked,
-  };
+  return top.type;
 }
 
-export function detectGoals(text) {
-  const ranked = ZYVERION_GOAL_SIGNALS.map((goal) => ({
+function detectGoalIds(text, businessType) {
+  const value = normalizeText(text);
+
+  const scored = ZYVERION_GOAL_SIGNALS.map((goal) => ({
     id: goal.id,
-    score: scoreIndicators(text, goal.indicators),
+    score: scoreIndicators(value, goal.indicators || []),
   }))
     .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.id);
 
-  return ranked.map((item) => item.id);
+  const recommended = Array.isArray(businessType?.recommendedGoals)
+    ? businessType.recommendedGoals
+    : [];
+
+  const boosted = uniqueStrings([
+    ...scored,
+    ...recommended.filter((goalId) => scored.includes(goalId)),
+  ]);
+
+  return boosted.slice(0, 4);
 }
 
-export function detectCapabilities(text) {
-  const ranked = ZYVERION_CAPABILITY_SIGNALS.map((capability) => ({
+function detectCapabilityIds(text, businessType) {
+  const value = normalizeText(text);
+
+  const detected = ZYVERION_CAPABILITY_SIGNALS.map((capability) => ({
     id: capability.id,
-    score: scoreIndicators(text, capability.indicators),
+    score: scoreIndicators(value, capability.indicators || []),
   }))
     .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.id);
 
-  return ranked.map((item) => item.id);
-}
+  const businessTypeId = businessType?.id || "";
 
-export function detectBusinessStage(text) {
-  const ranked = ZYVERION_STAGE_SIGNALS.map((stage) => ({
-    id: stage.id,
-    score: scoreIndicators(text, stage.indicators),
-  }))
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  if (!ranked.length) {
-    return "unknown";
+  if (
+    businessTypeId === "gym_fitness" &&
+    (value.includes("member") || value.includes("qr") || value.includes("portal"))
+  ) {
+    detected.push("website_plus_system", "user_accounts", "admin_tools");
   }
 
-  return ranked[0].id;
+  if (
+    businessTypeId === "education_training" &&
+    (value.includes("student") || value.includes("portal") || value.includes("login"))
+  ) {
+    detected.push("user_accounts", "website_plus_system");
+  }
+
+  if (
+    businessTypeId === "ecommerce_retail" &&
+    (value.includes("sell") || value.includes("cart") || value.includes("checkout"))
+  ) {
+    detected.push("ecommerce");
+  }
+
+  return uniqueStrings(detected).slice(0, 4);
 }
 
-export function detectIntentMode(text) {
+function detectStageId(text) {
+  const scored = ZYVERION_STAGE_SIGNALS.map((stage) => ({
+    id: stage.id,
+    score: scoreIndicators(text, stage.indicators || []),
+  }))
+    .sort((a, b) => b.score - a.score);
+
+  const top = scored[0];
+  if (!top || top.score <= 0) return "unknown";
+  return top.id;
+}
+
+function inferIntentMode({ goals, capabilities, stage, text }) {
   const value = normalizeText(text);
 
   if (
-    includesAny(value, [
-      "what do i need",
-      "what kind of website",
-      "what type of website",
-      "which website",
-      "not sure",
-      "i need guidance",
-      "project guidance",
-      "help me decide",
-      "මොන website එකද",
-      "මට sure නැහැ",
-      "guidance",
-      "எந்த website",
-      "எது சரி",
-      "help decide",
-    ])
-  ) {
-    return "discovery";
-  }
-
-  if (
-    includesAny(value, [
-      "price",
-      "cost",
-      "quote",
-      "budget",
-      "estimate",
-      "මිල",
-      "ගාණ",
-      "விலை",
-      "காசு",
-      "கட்டணம்",
-    ])
-  ) {
-    return "pricing";
-  }
-
-  if (
-    includesAny(value, [
-      "can you build",
-      "can you make",
-      "need a website",
-      "need a system",
-      "start a project",
-      "build for my business",
-      "website for my business",
-      "system for my business",
-      "website එකක් ඕනේ",
-      "system එකක් ඕනේ",
-      "ஒரு website வேண்டும்",
-      "ஒரு system வேண்டும்",
-    ])
+    value.includes("what should i build") ||
+    value.includes("what do i need") ||
+    value.includes("which website") ||
+    value.includes("what kind of website")
   ) {
     return "recommendation";
   }
 
-  return "general";
-}
-
-export function isHighIntentLead(text) {
-  return includesAny(text, [
-    "how much",
-    "price",
-    "cost",
-    "quote",
-    "start project",
-    "can you build",
-    "need a website",
-    "need a system",
-    "contact",
-    "consultation",
-    "meeting",
-    "let's start",
-    "මිල",
-    "project එක start",
-    "website එකක් ඕනේ",
-    "system එකක් ඕනේ",
-    "விலை",
-    "தொடங்கலாம்",
-    "website வேண்டும்",
-    "system வேண்டும்",
-  ]);
-}
-
-export function isUnsureUser(text) {
-  return includesAny(text, [
-    "not sure",
-    "don't know",
-    "help me decide",
-    "what should i build",
-    "what do i need",
-    "which website",
-    "i need guidance",
-    "මට sure නැහැ",
-    "මට තේරෙන්නෙ නැහැ",
-    "எனக்கு தெரியவில்லை",
-    "எதை தேர்வு செய்வது",
-    "guide me",
-  ]);
-}
-
-export function inferSituationProfile(text, options = {}) {
-  const language = normalizeLanguage(options.language);
-  const businessTypeResult = detectBusinessType(text);
-  const goals = detectGoals(text);
-  const capabilities = detectCapabilities(text);
-  const stage = detectBusinessStage(text);
-  const intentMode = detectIntentMode(text);
-
-  const businessType = getBusinessTypeById(businessTypeResult.primary);
-  const recommendedTypeIds = businessType
-    ? [...businessType.recommendedWebsiteTypes]
-    : ["business_profile", "lead_generation"];
-
-  if (goals.includes("sales")) {
-    recommendedTypeIds.push("ecommerce_store", "catalog_showcase");
+  if (
+    value.includes("price") ||
+    value.includes("pricing") ||
+    value.includes("cost") ||
+    value.includes("budget") ||
+    value.includes("estimate")
+  ) {
+    return "pricing";
   }
 
-  if (goals.includes("bookings")) {
-    recommendedTypeIds.push("booking_appointment");
+  if (!goals.length && !capabilities.length) {
+    return "discovery";
   }
 
-  if (goals.includes("operations")) {
-    recommendedTypeIds.push("admin_dashboard", "hybrid_website_system");
-  }
-
-  if (goals.includes("member_management")) {
-    recommendedTypeIds.push("membership_portal", "hybrid_website_system");
+  if (stage === "idea_stage" && goals.length <= 1 && capabilities.length === 0) {
+    return "discovery";
   }
 
   if (capabilities.includes("website_plus_system")) {
-    recommendedTypeIds.push("hybrid_website_system", "admin_dashboard");
+    return "recommendation";
   }
 
-  if (capabilities.includes("user_accounts")) {
-    recommendedTypeIds.push("membership_portal");
+  if (capabilities.includes("user_accounts") || capabilities.includes("admin_tools")) {
+    return "recommendation";
   }
 
-  if (capabilities.includes("admin_tools")) {
-    recommendedTypeIds.push("admin_dashboard");
+  if (goals.length >= 2) {
+    return "recommendation";
   }
 
-  if (capabilities.includes("ecommerce")) {
-    recommendedTypeIds.push("ecommerce_store");
+  return "discovery";
+}
+
+function inferHighIntent({ text, goals, capabilities }) {
+  const value = normalizeText(text);
+
+  if (
+    value.includes("need now") ||
+    value.includes("ready to start") ||
+    value.includes("let's build") ||
+    value.includes("want to start") ||
+    value.includes("contact")
+  ) {
+    return true;
   }
 
-  if (capabilities.includes("booking_flow")) {
-    recommendedTypeIds.push("booking_appointment");
+  if (capabilities.includes("website_plus_system")) return true;
+  if (goals.includes("sales") && goals.includes("trust")) return true;
+  if (goals.includes("member_management") && capabilities.length > 0) return true;
+
+  return false;
+}
+
+function inferUnsureUser({ text, goals, capabilities }) {
+  const value = normalizeText(text);
+
+  if (
+    value.includes("not sure") ||
+    value.includes("don't know") ||
+    value.includes("do not know") ||
+    value.includes("confused") ||
+    value.includes("help me decide")
+  ) {
+    return true;
   }
 
-  if (stage === "idea_stage") {
-    recommendedTypeIds.push("business_profile", "lead_generation");
+  if (!goals.length && !capabilities.length) return true;
+
+  return false;
+}
+function pickLang(language, en, si, ta) {
+  if (language === "si") return si;
+  if (language === "ta") return ta;
+  return en;
+}
+
+function hasGoal(profile, goalId) {
+  return Array.isArray(profile?.goals) && profile.goals.includes(goalId);
+}
+
+function hasCapability(profile, capabilityId) {
+  return (
+    Array.isArray(profile?.capabilities) &&
+    profile.capabilities.includes(capabilityId)
+  );
+}
+
+function hasEnoughDetailForRecommendation(profile) {
+  if (!profile) return false;
+
+  if (hasCapability(profile, "website_plus_system")) return true;
+  if (hasCapability(profile, "user_accounts")) return true;
+  if (hasCapability(profile, "admin_tools")) return true;
+  if (hasCapability(profile, "booking_flow")) return true;
+  if (hasCapability(profile, "ecommerce")) return true;
+
+  if ((profile.goals || []).length >= 2 && !profile.unsureUser) return true;
+
+  if (
+    profile.intentMode === "recommendation" &&
+    ((profile.goals || []).length > 0 || (profile.capabilities || []).length > 0)
+  ) {
+    return true;
   }
 
-  const rankedWebsiteTypes = rankWebsiteTypes({
-    businessTypeId: businessTypeResult.primary,
-    goals,
-    capabilities,
-    stage,
-    seedTypeIds: uniqueArray(recommendedTypeIds),
+  return false;
+}
+
+function scoreWebsiteTypeForProfile(profile, websiteType) {
+  let score = 0;
+
+  if (!profile || !websiteType) return score;
+
+  const businessType = profile.businessTypeId || "general_service_business";
+
+  if ((profile.businessType?.recommendedWebsiteTypes || []).includes(websiteType.id)) {
+    score += 4;
+  }
+
+  if (websiteType.id === "business_profile") {
+    if (hasGoal(profile, "trust")) score += 4;
+    if (hasGoal(profile, "clarity")) score += 4;
+    if (hasGoal(profile, "visibility")) score += 2;
+    if (businessType === "corporate_professional") score += 2;
+  }
+
+  if (websiteType.id === "lead_generation") {
+    if (hasGoal(profile, "leads")) score += 5;
+    if (hasGoal(profile, "trust")) score += 1;
+  }
+
+  if (websiteType.id === "booking_appointment") {
+    if (hasGoal(profile, "bookings")) score += 5;
+    if (hasCapability(profile, "booking_flow")) score += 4;
+  }
+
+  if (websiteType.id === "ecommerce_store") {
+    if (hasGoal(profile, "sales")) score += 5;
+    if (hasCapability(profile, "ecommerce")) score += 5;
+  }
+
+  if (websiteType.id === "catalog_showcase") {
+    if (hasGoal(profile, "sales")) score += 2;
+    if (businessType === "ecommerce_retail") score += 2;
+  }
+
+  if (websiteType.id === "portfolio_showcase") {
+    if (businessType === "creative_portfolio") score += 4;
+    if (hasGoal(profile, "trust")) score += 1;
+    if (hasGoal(profile, "visibility")) score += 2;
+  }
+
+  if (websiteType.id === "membership_portal") {
+    if (hasGoal(profile, "member_management")) score += 5;
+    if (hasCapability(profile, "user_accounts")) score += 5;
+  }
+
+  if (websiteType.id === "admin_dashboard") {
+    if (hasGoal(profile, "operations")) score += 5;
+    if (hasCapability(profile, "admin_tools")) score += 5;
+  }
+
+  if (websiteType.id === "hybrid_website_system") {
+    if (hasCapability(profile, "website_plus_system")) score += 6;
+    if (hasCapability(profile, "user_accounts")) score += 3;
+    if (hasCapability(profile, "admin_tools")) score += 3;
+    if (hasGoal(profile, "member_management")) score += 2;
+    if (hasGoal(profile, "operations")) score += 2;
+  }
+
+  if (websiteType.id === "landing_page") {
+    if (hasGoal(profile, "leads")) score += 2;
+    if (hasGoal(profile, "sales")) score += 1;
+  }
+
+  return score;
+}
+
+function rankWebsiteTypes(profile) {
+  if (!profile) return [];
+
+  const enoughDetail = hasEnoughDetailForRecommendation(profile);
+
+  if (!enoughDetail && profile.intentMode === "discovery") {
+    return [];
+  }
+
+  const scored = ZYVERION_WEBSITE_TYPES.map((websiteType) => ({
+    websiteType,
+    score: scoreWebsiteTypeForProfile(profile, websiteType),
+  }))
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((item) => item.websiteType);
+
+  const fallbackIds = Array.isArray(profile.businessType?.recommendedWebsiteTypes)
+    ? profile.businessType.recommendedWebsiteTypes
+    : [];
+
+  const merged = uniqueStrings([
+    ...scored.map((item) => item.id),
+    ...fallbackIds,
+  ])
+    .map((id) => getWebsiteTypeById(id))
+    .filter(Boolean);
+
+  return merged.slice(0, enoughDetail ? 3 : 1);
+}
+
+function buildServiceBuckets(profile, recommendedWebsiteTypes) {
+  const bucketIds = [];
+
+  (recommendedWebsiteTypes || []).forEach((item) => {
+    if (!item) return;
+
+    if (
+      item.id === "business_profile" ||
+      item.id === "lead_generation" ||
+      item.id === "portfolio_showcase" ||
+      item.id === "landing_page"
+    ) {
+      bucketIds.push("business_websites");
+    }
+
+    if (item.id === "ecommerce_store" || item.id === "catalog_showcase") {
+      bucketIds.push("ecommerce_and_catalog");
+    }
+
+    if (item.id === "booking_appointment") {
+      bucketIds.push("booking_and_service_flows");
+    }
+
+    if (item.id === "membership_portal") {
+      bucketIds.push("portals_and_membership");
+    }
+
+    if (item.id === "admin_dashboard" || item.id === "hybrid_website_system") {
+      bucketIds.push("admin_and_operations");
+    }
   });
 
-  return {
+  if (hasGoal(profile, "operations")) {
+    bucketIds.push("automation_and_process_design");
+  }
+
+  return uniqueStrings(bucketIds)
+    .map((id) => ZYVERION_SERVICE_BUCKETS.find((item) => item.id === id))
+    .filter(Boolean)
+    .slice(0, 3);
+}
+
+function buildDiscoveryQuestions(profile, language) {
+  const businessTypeId = profile?.businessTypeId || "general_service_business";
+  const enoughDetail = hasEnoughDetailForRecommendation(profile);
+
+  if (businessTypeId === "gym_fitness") {
+    if (!hasGoal(profile, "leads") && !hasGoal(profile, "member_management")) {
+      return [
+        pickLang(
+          language,
+          "Do you mainly want more new members, better current member handling, or both?",
+          "ඔයාට වැඩියෙන් ඕනේ new members ගන්න එකද, current members manage කරන එකද, නැත්නම් දෙකමද?",
+          "உங்களுக்கு அதிகம் வேண்டியது new members வாங்குவதா, current members manage செய்வதா, அல்லது இரண்டுமா?"
+        ),
+        pickLang(
+          language,
+          "Do you need only a website first, or member or admin features too?",
+          "ඔයාට website එකක් විතරක් first stage එකට ඕනේද, නැත්නම් member හෝ admin features ද ඕනේ?",
+          "உங்களுக்கு website மட்டும் போதுமா, அல்லது member அல்லது admin features வேண்டுமா?"
+        ),
+      ].slice(0, enoughDetail ? 1 : 2);
+    }
+
+    if (hasGoal(profile, "member_management") && !hasCapability(profile, "user_accounts")) {
+      return [
+        pickLang(
+          language,
+          "Do you need member login, QR check-in, admin dashboard access, or a full member system?",
+          "ඔයාට member login, QR check-in, admin dashboard access, නැත්නම් full member system එකක්ද ඕනේ?",
+          "உங்களுக்கு member login, QR check-in, admin dashboard access, அல்லது full member system வேண்டுமா?"
+        ),
+      ];
+    }
+
+    if (hasGoal(profile, "leads") && !hasCapability(profile, "website_plus_system")) {
+      return [
+        pickLang(
+          language,
+          "Should the first stage focus on trust and inquiries only, or should it leave room for member features later?",
+          "First stage එක trust සහ inquiries වලට focus කරන එකක්ද, නැත්නම් later member features වලට room තියෙන direction එකක්ද?",
+          "First stage trust மற்றும் inquiries க்கு மட்டும் focus செய்ய வேண்டுமா, அல்லது later member features க்கும் இடம் இருக்க வேண்டுமா?"
+        ),
+      ];
+    }
+  }
+
+  if (businessTypeId === "salon_spa_beauty") {
+    return [
+      pickLang(
+        language,
+        "Is the main goal more bookings, stronger visual presentation, or both?",
+        "Main goal එක bookings ද, stronger visual presentation ද, නැත්නම් දෙකමද?",
+        "Main goal bookings ஆ, stronger visual presentation ஆ, அல்லது இரண்டுமா?"
+      ),
+    ];
+  }
+
+  if (businessTypeId === "restaurant_cafe") {
+    return [
+      pickLang(
+        language,
+        "Do you mainly need menu presentation, reservations, online orders, or a mix of those?",
+        "ඔයාට වැඩියෙන් ඕනේ menu presentation එකද, reservations ද, online orders ද, නැත්නම් mixed direction එකක්ද?",
+        "உங்களுக்கு முக்கியமானது menu presentation ஆ, reservations ஆ, online orders ஆ, அல்லது mixed direction ஆ?"
+      ),
+    ];
+  }
+
+  if (businessTypeId === "medical_clinic") {
+    return [
+      pickLang(
+        language,
+        "Do patients mainly need clear information, appointment booking, or both?",
+        "Patientsලාට වැඩියෙන් ඕනේ clear information ද, appointment booking ද, නැත්නම් දෙකමද?",
+        "Patients க்கு முக்கியமானது clear information ஆ, appointment booking ஆ, அல்லது இரண்டுமா?"
+      ),
+    ];
+  }
+
+  if (businessTypeId === "education_training") {
+    return [
+      pickLang(
+        language,
+        "Is the main goal more student inquiries, a student portal, or both?",
+        "Main goal එක student inquiries ද, student portal ද, නැත්නම් දෙකමද?",
+        "Main goal student inquiries ஆ, student portal ஆ, அல்லது இரண்டுமா?"
+      ),
+    ];
+  }
+
+  if (businessTypeId === "ecommerce_retail") {
+    return [
+      pickLang(
+        language,
+        "Do you want full online selling, or do you want to start with product showcase and inquiry flow first?",
+        "ඔයාට full online selling එකද ඕනේ, නැත්නම් product showcase + inquiry flow එකෙන් first stage එක start කරන්නද?",
+        "உங்களுக்கு full online selling வேண்டுமா, அல்லது product showcase + inquiry flow மூலம் முதலில் தொடங்க வேண்டுமா?"
+      ),
+    ];
+  }
+
+  return [
+    pickLang(
+      language,
+      "What matters most right now: trust, more inquiries, bookings, sales, or system features?",
+      "දැනට වැඩියෙන් වැදගත් මොකද්ද: trust ද, more inquiries ද, bookings ද, sales ද, නැත්නම් system features ද?",
+      "இப்போது முக்கியமானது என்ன: trust ஆ, more inquiries ஆ, bookings ஆ, sales ஆ, அல்லது system features ஆ?"
+    ),
+  ];
+}
+
+function chooseSuggestedAction(profile, recommendedWebsiteTypes) {
+  if (!profile) {
+    return { type: "none", label: "", href: "" };
+  }
+
+  if (profile.intentMode === "pricing") {
+    return {
+      type: "estimator",
+      label: "Open Estimator",
+      href: "estimator.html",
+    };
+  }
+
+  if (profile.intentMode === "discovery") {
+    return { type: "none", label: "", href: "" };
+  }
+
+  if (!hasEnoughDetailForRecommendation(profile)) {
+    return { type: "none", label: "", href: "" };
+  }
+
+  if (profile.highIntent && (recommendedWebsiteTypes || []).length) {
+    return {
+      type: "contact",
+      label: "Contact Zyverion",
+      href: "contact.html",
+    };
+  }
+
+  return { type: "none", label: "", href: "" };
+}
+
+function buildConsultationGuidance(profile, language) {
+  const businessTypeName = profile?.businessType?.name || "Business";
+
+  return pickLang(
     language,
-    businessTypeId: businessTypeResult.primary,
-    businessTypeConfidence: businessTypeResult.confidence,
+    `${businessTypeName} situations should be guided by the business need first, then matched to the right website or system direction.`,
+    `${businessTypeName} වගේ situations වලදී first business need එක clear කරලා, ඊට පස්සේ right website හෝ system direction එකට match කරන එක තමයි best approach එක.`,
+    `${businessTypeName} போன்ற situations இல் first business need ஐ clear பண்ணி, அதன் பிறகு சரியான website அல்லது system direction க்கு match செய்வதே best approach.`
+  );
+}
+
+function inferSituationProfile(text, { language = "en" } = {}) {
+  const businessType = detectBusinessType(text);
+  const goals = detectGoalIds(text, businessType);
+  const capabilities = detectCapabilityIds(text, businessType);
+  const stage = detectStageId(text);
+
+  const profile = {
+    language,
+    languageName: getLanguageName(language),
+    businessTypeId: businessType.id,
     businessType,
     goals,
     capabilities,
     stage,
-    intentMode,
-    highIntent: isHighIntentLead(text),
-    unsureUser: isUnsureUser(text),
-    rankedWebsiteTypes,
-    topWebsiteType: rankedWebsiteTypes[0] || null,
-    discoveredSignals: {
-      businessTypeRanked: businessTypeResult.ranked,
+    intentMode: inferIntentMode({
       goals,
       capabilities,
       stage,
-      intentMode,
-    },
+      text,
+    }),
+    highIntent: inferHighIntent({
+      text,
+      goals,
+      capabilities,
+    }),
+    unsureUser: inferUnsureUser({
+      text,
+      goals,
+      capabilities,
+    }),
   };
+
+  return profile;
 }
 
-export function rankWebsiteTypes(profile) {
-  const scores = new Map();
-
-  function addScore(id, value) {
-    scores.set(id, (scores.get(id) || 0) + value);
-  }
-
-  (profile.seedTypeIds || []).forEach((id) => addScore(id, 2));
-
-  if (profile.businessTypeId) {
-    const businessType = getBusinessTypeById(profile.businessTypeId);
-    if (businessType) {
-      businessType.recommendedWebsiteTypes.forEach((id, index) => {
-        addScore(id, index === 0 ? 5 : 3);
-      });
-    }
-  }
-
-  (profile.goals || []).forEach((goalId) => {
-    if (goalId === "trust") {
-      addScore("business_profile", 4);
-      addScore("portfolio_showcase", 2);
-      addScore("lead_generation", 2);
-    }
-    if (goalId === "leads") {
-      addScore("lead_generation", 5);
-      addScore("business_profile", 2);
-      addScore("landing_page", 2);
-    }
-    if (goalId === "sales") {
-      addScore("ecommerce_store", 6);
-      addScore("catalog_showcase", 3);
-      addScore("landing_page", 2);
-    }
-    if (goalId === "bookings") {
-      addScore("booking_appointment", 6);
-      addScore("lead_generation", 2);
-    }
-    if (goalId === "operations") {
-      addScore("admin_dashboard", 6);
-      addScore("hybrid_website_system", 5);
-    }
-    if (goalId === "member_management") {
-      addScore("membership_portal", 6);
-      addScore("hybrid_website_system", 5);
-    }
-    if (goalId === "visibility") {
-      addScore("business_profile", 3);
-      addScore("lead_generation", 2);
-      addScore("portfolio_showcase", 2);
-    }
-    if (goalId === "clarity") {
-      addScore("business_profile", 4);
-      addScore("lead_generation", 2);
-    }
-    if (goalId === "growth") {
-      addScore("hybrid_website_system", 3);
-      addScore("lead_generation", 2);
-      addScore("business_profile", 2);
-    }
-  });
-
-  (profile.capabilities || []).forEach((capabilityId) => {
-    if (capabilityId === "just_website") {
-      addScore("business_profile", 3);
-      addScore("lead_generation", 2);
-    }
-    if (capabilityId === "website_plus_system") {
-      addScore("hybrid_website_system", 6);
-      addScore("admin_dashboard", 4);
-      addScore("membership_portal", 3);
-    }
-    if (capabilityId === "user_accounts") {
-      addScore("membership_portal", 5);
-      addScore("hybrid_website_system", 4);
-    }
-    if (capabilityId === "booking_flow") {
-      addScore("booking_appointment", 5);
-    }
-    if (capabilityId === "ecommerce") {
-      addScore("ecommerce_store", 5);
-      addScore("catalog_showcase", 3);
-    }
-    if (capabilityId === "admin_tools") {
-      addScore("admin_dashboard", 5);
-      addScore("hybrid_website_system", 4);
-    }
-  });
-
-  if (profile.stage === "idea_stage") {
-    addScore("business_profile", 2);
-    addScore("lead_generation", 2);
-  }
-
-  if (profile.stage === "digital_upgrade") {
-    addScore("hybrid_website_system", 2);
-    addScore("lead_generation", 2);
-    addScore("admin_dashboard", 2);
-  }
-
-  return Array.from(scores.entries())
-    .map(([id, score]) => ({
-      id,
-      score,
-      data: getWebsiteTypeById(id),
-    }))
-    .filter((item) => item.data)
-    .sort((a, b) => b.score - a.score);
-}
-
-export function getDiscoveryQuestions(profile, language = "en", limit = 3) {
-  const lang = normalizeLanguage(language);
-  const questions = [...(ZYVERION_DISCOVERY_QUESTION_BANK.core[lang] || [])];
-
-  if (profile?.businessTypeId) {
-    const specific = ZYVERION_DISCOVERY_QUESTION_BANK.businessSpecific[profile.businessTypeId];
-    if (specific && specific[lang]) {
-      questions.push(...specific[lang]);
-    }
-  }
-
-  const filtered = [];
-  questions.forEach((question) => {
-    if (!filtered.includes(question)) {
-      filtered.push(question);
-    }
-  });
-
-  return filtered.slice(0, limit);
-}
-
-export function getRecommendedWebsiteTypes(profile, limit = 3) {
-  return (profile?.rankedWebsiteTypes || [])
-    .slice(0, limit)
-    .map((item) => item.data);
-}
-
-export function getServiceBucketRecommendations(profile) {
-  const buckets = [];
-
-  const goalSet = new Set(profile?.goals || []);
-  const capabilitySet = new Set(profile?.capabilities || []);
-
-  if (goalSet.has("trust") || goalSet.has("leads") || goalSet.has("clarity") || goalSet.has("visibility")) {
-    buckets.push("business_websites");
-  }
-
-  if (goalSet.has("sales") || capabilitySet.has("ecommerce")) {
-    buckets.push("ecommerce_and_catalog");
-  }
-
-  if (goalSet.has("bookings") || capabilitySet.has("booking_flow")) {
-    buckets.push("booking_and_service_flows");
-  }
-
-  if (goalSet.has("member_management") || capabilitySet.has("user_accounts")) {
-    buckets.push("portals_and_membership");
-  }
-
-  if (goalSet.has("operations") || capabilitySet.has("admin_tools") || capabilitySet.has("website_plus_system")) {
-    buckets.push("admin_and_operations");
-    buckets.push("automation_and_process_design");
-  }
-
-  if (!buckets.length) {
-    buckets.push("business_websites");
-  }
-
-  return uniqueArray(buckets)
-    .map((id) => ZYVERION_SERVICE_BUCKETS.find((item) => item.id === id))
-    .filter(Boolean);
-}
-
-export function getConsultationSignals(profile) {
-  const signals = [];
-
-  if (profile?.unsureUser) signals.push("unsure_need");
-  if (profile?.stage === "idea_stage") signals.push("early_stage_business");
-  if (profile?.stage === "existing_business" || profile?.stage === "digital_upgrade") {
-    signals.push("existing_business_upgrade");
-  }
-
-  const capabilitySet = new Set(profile?.capabilities || []);
-  const goalSet = new Set(profile?.goals || []);
-
-  if (
-    capabilitySet.has("website_plus_system") ||
-    capabilitySet.has("user_accounts") ||
-    capabilitySet.has("admin_tools") ||
-    goalSet.has("operations") ||
-    goalSet.has("member_management")
-  ) {
-    signals.push("website_not_enough");
-  } else {
-    signals.push("website_only_might_be_enough");
-  }
-
-  return uniqueArray(signals);
-}
-
-export function getConsultationGuidance(profile, language = "en") {
-  const lang = normalizeLanguage(language);
-  return getConsultationSignals(profile)
-    .map((id) => ZYVERION_SITUATION_PROMPTS[id]?.[lang])
-    .filter(Boolean);
-}
-
-export function getTrustLines(language = "en", limit = 2) {
-  const lang = normalizeLanguage(language);
-  return (ZYVERION_BRAND.trustSignals[lang] || ZYVERION_BRAND.trustSignals.en).slice(0, limit);
-}
-
-export function getObjectionAnswer(key, language = "en") {
-  const lang = normalizeLanguage(language);
-  const item = ZYVERION_OBJECTION_HANDLING[key];
-  if (!item) return "";
-  return item[lang] || item.en || "";
-}
-
-export function chooseSuggestedAction(profile, text = "") {
-  const value = normalizeText(text);
-  const intentMode = profile?.intentMode || "general";
-  const highIntent = !!profile?.highIntent;
-
-  if (
-    includesAny(value, [
-      "price",
-      "cost",
-      "quote",
-      "budget",
-      "estimate",
-      "estimator",
-      "මිල",
-      "ගාණ",
-      "விலை",
-      "காசு",
-      "கட்டணம்",
-    ])
-  ) {
-    return { type: "estimator", ...ZYVERION_CTA_RULES.estimator };
-  }
-
-  if (
-    includesAny(value, [
-      "work",
-      "portfolio",
-      "examples",
-      "sample",
-      "can you build something like",
-      "similar",
-      "වැඩ",
-      "போர்ட்ஃபோலியோ",
-      "உதாரணம்",
-    ])
-  ) {
-    return { type: "work", ...ZYVERION_CTA_RULES.work };
-  }
-
-  if (highIntent || intentMode === "recommendation") {
-    return { type: "contact", ...ZYVERION_CTA_RULES.contact };
-  }
-
-  return { type: "none", ...ZYVERION_CTA_RULES.none };
-}
-
-export function buildKnowledgeSnapshot(profile, language = "en") {
-  const lang = normalizeLanguage(language);
-  const businessType = profile?.businessType || getBusinessTypeById(profile?.businessTypeId);
-  const topTypes = getRecommendedWebsiteTypes(profile, 3);
-  const buckets = getServiceBucketRecommendations(profile);
-  const questions = getDiscoveryQuestions(profile, lang, 3);
-  const guidance = getConsultationGuidance(profile, lang);
-  const trustLines = getTrustLines(lang, 2);
-  const responseStyle = ZYVERION_RESPONSE_STYLES[lang] || ZYVERION_RESPONSE_STYLES.en;
+function buildKnowledgeSnapshot(profile, language) {
+  const recommendedWebsiteTypes = rankWebsiteTypes(profile);
+  const serviceBuckets = buildServiceBuckets(profile, recommendedWebsiteTypes);
+  const discoveryQuestions = buildDiscoveryQuestions(profile, language);
+  const suggestedAction = chooseSuggestedAction(profile, recommendedWebsiteTypes);
+  const consultationGuidance = buildConsultationGuidance(profile, language);
 
   return {
-    brand: ZYVERION_BRAND,
-    languageName: LANGUAGE_NAMES[lang] || LANGUAGE_NAMES.en,
-    responseStyle,
-    businessType: businessType
-      ? {
-          id: businessType.id,
-          name: businessType.name,
-          recommendedWebsiteTypes: businessType.recommendedWebsiteTypes,
-          recommendedGoals: businessType.recommendedGoals,
-        }
-      : null,
-    goals: (profile?.goals || []).map((id) => getGoalById(id)).filter(Boolean),
-    capabilities: (profile?.capabilities || []).map((id) => getCapabilityById(id)).filter(Boolean),
-    stage: getStageById(profile?.stage),
-    recommendedWebsiteTypes: topTypes,
-    recommendedServiceBuckets: buckets,
-    discoveryQuestions: questions,
-    consultationGuidance: guidance,
-    trustLines,
-    suggestedAction: chooseSuggestedAction(profile),
+    recommendedWebsiteTypes,
+    serviceBuckets,
+    discoveryQuestions,
+    suggestedAction,
+    consultationGuidance,
+    enoughDetailForRecommendation: hasEnoughDetailForRecommendation(profile),
   };
 }
 
-export function buildSystemKnowledgePrompt(language = "en") {
-  const lang = normalizeLanguage(language);
-  const style = ZYVERION_RESPONSE_STYLES[lang] || ZYVERION_RESPONSE_STYLES.en;
-
-  return `
-Zyverion Knowledge Core
-
-Brand:
-- ${ZYVERION_BRAND.fullName}
-- ${ZYVERION_BRAND.positioning}
-- ${ZYVERION_BRAND.marketFocus}
-
-Operating style:
-- ${ZYVERION_BRAND.operatingStyle.join("\n- ")}
-
-Service buckets:
-${ZYVERION_SERVICE_BUCKETS.map(
-  (item) => `- ${item.label}: ${item.summary}`
-).join("\n")}
-
-Website and solution types:
-${ZYVERION_WEBSITE_TYPES.map(
-  (item) => `- ${item.name}: ${item.purpose}`
-).join("\n")}
-
-Response style:
-- Tone: ${style.consultantTone}
-- Rule: ${style.answerRule}
-
-Consultation rule:
-- Learn the user's situation first when needed.
-- Recommend the right website or system type based on business type, goal, complexity, and stage.
-- Explain why the recommendation fits.
-- Only then guide to Estimator, Contact, or Work if helpful.
-- Keep every recommendation inside Zyverion's actual service scope.
-`.trim();
-}
-
-export function buildRecommendationExplanation(profile, language = "en") {
-  const lang = normalizeLanguage(language);
-  const style = ZYVERION_RESPONSE_STYLES[lang] || ZYVERION_RESPONSE_STYLES.en;
-  const top = profile?.topWebsiteType?.data || null;
-  const goals = (profile?.goals || []).slice(0, 2);
-  const businessType = profile?.businessType || getBusinessTypeById(profile?.businessTypeId);
-
-  if (!top) {
-    return "";
-  }
-
-  const goalLabels = goals
-    .map((id) => getGoalById(id))
-    .filter(Boolean)
-    .map((item) => item.label);
-
-  const reasonBits = [];
-
-  if (businessType) {
-    reasonBits.push(`${top.name} is a strong fit for ${businessType.name.toLowerCase()} situations`);
-  }
-
-  if (goalLabels.length) {
-    reasonBits.push(`because your likely goals point toward ${goalLabels.join(" and ").toLowerCase()}`);
-  }
-
-  if (profile?.stage === "idea_stage") {
-    reasonBits.push("and it keeps the first build practical without overcomplicating the project");
-  }
-
-  if (profile?.capabilities?.includes("website_plus_system")) {
-    reasonBits.push("while still leaving room for a deeper website plus system direction if needed");
-  }
-
-  const reasonLine = reasonBits.join(" ");
-
-  if (lang === "si") {
-    return `${style.recommendationIntro} ${top.name} solution එකයි. ${style.reasoningIntro} ${reasonLine}.`;
-  }
-
-  if (lang === "ta") {
-    return `${style.recommendationIntro} ${top.name}. ${style.reasoningIntro} ${reasonLine}.`;
-  }
-
-  return `${style.recommendationIntro} a ${top.name}. ${style.reasoningIntro} ${reasonLine}.`;
-}
-
-export function buildNextStepGuidance(profile, language = "en") {
-  const lang = normalizeLanguage(language);
-  const style = ZYVERION_RESPONSE_STYLES[lang] || ZYVERION_RESPONSE_STYLES.en;
-  const action = chooseSuggestedAction(profile);
-
-  if (action.type === "estimator") {
-    if (lang === "si") {
-      return `${style.nextStepIntro} Estimator එකෙන් price direction එක check කරන එකයි.`;
-    }
-    if (lang === "ta") {
-      return `${style.nextStepIntro} Estimator மூலம் price direction பெறுவது.`;
-    }
-    return `${style.nextStepIntro} using the Estimator for price direction.`;
-  }
-
-  if (action.type === "contact") {
-    if (lang === "si") {
-      return `${style.nextStepIntro} Zyverion එක්ක direct consultation එකකට Contact page එකෙන් details share කරන එකයි.`;
-    }
-    if (lang === "ta") {
-      return `${style.nextStepIntro} Zyverion உடன் direct consultation க்கு Contact page மூலம் details share செய்வது.`;
-    }
-    return `${style.nextStepIntro} sharing your details through the Contact page for direct consultation.`;
-  }
-
-  if (action.type === "work") {
-    if (lang === "si") {
-      return `${style.nextStepIntro} Work page එකෙන් proof සහ project direction examples බලන එකයි.`;
-    }
-    if (lang === "ta") {
-      return `${style.nextStepIntro} Work page இல் proof மற்றும் project direction examples பார்க்கும்து.`;
-    }
-    return `${style.nextStepIntro} reviewing the Work page for proof and project direction examples.`;
-  }
-
-  return "";
-}
-
-export function buildDiscoveryPrompt(profile, language = "en", limit = 2) {
-  const lang = normalizeLanguage(language);
-  const style = ZYVERION_RESPONSE_STYLES[lang] || ZYVERION_RESPONSE_STYLES.en;
-  const questions = getDiscoveryQuestions(profile, lang, limit);
-
-  if (!questions.length) return "";
-
-  if (lang === "si") {
-    return `${style.followUpIntro}: ${questions.join(" ")}`;
-  }
-
-  if (lang === "ta") {
-    return `${style.followUpIntro}: ${questions.join(" ")}`;
-  }
-
-  return `${style.followUpIntro}: ${questions.join(" ")}`;
-}
-
-export function createSituationBlueprint(text, options = {}) {
-  const profile = inferSituationProfile(text, options);
-  const language = normalizeLanguage(options.language);
+function createBlueprint(text, { language = "en" } = {}) {
+  const profile = inferSituationProfile(text, { language });
   const snapshot = buildKnowledgeSnapshot(profile, language);
 
   return {
     profile,
     snapshot,
-    recommendationExplanation: buildRecommendationExplanation(profile, language),
-    nextStepGuidance: buildNextStepGuidance(profile, language),
-    discoveryPrompt: buildDiscoveryPrompt(profile, language, 2),
-    suggestedAction: chooseSuggestedAction(profile, text),
   };
 }
-
-const knowledge = {
-  LANGUAGE_NAMES,
-  ZYVERION_BRAND,
-  ZYVERION_SERVICE_BUCKETS,
-  ZYVERION_WEBSITE_TYPES,
-  ZYVERION_BUSINESS_TYPES,
-  ZYVERION_GOAL_SIGNALS,
-  ZYVERION_CAPABILITY_SIGNALS,
-  ZYVERION_STAGE_SIGNALS,
-  ZYVERION_DISCOVERY_QUESTION_BANK,
-  ZYVERION_OBJECTION_HANDLING,
-  ZYVERION_CTA_RULES,
-  ZYVERION_CONSULTATION_STAGES,
-  ZYVERION_RESPONSE_STYLES,
-  ZYVERION_SITUATION_PROMPTS,
-  detectBusinessType,
-  detectGoals,
-  detectCapabilities,
-  detectBusinessStage,
-  detectIntentMode,
-  isHighIntentLead,
-  isUnsureUser,
-  inferSituationProfile,
-  rankWebsiteTypes,
-  getDiscoveryQuestions,
-  getRecommendedWebsiteTypes,
-  getServiceBucketRecommendations,
-  getConsultationSignals,
-  getConsultationGuidance,
-  getTrustLines,
-  getObjectionAnswer,
-  chooseSuggestedAction,
-  buildKnowledgeSnapshot,
-  buildSystemKnowledgePrompt,
-  buildRecommendationExplanation,
-  buildNextStepGuidance,
-  buildDiscoveryPrompt,
-  createSituationBlueprint,
+const OBJECTION_ANSWERS = {
+  why_zyverion: {
+    en: "Zyverion is built for businesses that need more than a generic website. The approach is to understand the situation first, then recommend the right website or system direction based on actual business needs.",
+    si: "Zyverion කියන්නේ generic website එකක් විකුණන setup එකක් නොවේ. First situation එක තේරුම්ගෙන, business need එකට fit වෙන website හෝ system direction එක recommend කරන approach එකක්.",
+    ta: "Zyverion என்பது generic website விற்கும் setup அல்ல. முதலில் situation ஐ புரிந்து கொண்டு, business need க்கு பொருந்தும் website அல்லது system direction ஐ recommend செய்வதே இதன் approach.",
+  },
+  only_websites: {
+    en: "No. Zyverion can support business websites, portals, dashboards, workflow systems, and hybrid website-plus-system solutions when the situation needs more than presentation alone.",
+    si: "නැහැ. Situation එකට normal presentation එකකට වඩා දේවල් ඕනේ නම්, business websites වලට අමතරව portals, dashboards, workflow systems, සහ hybrid website-plus-system solutions ද Zyverion handle කරන්න පුළුවන්.",
+    ta: "இல்லை. Situation க்கு சாதாரண presentation ஐ விட அதிகம் தேவைப்பட்டால், business websites மட்டுமல்லாமல் portals, dashboards, workflow systems, மற்றும் hybrid website-plus-system solutions களையும் Zyverion handle செய்ய முடியும்.",
+  },
 };
 
-export default knowledge;
+export function createSituationBlueprint(text, { language = "en" } = {}) {
+  return createBlueprint(text, { language });
+}
+
+export function getTrustLines(language = "en") {
+  return ZYVERION_BRAND.trustSignals[language] || ZYVERION_BRAND.trustSignals.en;
+}
+
+export function getObjectionAnswer(key, language = "en") {
+  const entry = OBJECTION_ANSWERS[key];
+  if (!entry) return "";
+  return entry[language] || entry.en || "";
+}
+
+export function buildSystemKnowledgePrompt(language = "en") {
+  const trustLines = getTrustLines(language);
+  const serviceNames = ZYVERION_SERVICE_BUCKETS.map((item) => item.label).join(", ");
+
+  return pickLang(
+    language,
+    `
+You are Zyverion AI, a business-focused digital consultation assistant for Zyverion Solutions.
+
+Your job:
+- Understand the user's business situation before recommending a solution.
+- Keep the guidance inside Zyverion's real scope: websites, e-commerce fronts, portals, dashboards, workflows, automation-minded digital solutions, and hybrid website-plus-system builds.
+- Prefer practical consultation over generic marketing language.
+- Ask the next specific question when the user has not given enough detail.
+- Recommend only when enough detail exists or the user directly asks what they should build.
+- Avoid pushing Contact, Work, or Estimator too early.
+- Never act like a generic website menu bot.
+- Never pretend Zyverion offers unrelated services.
+
+Brand trust context:
+${trustLines.map((line) => `- ${line}`).join("\n")}
+
+Service buckets Zyverion operates across:
+- ${serviceNames}
+
+Response style:
+- Human
+- Practical
+- Clear
+- Slightly premium, but not overdramatic
+- Strong on business fit
+- Strong on narrowing the next step
+`.trim(),
+    `
+ඔබ Zyverion Solutions සඳහා build කරපු business-focused digital consultation assistant කෙනෙක්.
+
+ඔබගේ job එක:
+- First userගේ business situation එක තේරුම් ගන්න.
+- Guidance එක Zyverionගේ real scope එක ඇතුළෙ තබා ගන්න: websites, e-commerce fronts, portals, dashboards, workflows, automation-minded digital solutions, සහ hybrid website-plus-system builds.
+- Generic marketing language වලට වඩා practical consultation එකට priority දෙන්න.
+- Detail මදි නම් next specific question එක අහන්න.
+- Enough detail තියෙන වෙලාවට හෝ user direct ලෙස "what should I build" වගේ දෙයක් අහන වෙලාවට විතරක් recommendation දෙන්න.
+- Contact, Work, හෝ Estimator ඉක්මනින් push කරන්න එපා.
+- Generic website menu bot එකක් වගේ හැසිරෙන්න එපා.
+- Zyverion unrelated services දෙනවා වගේ act කරන්න එපා.
+
+Brand trust context:
+${trustLines.map((line) => `- ${line}`).join("\n")}
+
+Zyverion වැඩ කරන service buckets:
+- ${serviceNames}
+
+Response style:
+- Human
+- Practical
+- Clear
+- Slightly premium, but not overdramatic
+- Strong on business fit
+- Strong on narrowing the next step
+`.trim(),
+    `
+நீங்கள் Zyverion Solutions க்கான business-focused digital consultation assistant.
+
+உங்கள் job:
+- முதலில் user இன் business situation ஐ புரிந்துகொள்ள வேண்டும்.
+- Guidance ஐ Zyverion இன் real scope குள் வைத்திருக்க வேண்டும்: websites, e-commerce fronts, portals, dashboards, workflows, automation-minded digital solutions, மற்றும் hybrid website-plus-system builds.
+- Generic marketing language ஐ விட practical consultation க்கு priority கொடுக்க வேண்டும்.
+- Detail போதவில்லை என்றால் next specific question கேட்க வேண்டும்.
+- Enough detail இருக்கும் போது அல்லது user நேரடியாக "what should I build" என்று கேட்டால் மட்டுமே recommendation கொடுக்க வேண்டும்.
+- Contact, Work, அல்லது Estimator ஐ மிக சீக்கிரம் push செய்யக்கூடாது.
+- Generic website menu bot போல நடக்கக்கூடாது.
+- Zyverion unrelated services வழங்குகிறது போல நடிக்கக்கூடாது.
+
+Brand trust context:
+${trustLines.map((line) => `- ${line}`).join("\n")}
+
+Zyverion செயல்படும் service buckets:
+- ${serviceNames}
+
+Response style:
+- Human
+- Practical
+- Clear
+- Slightly premium, but not overdramatic
+- Strong on business fit
+- Strong on narrowing the next step
+`.trim()
+  );
+}
