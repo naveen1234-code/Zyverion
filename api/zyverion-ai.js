@@ -605,14 +605,14 @@ function buildFallbackReply({
   const profile = blueprint.profile;
   const snapshot = blueprint.snapshot;
   const topSolutions = (snapshot.recommendedWebsiteTypes || []).slice(0, 3);
-  const suggestedAction = normalizeSuggestedAction(
-    blueprint.suggestedAction,
-    {
-      type: "none",
-      label: "",
-      href: "",
-    }
-  );
+const suggestedAction = sanitizeSuggestedAction(
+  blueprint.suggestedAction,
+  {
+    type: "none",
+    label: "",
+    href: "",
+  }
+);
 
   const answerMode = decideFallbackAnswerMode(intent, profile);
   const followUpQuestions =
