@@ -1524,9 +1524,9 @@ function setVoiceOverlayCopy(language) {
         setCurrentAnswer(result.textReply);
       }
 
-      if (result.spokenReply || result.textReply) {
-        await speakText(result.spokenReply || result.textReply, language);
-      }
+if (result.textReply || result.spokenReply) {
+  await speakText(result.textReply || result.spokenReply, language);
+}
     } finally {
       isProcessing = false;
 

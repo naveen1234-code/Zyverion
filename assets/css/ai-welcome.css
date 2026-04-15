@@ -3763,3 +3763,44 @@ body.zyverion-ai-open #aiLauncher {
 .ai-voice-copy {
   justify-content: center !important;
 }
+/* =========================================================
+   ZYVERION AI ANSWER SCROLL FIX
+========================================================= */
+
+body.zyverion-ai-open {
+  overflow: hidden !important;
+}
+
+.zyverion-ai-popup-shell-v2 {
+  height: min(72vh, 560px) !important;
+  max-height: min(72vh, 560px) !important;
+}
+
+.zyverion-ai-messages-v2 {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.zyverion-ai-answer-card,
+.zyverion-ai-messages-v2 .zyverion-ai-message:last-child {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+.zyverion-ai-answer-text,
+.zyverion-ai-messages-v2 .zyverion-ai-message:last-child .zyverion-ai-message-bubble {
+  display: block !important;
+  max-height: min(24vh, 230px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-right: 6px !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}

@@ -1,3 +1,23 @@
+const DEFAULT_MODEL = "gpt-4o-mini-tts";
+const DEFAULT_FORMAT = "mp3";
+const DEFAULT_VOICE = "marin";
+
+const ALLOWED_VOICES = new Set([
+  "alloy",
+  "ash",
+  "ballad",
+  "coral",
+  "echo",
+  "fable",
+  "nova",
+  "onyx",
+  "sage",
+  "shimmer",
+  "verse",
+  "marin",
+  "cedar",
+]);
+
 export async function OPTIONS() {
   return new Response(null, {
     status: 204,
@@ -33,14 +53,13 @@ export async function POST(request) {
       );
     }
 
-    const rawText = typeof body?.text === "string" ? body.text.trim() : "";
+    const rawText = typeof body?.text === "string" ? body.text : "";
     const language = normalizeLanguage(body?.language);
-    const voice =
-      typeof body?.voice === "string" && body.voice.trim()
-        ? body.voice.trim()
-        : "marin";
+    const requestedVoice =
+      typeof body?.voice === "string" ? body.voice.trim().toLowerCase() : "";
+    const text = sanitizeSpeechInput(rawText, language);
 
-    if (!rawText) {
+    if (!text) {
       return json(
         {
           error: "Text is required.",
@@ -49,46 +68,37 @@ export async function POST(request) {
       );
     }
 
-    if (rawText.length > 1800) {
-      return json(
-        {
-          error: "Text is too long.",
-        },
-        400
-      );
-    }
+    const voice = pickVoice(requestedVoice, language);
+    const instructions = buildVoiceInstructions(language, voice);
 
-    const cleanedText = cleanupSpeechText(rawText, language);
-    const model = process.env.OPENAI_TTS_MODEL || "gpt-4o-mini-tts";
-
-    const upstream = await fetch("https://api.openai.com/v1/audio/speech", {
+    const response = await fetch("https://api.openai.com/v1/audio/speech", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model,
+        model: DEFAULT_MODEL,
         voice,
-        input: cleanedText,
+        format: DEFAULT_FORMAT,
+        input: text,
+        instructions,
       }),
     });
 
-    if (!upstream.ok) {
-      const detail = await safeReadText(upstream);
-
+    if (!response.ok) {
+      const detail = await safeReadText(response);
       return json(
         {
-          error: "TTS request failed.",
-          detail: detail.slice(0, 400),
+          error: "TTS generation failed.",
+          detail: detail.slice(0, 700),
         },
         500
       );
     }
 
-    const contentType =
-      upstream.headers.get("content-type") || "audio/mpeg";
-    const audioBuffer = await upstream.arrayBuffer();
+    const contentType = response.headers.get("content-type") || "audio/mpeg";
+    const audioBuffer = await response.arrayBuffer();
 
     return new Response(audioBuffer, {
       status: 200,
@@ -99,10 +109,11 @@ export async function POST(request) {
         }),
       },
     });
-  } catch {
+  } catch (error) {
     return json(
       {
-        error: "Unable to generate speech right now.",
+        error: "Unexpected TTS server error.",
+        detail: error instanceof Error ? error.message : "Unknown error",
       },
       500
     );
@@ -140,43 +151,125 @@ function normalizeLanguage(value) {
   return value === "si" || value === "ta" || value === "en" ? value : "en";
 }
 
-function cleanupSpeechText(text, language) {
-  let cleaned = String(text || "")
+function pickVoice(requestedVoice, language) {
+  if (requestedVoice && ALLOWED_VOICES.has(requestedVoice)) {
+    return requestedVoice;
+  }
+
+  if (language === "en") return "marin";
+  if (language === "si") return "cedar";
+  if (language === "ta") return "cedar";
+
+  return DEFAULT_VOICE;
+}
+
+function sanitizeSpeechInput(value, language) {
+  let text = String(value || "");
+
+  text = text
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
+    .replace(/[*_#~>|]/g, " ")
     .replace(/\s+/g, " ")
-    .replace(/\bcontinue\b/gi, "")
     .trim();
+
+  text = removeUiNoise(text, language);
+  text = cleanRepeatedPhrases(text);
+
+  if (text.length > 2600) {
+    text = text.slice(0, 2600).trim();
+  }
+
+  return text;
+}
+
+function removeUiNoise(text, language) {
+  let cleaned = text;
+
+  const sharedNoise = [
+    "Open Estimator",
+    "Contact Zyverion",
+    "View Our Work",
+    "Estimator",
+    "Contact",
+    "Work",
+    "Replay",
+    "Mute",
+    "Tap to speak",
+    "ZYVERION AI",
+    "Assistant",
+    "NEXT QUESTIONS",
+    "Recommended Direction",
+  ];
+
+  sharedNoise.forEach((item) => {
+    const escaped = escapeRegExp(item);
+    cleaned = cleaned.replace(new RegExp(escaped, "gi"), " ");
+  });
 
   if (language === "si") {
     cleaned = cleaned
-      .replace(/\bservices\b/gi, "සේවා")
-      .replace(/\bwebsite solutions\b/gi, "වෙබ් අඩවි විසඳුම්")
-      .replace(/\bpricing guidance\b/gi, "මිල මාර්ගදර්ශනය")
-      .replace(/\bproject guidance\b/gi, "ප්‍රොජෙක්ට් මාර්ගදර්ශනය")
-      .replace(/\bContact page\b/gi, "සම්බන්ධතා පිටුව")
-      .replace(/\bEstimator page\b/gi, "එස්ටිමේටර් පිටුව")
-      .replace(/\bWork page\b/gi, "වැඩ පිටුව")
-      .replace(/\bpage\b/gi, "පිටුව")
-      .replace(/\bdirection\b/gi, "මාර්ගදර්ශනය")
-      .replace(/\bproject\b/gi, "ප්‍රොජෙක්ට්")
-      .replace(/\s+/g, " ")
-      .trim();
+      .replace(/\bcontinue\b/gi, " ")
+      .replace(/\bwebsite\b/gi, "වෙබ් අඩවිය")
+      .replace(/\bsystem\b/gi, "සිස්ටම්")
+      .replace(/\badmin\b/gi, "පරිපාලන")
+      .replace(/\bmember\b/gi, "සාමාජික");
   }
 
   if (language === "ta") {
     cleaned = cleaned
-      .replace(/\bservices\b/gi, "சேவைகள்")
-      .replace(/\bwebsite solutions\b/gi, "இணையதள தீர்வுகள்")
-      .replace(/\bpricing guidance\b/gi, "விலை வழிகாட்டல்")
-      .replace(/\bproject guidance\b/gi, "திட்ட வழிகாட்டல்")
-      .replace(/\bContact page\b/gi, "தொடர்பு பக்கம்")
-      .replace(/\bEstimator page\b/gi, "எஸ்டிமேட்டர் பக்கம்")
-      .replace(/\bWork page\b/gi, "வேலை பக்கம்")
-      .replace(/\bpage\b/gi, "பக்கம்")
-      .replace(/\bdirection\b/gi, "வழிகாட்டல்")
-      .replace(/\bproject\b/gi, "திட்டம்")
-      .replace(/\s+/g, " ")
-      .trim();
+      .replace(/\bcontinue\b/gi, " ")
+      .replace(/\bwebsite\b/gi, "இணையதளம்")
+      .replace(/\bsystem\b/gi, "சிஸ்டம்")
+      .replace(/\badmin\b/gi, "நிர்வாக")
+      .replace(/\bmember\b/gi, "உறுப்பினர்");
   }
 
-  return cleaned;
+  return cleaned.replace(/\s+/g, " ").trim();
+}
+function cleanRepeatedPhrases(text) {
+  return text
+    .replace(/\b(Speaking|speaking)\b\.?/g, " ")
+    .replace(/\b(Tap to speak|tap to speak)\b/g, " ")
+    .replace(/\b(ZYVERION AI)\b\s+\b(ZYVERION AI)\b/gi, "ZYVERION AI")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function buildVoiceInstructions(language, voice) {
+  if (language === "si") {
+    return [
+      "Speak in Sinhala with a calm, premium, warm, business-consultant tone.",
+      "Keep the delivery smooth, natural, and polished.",
+      "Do not sound robotic, rushed, or overly dramatic.",
+      "Use clean Sinhala pronunciation and avoid reading UI labels or formatting noise.",
+      "If an English brand or technical term appears, say it naturally and continue smoothly in Sinhala.",
+      `Preferred voice character: ${voice}.`,
+    ].join(" ");
+  }
+
+  if (language === "ta") {
+    return [
+      "Speak in Tamil with a calm, premium, warm, business-consultant tone.",
+      "Keep the delivery smooth, natural, and polished.",
+      "Do not sound robotic, rushed, or overly dramatic.",
+      "Use clean Tamil pronunciation and avoid reading UI labels or formatting noise.",
+      "If an English brand or technical term appears, say it naturally and continue smoothly in Tamil.",
+      `Preferred voice character: ${voice}.`,
+    ].join(" ");
+  }
+
+  return [
+    "Speak in English with a premium, warm, confident business-consultant tone.",
+    "Sound natural, polished, and trustworthy.",
+    "Do not sound robotic, overly excited, or salesy.",
+    "Keep pacing smooth and clear, with natural pauses.",
+    "Avoid reading labels, buttons, or interface fragments unless they are part of the actual sentence.",
+    `Preferred voice character: ${voice}.`,
+  ].join(" ");
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
