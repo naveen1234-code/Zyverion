@@ -1257,7 +1257,7 @@ function setVoiceOverlayCopy(language) {
       setTimeout(function () {
         hint.classList.remove("show");
       }, 4500);
-    }, 1600);
+    }, 17000);
   }
 
   function isProjectsPage() {
