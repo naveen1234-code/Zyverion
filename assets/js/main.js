@@ -233,5 +233,11 @@ window.addEventListener("load", () => {
         closeMenu();
       }
     });
+    /* Safety reset: prevent menu blur from staying after refresh/back navigation */
+closeMenu();
+
+window.addEventListener("pageshow", () => {
+  closeMenu();
+});
   })();
 });

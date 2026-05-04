@@ -7073,45 +7073,6 @@ body:has(.team-card) .grid.grid-3 .team-card {
    Blurs page behind Zyverion Command Core menu
    ========================================================= */
 
-@media (max-width: 768px) {
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 999990;
-
-    background:
-      radial-gradient(circle at 50% 18%, rgba(99, 70, 255, 0.16), transparent 34%),
-      rgba(2, 5, 15, 0.48);
-
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.22s ease;
-  }
-
-  body.menu-open::before,
-  body.nav-open::before,
-  body:has(#mobileMenu.is-open)::before,
-  body:has(#mobileMenu.open)::before,
-  body:has(#mobileMenu.active)::before {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  /* Keep navbar and opened menu above the blur */
-  .nav,
-  .nav-upgrade {
-    z-index: 999999 !important;
-  }
-
-  #mobileMenu.menu-upgrade,
-  .menu.menu-upgrade {
-    z-index: 999998 !important;
-  }
-}
 /* =========================================================
    ZYVERION COMMAND CORE MENU - V3 BIGGER / TALLER
    Makes the mobile menu feel more premium and less compressed
@@ -7412,5 +7373,83 @@ body:has(.team-card) .grid.grid-3 .team-card {
   .menu.menu-upgrade a[href*="contact"] {
     min-height: 58px !important;
     height: 58px !important;
+  }
+}
+/* =========================================================
+   SAFE MOBILE MENU BLUR OVERLAY
+   Blur only appears while menu is actually open
+   ========================================================= */
+
+@media (max-width: 768px) {
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 999990;
+
+    background:
+      radial-gradient(circle at 50% 18%, rgba(113, 76, 255, 0.16), transparent 34%),
+      rgba(1, 4, 14, 0.52);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+  }
+
+  body.menu-open::after {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  body:not(.menu-open)::after {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  body.menu-open {
+    overflow: hidden !important;
+  }
+
+  body:not(.menu-open) {
+    overflow-x: hidden !important;
+  }
+
+  /* Never permanently blur the actual page content */
+  main,
+  footer,
+  .hero,
+  .section,
+  .whatsapp-fab,
+  #aiLauncher,
+  #zyverionAiHint,
+  .ai-launcher,
+  .mobile-sticky-cta {
+    filter: none !important;
+  }
+
+  /* Hide AI only while menu is open */
+  body.menu-open #aiLauncher,
+  body.menu-open #zyverionAiHint,
+  body.menu-open .ai-launcher,
+  body.menu-open .mobile-sticky-cta {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .nav,
+  .nav-upgrade {
+    z-index: 999999 !important;
+  }
+
+  #mobileMenu.menu-upgrade,
+  .menu.menu-upgrade {
+    z-index: 999998 !important;
   }
 }
