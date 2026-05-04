@@ -21,6 +21,7 @@
   <meta name="twitter:image" content="https://zyverion.com/assets/img/og-cover.jpg">
 
   <link rel="stylesheet" href="assets/css/style.css?v=41">
+  <link rel="stylesheet" href="assets/css/ai-welcome.css?v=6">
 </head>
 <body>
   <div id="introFX" class="intro-fx" aria-hidden="true">
@@ -51,6 +52,8 @@
       <a href="projects.html">Work</a>
       <a href="about.html">About</a>
       <a href="team.html">Team</a>
+      <a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms-and-conditions.html">Terms &amp; Conditions</a>
       <a href="estimator.html">Estimator</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -665,19 +668,254 @@
     <span>WA</span>
   </a>
 
-  <div id="aiLauncher" class="ai-launcher" aria-label="Open AI Estimator">
+  <div id="aiLauncher" class="ai-launcher" aria-label="Open Zyverion AI Assistant">
     <div class="ai-core">
       <img src="assets/img/ai-logo.png" alt="ZYVERION AI" />
     </div>
   </div>
 
-  <div id="aiWelcomeOverlay" class="ai-welcome-overlay" aria-hidden="true">
-    <div class="ai-welcome-card">
-      <div class="ai-welcome-glow"></div>
-      <h2>Welcome to ZYVERION AI</h2>
-      <p>Launching your project estimator...</p>
+<div id="zyverionAiHint" class="zyverion-ai-hint" aria-hidden="true">
+    <span class="zyverion-ai-hint-text">Speak to Zyverion AI</span>
+  </div>
+
+  <div id="zyverionAiPanelBackdrop" class="zyverion-ai-panel-backdrop" aria-hidden="true"></div>
+
+<aside
+  id="zyverionAiPanel"
+  class="zyverion-ai-panel zyverion-ai-popup-v2"
+  aria-hidden="true"
+  aria-label="Zyverion AI Assistant"
+>
+  <div class="zyverion-ai-panel-shell zyverion-ai-popup-shell-v2">
+    <div class="zyverion-ai-popup-top">
+      <div class="zyverion-ai-panel-badge zyverion-ai-popup-badge">
+        <span class="zyverion-ai-panel-dot"></span>
+        <span>ZYVERION AI</span>
+      </div>
+
+      <div class="zyverion-ai-popup-language-mini">
+        <select
+          id="zyverionAiLanguageSelect"
+          class="zyverion-ai-language-select zyverion-ai-language-select-mini"
+          aria-label="Choose language"
+        >
+          <option value="">Lang</option>
+          <option value="si">සිංහල</option>
+          <option value="en">English</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="zyverionAiLanguagePicker" class="zyverion-ai-language-picker zyverion-ai-language-picker-mini">
+      <div class="zyverion-ai-language-grid zyverion-ai-language-grid-mini">
+        <button type="button" class="zyverion-ai-language-option" data-ai-language="si">
+          <strong>සිංහල</strong>
+          <span>Sinhala</span>
+        </button>
+
+        <button type="button" class="zyverion-ai-language-option" data-ai-language="en">
+          <strong>English</strong>
+          <span>English</span>
+        </button>
+
+        <button type="button" class="zyverion-ai-language-option" data-ai-language="ta">
+          <strong>தமிழ்</strong>
+          <span>Tamil</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="zyverionAiOrbZone" class="zyverion-ai-orb-zone zyverion-ai-orb-zone-v2 is-idle">
+      <button
+        id="zyverionAiOrbButton"
+        class="zyverion-ai-orb-button zyverion-ai-orb-button-v2"
+        type="button"
+        aria-label="Talk to Zyverion AI"
+      >
+        <span class="zyverion-ai-orb-ring ring-1"></span>
+        <span class="zyverion-ai-orb-ring ring-2"></span>
+
+        <span class="zyverion-ai-orb-core zyverion-ai-orb-core-v2">
+          <span class="zyverion-ai-orb-glow"></span>
+          <span class="zyverion-ai-orb-mic" aria-hidden="true">
+            <span class="mic-head"></span>
+            <span class="mic-body"></span>
+            <span class="mic-base"></span>
+          </span>
+        </span>
+      </button>
+
+      <div class="zyverion-ai-orb-copy zyverion-ai-orb-copy-v2">
+        <strong id="zyverionAiOrbStateText">ZYVERION AI</strong>
+        <span id="zyverionAiOrbHintText">Tap to speak</span>
+      </div>
+    </div>
+
+    <div class="zyverion-ai-popup-live-state">
+      <div id="zyverionAiStatus" class="zyverion-ai-status zyverion-ai-status-v2">
+        Tell me about your business.
+      </div>
+
+      <div id="zyverionAiTranscript" class="zyverion-ai-transcript zyverion-ai-transcript-v2" hidden>
+        Voice input will appear here...
+      </div>
+    </div>
+
+    <div id="zyverionAiHeaderIntro" class="zyverion-ai-header-intro-v2" hidden></div>
+
+    <div id="zyverionAiContextSummary" class="zyverion-ai-context-summary zyverion-ai-context-summary-v2" hidden></div>
+
+    <div id="zyverionAiMessages" class="zyverion-ai-messages zyverion-ai-messages-v2" aria-live="polite">
+      <div class="zyverion-ai-answer-card">
+        <div class="zyverion-ai-answer-label">Assistant</div>
+        <div class="zyverion-ai-answer-text">
+          Welcome to Zyverion AI. Tell me what kind of business you have.
+        </div>
+      </div>
+    </div>
+
+    <div id="zyverionAiRecommendationRail" class="zyverion-ai-recommendation-rail zyverion-ai-recommendation-rail-v2" hidden></div>
+
+    <div id="zyverionAiFollowUpRail" class="zyverion-ai-followup-rail zyverion-ai-followup-rail-v2" hidden></div>
+
+    <div id="zyverionAiActionDock" class="zyverion-ai-action-dock zyverion-ai-action-dock-v2" aria-label="Assistant shortcuts">
+      <a id="zyverionAiEstimatorLink" class="zyverion-ai-action-link" href="estimator.html">
+        Estimator
+      </a>
+
+      <a id="zyverionAiContactLink" class="zyverion-ai-action-link" href="contact.html">
+        Contact
+      </a>
+
+      <a id="zyverionAiWorkLink" class="zyverion-ai-action-link" href="projects.html">
+        Work
+      </a>
+    </div>
+
+    <div id="zyverionAiUtilityDock" class="zyverion-ai-utility-dock zyverion-ai-utility-dock-v2" aria-label="Assistant utilities">
+      <button id="zyverionAiMuteBtn" class="zyverion-ai-utility-btn" type="button">
+        Mute
+      </button>
+
+      <button id="zyverionAiReplayBtn" class="zyverion-ai-utility-btn" type="button">
+        Replay
+      </button>
+    </div>
+
+    <!-- compatibility hooks kept for JS stability -->
+    <div class="zyverion-ai-controls" style="display:none;">
+      <button id="zyverionAiStartBtn" class="zyverion-ai-control primary" type="button">Start</button>
+      <button id="zyverionAiStopBtn" class="zyverion-ai-control" type="button">Stop</button>
     </div>
   </div>
+</aside>
+
+  <div class="mobile-sticky-cta">
+    <a class="btn primary" href="contact.html">Start Project</a>
+    <a class="btn" href="projects.html">View Work</a>
+  </div>
+
+  <div id="aiWelcomeOverlay" class="ai-welcome-overlay" aria-hidden="true">
+  <div class="ai-welcome-grid"></div>
+
+  <div class="ai-nebula ai-nebula-a"></div>
+  <div class="ai-nebula ai-nebula-b"></div>
+  <div class="ai-nebula ai-nebula-c"></div>
+
+  <div class="ai-particles" aria-hidden="true">
+    <span class="particle p1"></span>
+    <span class="particle p2"></span>
+    <span class="particle p3"></span>
+    <span class="particle p4"></span>
+    <span class="particle p5"></span>
+    <span class="particle p6"></span>
+    <span class="particle p7"></span>
+    <span class="particle p8"></span>
+    <span class="particle p9"></span>
+    <span class="particle p10"></span>
+  </div>
+
+  <div class="ai-welcome-stage">
+    <button id="aiWelcomeClose" class="ai-welcome-close" type="button" aria-label="Close welcome">
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="ai-status-chip">
+      <span class="ai-status-dot"></span>
+      <span>ZYVERION AI</span>
+    </div>
+
+<div class="ai-reactor-zone">
+  <div class="ai-reactor-shadow"></div>
+
+  <div class="ai-orbit orbit-1"></div>
+  <div class="ai-orbit orbit-2"></div>
+  <div class="ai-orbit orbit-3"></div>
+  <div class="ai-orbit orbit-4"></div>
+
+  <div class="ai-pulse pulse-1"></div>
+  <div class="ai-pulse pulse-2"></div>
+  <div class="ai-pulse pulse-3"></div>
+
+  <div class="ai-reactor">
+    <div class="ai-reactor-shell">
+      <div class="ai-reactor-core-glow"></div>
+
+      <div class="ai-reactor-core">
+        <div class="ai-crystal-mark"></div>
+      </div>
+
+      <div class="ai-reactor-scan"></div>
+    </div>
+  </div>
+</div>
+
+    <div class="ai-copy">
+      <h2 class="ai-title">Welcome to ZYVERION</h2>
+      <p class="ai-text">
+        Premium digital execution, intelligent systems, and refined solutions for modern businesses.
+      </p>
+
+      <div class="ai-wave" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="ai-hint">Tap the close button to continue</div>
+    </div>
+  </div>
+</div>
+
+<div id="aiVoiceOverlay" class="ai-voice-overlay" aria-hidden="true">
+  <div class="ai-voice-shell">
+    <div class="ai-voice-orb-wrap">
+      <div class="ai-voice-orb-core"></div>
+      <div class="ai-voice-orb-ring ring-a"></div>
+      <div class="ai-voice-orb-ring ring-b"></div>
+      <div class="ai-voice-orb-ring ring-c"></div>
+    </div>
+
+    <div class="ai-voice-bars" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="ai-voice-copy">
+      <strong>ZYVERION AI</strong>
+      <span>Speaking...</span>
+    </div>
+  </div>
+</div>
 
   <script>
     const y = document.getElementById("y");
@@ -685,6 +923,7 @@
   </script>
   <script src="assets/js/main.js?v=8"></script>
   <script src="assets/js/transition-pack.js?v=1"></script>
-  <script src="assets/js/ai-launcher.js?v=4"></script>
+  <script src="assets/js/ai-welcome.js?v=202"></script>
+<script src="assets/js/ai-launcher.js?v=5"></script>
 </body>
 </html>
