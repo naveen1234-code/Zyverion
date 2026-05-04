@@ -1972,3 +1972,120 @@ function updateMuteButton() {
   bindLauncher();
   exposeApi();
 })();
+/* =========================================================
+   FINAL AI LAUNCHER ROOT-LOCK + CLICK RESTORE FIX
+   Keeps the full AI launcher working on every page
+   ========================================================= */
+
+(function () {
+  function getAIBestRoot() {
+    const rootSelectors = [
+      "#zyverion-ai-root",
+      "#zyverion-ai-launcher",
+      ".zyverion-ai-root",
+      ".zyverion-ai-launcher",
+      ".zyv-ai-launcher",
+      ".ai-launcher",
+      ".floating-ai"
+    ];
+
+    for (const selector of rootSelectors) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+    }
+
+    const button = document.querySelector(
+      "#zyverion-ai-button, .zyverion-ai-button, .zyverion-ai-orb, .zyv-ai-orb, .ai-orb, .floating-ai-button"
+    );
+
+    if (!button) return null;
+
+    return (
+      button.closest("#zyverion-ai-root") ||
+      button.closest("#zyverion-ai-launcher") ||
+      button.closest(".zyverion-ai-root") ||
+      button.closest(".zyverion-ai-launcher") ||
+      button.closest(".zyv-ai-launcher") ||
+      button.closest(".ai-launcher") ||
+      button.closest(".floating-ai") ||
+      button
+    );
+  }
+
+  function lockFullAILauncher() {
+    const root = getAIBestRoot();
+    if (!root) return;
+
+    /*
+      Important:
+      Move the FULL launcher/root to body,
+      not only the globe. This keeps click + popup together.
+    */
+    if (root.parentElement !== document.body) {
+      document.body.appendChild(root);
+    }
+
+    Object.assign(root.style, {
+      position: "fixed",
+      right: "18px",
+      bottom: "18px",
+      left: "auto",
+      top: "auto",
+      margin: "0",
+      transform: "none",
+      zIndex: "2147483647",
+      pointerEvents: "auto"
+    });
+  }
+
+  function restoreAIClick() {
+    const root = getAIBestRoot();
+    if (!root || root.dataset.zyverionClickFixed === "true") return;
+
+    root.dataset.zyverionClickFixed = "true";
+
+    root.addEventListener("click", function (event) {
+      const clickedButton = event.target.closest(
+        "#zyverion-ai-button, .zyverion-ai-button, .zyverion-ai-orb, .zyv-ai-orb, .ai-orb, .floating-ai-button, button"
+      );
+
+      if (!clickedButton) return;
+
+      const panel =
+        document.querySelector("#zyverion-ai-panel") ||
+        document.querySelector(".zyverion-ai-panel") ||
+        document.querySelector(".zyverion-ai-popup") ||
+        document.querySelector(".ai-welcome-popup") ||
+        document.querySelector(".ai-popup");
+
+      if (panel) {
+        panel.classList.toggle("active");
+        panel.classList.toggle("is-active");
+        panel.classList.toggle("open");
+        panel.classList.toggle("is-open");
+
+        panel.style.display =
+          panel.style.display === "none" || getComputedStyle(panel).display === "none"
+            ? "block"
+            : panel.style.display;
+
+        panel.style.opacity = "1";
+        panel.style.visibility = "visible";
+        panel.style.pointerEvents = "auto";
+      }
+    });
+  }
+
+  function fixAILauncherEverywhere() {
+    lockFullAILauncher();
+    restoreAIClick();
+  }
+
+  window.addEventListener("DOMContentLoaded", fixAILauncherEverywhere);
+  window.addEventListener("load", fixAILauncherEverywhere);
+  window.addEventListener("resize", fixAILauncherEverywhere);
+
+  setTimeout(fixAILauncherEverywhere, 100);
+  setTimeout(fixAILauncherEverywhere, 500);
+  setTimeout(fixAILauncherEverywhere, 1500);
+})();

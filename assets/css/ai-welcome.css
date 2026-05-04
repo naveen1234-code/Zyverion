@@ -2817,3 +2817,42 @@ body.zyverion-ai-open::before {
 .zyverion-ai-header-intro {
   display: none !important;
 }
+/* =========================================================
+   FINAL FLOATING AI POSITION FIX
+   Keeps Zyverion AI globe fixed on every page
+   ========================================================= */
+
+#zyverion-ai-launcher,
+.zyverion-ai-launcher,
+.ai-launcher,
+.floating-ai-button,
+.zyv-ai-orb,
+.zyverion-ai-orb {
+  position: fixed !important;
+  right: 18px !important;
+  bottom: 18px !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  z-index: 999999 !important;
+}
+
+/* Prevent the AI button from being clipped */
+body,
+html {
+  overflow-x: hidden;
+}
+
+/* Mobile size + safe spacing */
+@media (max-width: 768px) {
+  #zyverion-ai-launcher,
+  .zyverion-ai-launcher,
+  .ai-launcher,
+  .floating-ai-button,
+  .zyv-ai-orb,
+  .zyverion-ai-orb {
+    right: 16px !important;
+    bottom: 16px !important;
+    z-index: 999999 !important;
+  }
+}
